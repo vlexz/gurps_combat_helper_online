@@ -1,0 +1,19 @@
+{
+  "name": "gurps_combat_helper",
+  "homepage": "https://github.com/vlexz/gurps_combat_helper_online",
+  "authors": [
+    "VlexZ <vlexzg@gmail.com>"
+  ],
+  "description": "Gurps GM assistant, to track combats and quests",
+  "main": "index.html",
+  "moduleType": [],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

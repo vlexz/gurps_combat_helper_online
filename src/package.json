@@ -1,0 +1,9 @@
+{
+  "name": "gurps_combat_helper",
+  "description": "program to help combat in GURPS",
+  "dependencies": {
+    "express": "^4.13.3",
+    "gulp-jade": "^1.1.0",
+    "jade": "^1.11.0"
+  }
+}
