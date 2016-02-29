@@ -5,6 +5,6 @@ var
 
 var app = express();
 
-app.use('/front', express.static(path.join(__dirname, 'front')));
+app.use('/front', express.static(path.join(__dirname, '../build')));
 
 app.listen(3000);

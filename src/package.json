@@ -2,8 +2,14 @@
   "name": "gurps_combat_helper",
   "description": "program to help combat in GURPS",
   "dependencies": {
+    "del": "^2.2.0",
     "express": "^4.13.3",
+    "gulp": "^3.9.1",
     "gulp-jade": "^1.1.0",
     "jade": "^1.11.0"
+  },
+  "devDependencies": {
+    "gulp-concat": "^2.6.0",
+    "gulp-rigger": "^0.5.8"
   }
 }
