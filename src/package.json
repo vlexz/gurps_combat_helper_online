@@ -10,6 +10,8 @@
   },
   "devDependencies": {
     "gulp-concat": "^2.6.0",
-    "gulp-rigger": "^0.5.8"
+    "gulp-rigger": "^0.5.8",
+    "gulp-rsync": "0.0.5",
+    "gulp-watch": "^4.3.5"
   }
 }

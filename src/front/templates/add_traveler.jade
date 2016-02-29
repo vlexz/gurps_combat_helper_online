@@ -1,0 +1,33 @@
+.modal-header
+    h3.modal-title Add Traveler
+.modal-body
+    .container.form
+        .row
+            .col-md-4
+                .form-group
+                    label(for="traveler.name") Name            
+                    input.form-control(type="text" ng-model="traveler.name" id="traveler.name")
+        .row
+            .col-md-1
+                .form-group
+                    label(for="traveler.move") Move                    
+                    input.form-control(type="number" ng-model="traveler.move" id="traveler.move")
+        .row
+            .col-md-1
+                .form-group
+                    label(for="traveler.fp") Fatigue                    
+                    input.form-control(type="number" ng-model="traveler.fp" id="traveler.fp")
+        .row
+            .col-md-2
+                .form-group
+                    label(for="traveler.load") Load Level                    
+                    select.form-control(ng-model="traveler.load" id="traveler.load")
+                        option(ng-repeat="level in load_levels") {{level}}
+        .row
+            .col-md-1
+                .form-group
+                    label(for="traveler.hiking") Hiking
+                    input.form-control(type="number" ng-model="traveler.hiking" id="traveler.hiking")
+.modal-footer
+    button.btn.btn-default(ng-click="ok()") Save
+    button.btn.btn-default(ng-click="cancel()") Cancel

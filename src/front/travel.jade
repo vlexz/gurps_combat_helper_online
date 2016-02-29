@@ -1,0 +1,61 @@
+include includes/head.jade
+    -var current = 'travel'
+    include includes/navigation.jade
+    .container(ng-controller="TravelCalculatorCtrl")
+        .row
+            .col-md-6
+                .container
+                    .row
+                        .col-md-12
+                        h3 Travelers
+                    .row
+                        .col-md-1 Name
+                        .col-md-1 Move
+                        .col-md-1 FP
+                        .col-md-1 Load
+                        .col-md-1 Hiking
+                    .row(ng-repeat="c in travelers")
+                        .col-md-1 {{c.name}}
+                        .col-md-1 {{c.move}}
+                        .col-md-1 {{c.fp}}
+                        .col-md-1 {{c.load}}
+                        .col-md-1 {{c.hiking}}
+                    .row
+                        .col-m2-2
+                            button.btn.btn-default(ng-click="add_traveler()") Add Traveler
+            .col-md-6
+                .container
+                    .row
+                        .col-md-12
+                            h3 Travel
+                    .row.inline-form
+                        .col-md-4 
+                            label Travel Time (hours)
+                                input.form-control(type="number" ng-model="travel_time")
+                    .row.inline-form
+                        .col-md-4 
+                            label Encounter Probability (each hour) percents
+                                input.form-control(type="number" ng-model="encounter")
+                    .row
+                        .col-md-2
+                            input(type="checkbox" ng-model="hot_day") 
+                            label &nbsp;A hot day                                
+                    .row
+                        .col-md-3
+                            input(type="checkbox" ng-model="have_leader") 
+                            label &nbsp;Party has a leader                                
+                    .row.inline-form
+                        .col-md-4 
+                            label Terrain
+                                select.form-control(ng-model="terrain")
+                                    <option ng-repeat="value in terrains" value="{{value}}"> {{value}}
+                    .row.inline-form
+                        .col-md-4 
+                            label Weather
+                                select.form-control(ng-model="weather")
+                                    <option ng-repeat="value in weathers" value="{{value}}"> {{value}}
+
+
+        .row
+            .col-md-12
+                button.btn.btn-primary(ng-click="travel()") Let's Go!

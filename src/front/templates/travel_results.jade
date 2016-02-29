@@ -1,0 +1,10 @@
+.modal-header
+    h3.modal-title Add Traveler
+.modal-body
+    p You have travel for an {{result.time}} hours and pass {{result.range}} kilometers
+    p(ng-if="result.encounter") You meet enemies on your way
+    p(ng-if="!result.encounter") You not meet any danger during your way
+    p(ng-repeat="traveler in result.fp_lose")
+        {{traveler.name}} has lose {{traveler.fp_lost}} fatigue points and left in {{traveler.fp_left}}
+ .modal-footer
+    button.btn.btn-default(ng-click="ok()") Ok
