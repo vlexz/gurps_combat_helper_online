@@ -3,13 +3,16 @@
 var load_levels = ['None', 'Light', 'Medium', 'Heavy', 'Extra Heavy'];
 
 angular.module('GurpsCombatHelper')
-.controller('TravelCalculatorCtrl', ['$scope', '$uibModal', 'dices',
-function($scope, $uibModal, dices) {
+.controller('TravelCalculatorCtrl', ['$scope', '$uibModal', '$sce', 'dices',
+function($scope, $uibModal, $sce, dices) {
 
     $scope.travelers = []
-    $scope.travel_time = 0;
+    $scope.travel_time = 2;
     $scope.encounter = 0;
     $scope.hot_day = false;
+
+    var travel_count = 0;
+    var total_passed = 0;
 
     $scope.terrains = [
         "Horrible",
@@ -17,7 +20,7 @@ function($scope, $uibModal, dices) {
         "Average",
         "Earth Road",
         "Good Road",
-        "Excellent"
+        "Good"
     ];
 
     var terrain_modifiers = {
@@ -53,14 +56,70 @@ function($scope, $uibModal, dices) {
         });
     }
 
+    $scope.remove_traveler = function(index) {
+        $scope.travelers.splice(index, 1);
+    }
+
+    $scope.save_party = function(){
+        $uibModal.open({
+            templateUrl: 'templates/save_load_travelers.html',
+            controller: 'TravelCalculatorSaveLoadCtrl',
+            resolve: {
+                params: function() {
+                    return {
+                        title: 'Save party',
+                        party: JSON.stringify($scope.travelers)
+                    }
+                }
+            }
+        })
+    }
+
+    $scope.load_party = function(){
+        $uibModal.open({
+            templateUrl: 'templates/save_load_travelers.html',
+            controller: 'TravelCalculatorSaveLoadCtrl',
+            resolve: {
+                params: function() {
+                    return {
+                        title: 'Load party',
+                        party: null
+                    }
+                }
+            }
+        }).result.then(function(party) {
+            $scope.travelers = JSON.parse(party);
+        })
+    }
+
+    $scope.travel_results_text = '';
     $scope.travel_results = null;
 
     $scope.travel = function() {
+
+        function fplose(traveler, hikingTime) {
+            return (1 + load_levels.indexOf(traveler.load)) * hikingTime;
+        }
+
         var hikingTime = $scope.travel_time;     
         var encounterHappend = false;   
+
+        var tired;
+
+        for(var i = 0; i < hikingTime; ++i) {
+            tired = $scope.travelers.find(function(t) {
+                return Math.ceil(parseFloat(t.fp) / 3) <= fplose(t, i + 1);
+            });
+            if(tired) {
+                hikingTime = Math.min(i + 2, hikingTime);
+                break;
+            }
+        }
+
         //check for encounter
         for(var i = 0; i < hikingTime; ++i) {
             if(dices.rollPercent() < $scope.encounter) {
+                tired = null;
                 hikingTime = i + 1;
                 encounterHappend = true;
                 break;
@@ -112,7 +171,8 @@ function($scope, $uibModal, dices) {
                 fp_left: person.fp - fp_lose
             }
         });
-        $uibModal.open({
+        total_passed += hikingTime * speed;
+        var d = $uibModal.open({
             templateUrl: "templates/travel_results.html",
             controller: 'TravelCalculatorTravelResultsCtrl',
             resolve: {
@@ -121,11 +181,18 @@ function($scope, $uibModal, dices) {
                         encounter: encounterHappend,
                         time: hikingTime,
                         range: hikingTime * speed,
-                        fp_lose: fp_lose
+                        fp_lose: fp_lose,
+                        tired: tired
                     }
                 }
             }
-        })
+        }).result.then(function(log_piece) {
+            console.log('result:', log_piece);
+            $scope.travel_results_text = '<p>Travel ' + ++travel_count + ' total passed ' + total_passed + 'km' + '</p>'
+                                        + log_piece + '<p><hr/></p>' + $scope.travel_results_text;
+            
+            $scope.travel_results = $sce.trustAsHtml($scope.travel_results_text);
+        });
     }
 }]);
 
@@ -152,12 +219,46 @@ function($scope, $uibModalInstance) {
 }]);
 
 angular.module('GurpsCombatHelper')
-.controller('TravelCalculatorTravelResultsCtrl', ['$scope', '$uibModalInstance', 'result',
-function($scope, $uibModalInstance, result) {
+.controller('TravelCalculatorSaveLoadCtrl', ['$scope', '$uibModalInstance', 'params',
+function($scope, $uibModalInstance, params) {
+
+    $scope.title = params.title;
+    $scope.party = params.party;
+    
+    $scope.ok = function () {
+        $uibModalInstance.close($scope.party);
+    };
+
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+}]);
+
+angular.module('GurpsCombatHelper')
+.controller('TravelCalculatorTravelResultsCtrl', ['$scope', '$uibModalInstance', '$sce', 'result', 'dices',
+function($scope, $uibModalInstance, $sce, result, dices) {
 
     $scope.result = result;
 
+    var res = '';
+    res += '<p> You have traveled for an ' + result.time + ' hours and passed ' + result.range + ' kilometers</p>';
+    if(result.tired) {
+        res += '<p> You can\'t go further, because ' + result.tired.name + ' has tired and require rest </p>';
+    }
+    if(result.encounter) 
+        res += '<p> You have met enemies on your way, situation roll ' + dices.roll3d6() + '</p>';
+    else 
+        res += '<p> You haven\'t met any danger on your way </p>';
+    result.fp_lose.forEach(function(t) {
+        res += '<p> ' + t.name + ' have lost ' + t.fp_lost + ' fatigue points and left in ' + t.fp_left + '</p>';
+    });
+
+
+
+    $scope.message = $sce.trustAsHtml(res);
+
     $scope.ok = function () {
-        $uibModalInstance.close(null);
+        console.log('exit from result dialog');
+        $uibModalInstance.close(res);
     };
 }]);

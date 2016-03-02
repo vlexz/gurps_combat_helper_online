@@ -6,7 +6,7 @@ angular.module('GurpsCombatHelper')
         roll3d6: function() {           
             var result = 0; 
             for(var i = 0; i < 3; ++i) {                
-                result += parseInt(Math.random()*6);
+                result += parseInt(Math.random()*6) + 1;
             }
             console.log('3d6 roll', result);
             return result;
