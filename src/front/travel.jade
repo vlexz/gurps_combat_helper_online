@@ -60,6 +60,10 @@ include includes/head.jade
                             label Weather
                                 select.form-control(ng-model="weather")
                                     <option ng-repeat="value in weathers" value="{{value}}"> {{value}}
+                    .row
+                        .col-md-3
+                            input(type="checkbox" ng-model="popup_result") 
+                            label &nbsp;Show travel result in popup window
 
 
         .row

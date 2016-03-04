@@ -1,0 +1,40 @@
+include includes/head.jade
+    -var current = 'edge_protection'
+    include includes/navigation.jade
+    .container(ng-controller="EdgeProtectionCtrl")
+        .row
+            .col-md-12
+                h3 Edge Protection Tracking
+        .row
+            .col-md-12
+                h4 Combatants
+        .row
+            .col-md-2 Name
+            .col-md-2 Current Hp
+            .col-md-2 Damage
+            .col-md-2 Type
+            .col-md-2 Location
+        .row(ng-repeat="combatant in combatants")
+            .col-md-2
+                h5 {{combatant.name}}
+            .col-md-2
+                input.form-control(type="number" ng-model="combatant.curr_hp")
+            .col-md-2
+                input.form-control(type="number" ng-model="combatant.damage")
+            .col-md-2
+                select.form-control(ng-model="combatant.dmg_type")            
+                    option(ng-repeat="type in dmg_types" value="{{type}}") {{type}}
+            .col-md-2
+                select.form-control(ng-model="combatant.location")
+                    option(ng-repeat="loc in locations" value="{{loc}}") {{loc}}
+            .col-md-2
+                button.btn.btn-default(ng-click="strike($index)") Strike!
+        .row
+            .col-md-12
+                .btn-group
+                    button.btn.btn-default(ng-click="add_combatant()") Add Combatant
+                    button.btn.btn-default(ng-click="save_party()") Save Party
+                    button.btn.btn-default(ng-click="load_party()") Load Party
+        .row
+            .col-md-12
+                p(ng-repeat="part in combat_log track by $index") {{part}}

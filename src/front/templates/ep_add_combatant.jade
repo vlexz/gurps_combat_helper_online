@@ -1,0 +1,29 @@
+.modal-header
+    h3.modal-title Add Combatant
+.modal-body
+    .row
+        .col-md-4
+            label Name
+                input.form-control(type="text" ng-model="combatant.name")
+        .col-md-4
+            label Hp
+                input.form-control(type="number" ng-model="combatant.hp")
+    .row
+        .col-md-2.col-md-offset-2 DR            
+        .col-md-2 EP Cut
+        .col-md-2 EP Imp
+        .col-md-2 HP
+    .row(ng-repeat="(area,drset) in combatant.armor")
+        .col-md-2 {{area}}
+        .col-md-2 
+            input.form-control(type="number" ng-model="drset.dr")
+        .col-md-2 
+            input.form-control(type="number" ng-model="drset.ep.cut")
+        .col-md-2 
+            input.form-control(type="number" ng-model="drset.ep.imp")
+        .col-md-2 
+            input.form-control(type="number" ng-model="drset.hp")
+
+.modal-footer
+    button.btn.btn-default(ng-click="ok()") Save
+    button.btn.btn-default(ng-click="cancel()") Cancel

@@ -1,0 +1,11 @@
+{
+  "name": "gurps_combat_helper_backend",
+  "version": "0.0.1",
+  "description": "Backend for gurps combat helper",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "VlexZ",
+  "license": "ISC"
+}

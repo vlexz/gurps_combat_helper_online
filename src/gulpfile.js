@@ -76,13 +76,26 @@ gulp.task('watch', function(){
     watch(templates, () => {gulp.start('templates')});
 });
 
-gulp.task('deploy', function() {
+gulp.task('deploy:front', function() {
     gulp.src(builddir + '**')
     .pipe(rsync({
         root: builddir,
         hostname: 'vlexz.net',
         destination: 'gurps'
     }))
+});
+
+gulp.task('deploy:server', function(){
+    gulp.src('backend/**/')
+    .pipe(rsync({
+        root: 'backend',
+        hostname: 'vlexz.net',
+        destination: 'gurps-backend'
+    }))
+});
+
+gulp.task('deploy', function() {
+    
 });
 
 gulp.task('build', [

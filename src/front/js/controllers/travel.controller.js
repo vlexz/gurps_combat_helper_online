@@ -172,27 +172,33 @@ function($scope, $uibModal, $sce, dices) {
             }
         });
         total_passed += hikingTime * speed;
-        var d = $uibModal.open({
-            templateUrl: "templates/travel_results.html",
-            controller: 'TravelCalculatorTravelResultsCtrl',
-            resolve: {
-                result: function() {
-                    return {
-                        encounter: encounterHappend,
-                        time: hikingTime,
-                        range: hikingTime * speed,
-                        fp_lose: fp_lose,
-                        tired: tired
-                    }
-                }
-            }
-        }).result.then(function(log_piece) {
-            console.log('result:', log_piece);
+
+        function appendLog(piece) {
+            console.log('result:', piece);
             $scope.travel_results_text = '<p>Travel ' + ++travel_count + ' total passed ' + total_passed + 'km' + '</p>'
-                                        + log_piece + '<p><hr/></p>' + $scope.travel_results_text;
-            
+                                        + piece + '<p><hr/></p>' + $scope.travel_results_text;            
             $scope.travel_results = $sce.trustAsHtml($scope.travel_results_text);
-        });
+        }
+
+        var result = {
+            encounter: encounterHappend,
+            time: hikingTime,
+            range: hikingTime * speed,
+            fp_lose: fp_lose,
+            tired: tired
+        };
+
+        if($scope.popup_result) {
+            var d = $uibModal.open({
+                templateUrl: "templates/travel_results.html",
+                controller: 'TravelCalculatorTravelResultsCtrl',
+                resolve: {
+                    result: function() { return result } 
+                }
+            })
+        } 
+
+        appendLog(composeResult(result, dices));        
     }
 }]);
 
@@ -238,8 +244,19 @@ angular.module('GurpsCombatHelper')
 .controller('TravelCalculatorTravelResultsCtrl', ['$scope', '$uibModalInstance', '$sce', 'result', 'dices',
 function($scope, $uibModalInstance, $sce, result, dices) {
 
-    $scope.result = result;
+    $scope.result = result;   
 
+    var res = composeResult(result, dices);
+
+    $scope.message = $sce.trustAsHtml(res);
+
+    $scope.ok = function () {
+        console.log('exit from result dialog');
+        $uibModalInstance.close(res);
+    };
+}]);
+
+function composeResult(result, dices) {
     var res = '';
     res += '<p> You have traveled for an ' + result.time + ' hours and passed ' + result.range + ' kilometers</p>';
     if(result.tired) {
@@ -252,13 +269,7 @@ function($scope, $uibModalInstance, $sce, result, dices) {
     result.fp_lose.forEach(function(t) {
         res += '<p> ' + t.name + ' have lost ' + t.fp_lost + ' fatigue points and left in ' + t.fp_left + '</p>';
     });
+    return res;
+}
 
 
-
-    $scope.message = $sce.trustAsHtml(res);
-
-    $scope.ok = function () {
-        console.log('exit from result dialog');
-        $uibModalInstance.close(res);
-    };
-}]);
