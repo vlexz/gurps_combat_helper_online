@@ -48,6 +48,17 @@ function($http, $q, $rootScope) {
         })
     }
 
+    function logout() {
+        return $q(function(resolve, reject){
+            console.log('logout');
+            $http.get('/api/users/logout')
+            .then(function(){
+                resolve();
+                update_user();
+            })
+        })
+    }
+
     update_user();
 
 
@@ -55,6 +66,7 @@ function($http, $q, $rootScope) {
         user: user,
         exists: check_username,
         register: register,
-        login: login
+        login: login,
+        logout: logout
     }
 }]);

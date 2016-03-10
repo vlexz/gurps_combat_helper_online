@@ -9,15 +9,15 @@
         .row
             .col-md-6
                 label User name
-                    input.form-control(type="text" ng-model="username" ng-change="check_username()")
+                    input.form-control(type="text" ng-model="user.username" ng-change="check_username()")
         .row
             .col-md-6
                 label Password
-                    input.form-control(type="password" ng-model="password" ng-change="check_password()")
+                    input.form-control(type="password" ng-model="user.password" ng-change="check_password()")
         .row
             .col-md-6
                 label Re-type password
-                    input.form-control(type="password" ng-model="password_confirm" ng-change="check_password()")
+                    input.form-control(type="password" ng-model="user.password_confirm" ng-change="check_password()")
 .modal-footer
     button.btn.btn-default(ng-click="ok()") Register
     button.btn.btn-default(ng-click="cancel()") Cancel

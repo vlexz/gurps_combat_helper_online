@@ -20,7 +20,9 @@ function($scope, UsersService, $uibModal) {
         })
     }
 
-
+    $scope.logout = function() {
+        UsersService.logout();
+    }
 
 }]);
 
@@ -28,11 +30,13 @@ angular.module('GurpsCombatHelper')
 .controller('UsersLoginCtrl', ['$scope', 'UsersService', '$uibModalInstance',
 function($scope, UsersService, $uibModalInstance) {    
 
-    $scope.username = '';
-    $scope.password = '';
+    $scope.user = {}
+
+    $scope.user.username = '';
+    $scope.user.password = '';
 
     $scope.ok = function () {      
-        UsersService.login($scope.username, $scope.password)
+        UsersService.login($scope.user.username, $scope.user.password)
         .then(function(){
             $uibModalInstance.close();
         })         
@@ -45,16 +49,17 @@ function($scope, UsersService, $uibModalInstance) {
 
 angular.module('GurpsCombatHelper')
 .controller('UsersRegisterCtrl', ['$scope', 'UsersService', '$uibModalInstance',
-function($scope, UsersService, $uibModalInstance) {    
-    $scope.username = '';
-    $scope.password = '';
-    $scope.password_confirm = '';
+function($scope, UsersService, $uibModalInstance) {   
+    $scope.user = {} 
+    $scope.user.username = '';
+    $scope.user.password = '';
+    $scope.user.password_confirm = '';
 
     $scope.password_mismatch = false;
     $scope.user_exists = false;
 
     $scope.check_password = function() {
-        if($scope.password != $scope.password_confirm) {
+        if($scope.user.password != $scope.user.password_confirm) {
             $scope.password_mismatch = true;
         } else {
             $scope.password_mismatch = false;
@@ -62,7 +67,7 @@ function($scope, UsersService, $uibModalInstance) {
     }
 
     $scope.check_username = function() {
-        UsersService.exists($scope.username)
+        UsersService.exists($scope.user.username)
         .then(function(exists) {
             $scope.user_exists = exists;
         });
@@ -70,13 +75,13 @@ function($scope, UsersService, $uibModalInstance) {
 
     $scope.ok = function () {       
         if (!$scope.password_mismatch && !$scope.user_exists) {
-            UsersService.register($scope.username, $scope.password)
+            UsersService.register($scope.user.username, $scope.user.password)
             .then(function(response) {
                 console.log(response);
-                if(response.status == 'ok') {
+                if(response.data.status == 'ok') {
                     $uibModalInstance.close();
                 } else {
-                    alert(response.message);
+                    alert(response.data.message);
                 }
             })
         }

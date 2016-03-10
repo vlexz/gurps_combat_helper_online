@@ -11,15 +11,20 @@ var
 
 passport.use(new localStrategy(function(username, password, done){
     db.users.findOne({
-        name: username
+        where: {
+            name: username
+        }
     }).then(user => {
         if(user) {
             var hash = cryp.createHash('sha256');
             hash.update(password);
-            if(hash.digest('hex') == user.password) {
+            var d = hash.digest('hex');
+            log.info(username, user.password, d, password);
+            if(d == user.password) {
                 return done(null, user.id);
             }
         }
+        log.info('Incorrect password');
         done(null, false, {message: 'Incorrect username or password!'});
     })
 }));
@@ -68,9 +73,11 @@ function register(req, resp, next) {
         } else {
             var hash = cryp.createHash('sha256');
             hash.update(req.body.password);
+            var d = hash.digest('hex');
+            log.info('register with', req.body.password, d);
             db.users.create({                
                 name: req.body.username,                
-                password: hash.digest('hex')
+                password: d
             }).then(() => {
                 resp.send({status: 'ok'});
             })
@@ -96,6 +103,11 @@ function getUser(req, resp, next) {
     resp.send(req.user);
 }
 
+function logout(req, resp) {
+    req.logout();
+    resp.send({status: 'ok'});
+}
+
 module.exports = {
     init: function(app) {    
         app.use(passport.initialize());
@@ -115,6 +127,7 @@ module.exports = {
         }));
         router.get('/api/users/get_user', getUser);
         router.post('/api/users/check_username', check_username);
+        router.get('/api/users/logout', logout);
         return router;
     }    
 }

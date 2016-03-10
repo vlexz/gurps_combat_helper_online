@@ -5,11 +5,11 @@
         .row
             .col-md-6
                 label User name
-                    input.form-control(type="text" ng-model="username")
+                    input.form-control(type="text" ng-model="user.username")
         .row
             .col-md-6
                 label Password
-                    input.form-control(type="password" ng-model="password")
+                    input.form-control(type="password" ng-model="user.password")
 .modal-footer
     button.btn.btn-default(ng-click="ok()") Login
     button.btn.btn-default(ng-click="cancel()") Cancel
