@@ -1,0 +1,15 @@
+.modal-header
+    h3.modal-title Login
+.modal-body    
+    .container
+        .row
+            .col-md-6
+                label User name
+                    input.form-control(type="text" ng-model="username")
+        .row
+            .col-md-6
+                label Password
+                    input.form-control(type="password" ng-model="password")
+.modal-footer
+    button.btn.btn-default(ng-click="ok()") Login
+    button.btn.btn-default(ng-click="cancel()") Cancel

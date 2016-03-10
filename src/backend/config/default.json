@@ -1,0 +1,10 @@
+{
+    "site_name": "http://gurps.localhost",
+    "db": {
+        "host": "localhost",
+        "user": "root",
+        "password": "mysqlgfhjkm",
+        "database": "gurps"
+    },
+    "mongodb": "mongodb://localhost:27017/gurps"
+}

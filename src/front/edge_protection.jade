@@ -34,7 +34,7 @@ include includes/head.jade
                 .btn-group
                     button.btn.btn-default(ng-click="add_combatant()") Add Combatant
                     button.btn.btn-default(ng-click="save_party()") Save Party
-                    button.btn.btn-default(ng-click="load_party()") Load Party
+                    button.btn.btn-default(ng-click="load_party()") Load Party                    
         .row
             .col-md-12
                 p(ng-repeat="part in combat_log track by $index") {{part}}

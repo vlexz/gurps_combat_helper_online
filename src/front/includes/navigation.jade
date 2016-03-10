@@ -1,7 +1,10 @@
 .nav
     .nav-inner
         .container
-            ul.nav.nav-pills
+            ul.nav.nav-pills(ng-controller="UsersCtrl")
                 li(role='presentation' class=(current == 'home' ? 'active' : '') ): a(href='/') Home
                 li(role='presentation' class=(current == 'travel' ? 'active' : '') ): a(href='/travel.html') Travels
                 li(role='presentation' class=(current == 'edge_protection' ? 'active' : '') ): a(href='/edge_protection.html') Edge Protection
+                li(ng-if="!user.loggedIn"): a(ng-click="login()") Log In
+                li(ng-if="!user.loggedIn"): a(ng-click="register()") Register
+                li(ng-if="user.loggedIn"): a(ng-click="logout()") Log Out

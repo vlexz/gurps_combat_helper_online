@@ -1,0 +1,23 @@
+.modal-header
+    h3.modal-title Register new user
+.modal-body    
+    .container
+        .row(ng-if="password_mismatch")
+            .col-md-6.alert.alert-warning Passwords Missmatch!
+        .row(ng-if="user_exists")
+            .col-md-6.alert.alert-warning User with this name already registered!
+        .row
+            .col-md-6
+                label User name
+                    input.form-control(type="text" ng-model="username" ng-change="check_username()")
+        .row
+            .col-md-6
+                label Password
+                    input.form-control(type="password" ng-model="password" ng-change="check_password()")
+        .row
+            .col-md-6
+                label Re-type password
+                    input.form-control(type="password" ng-model="password_confirm" ng-change="check_password()")
+.modal-footer
+    button.btn.btn-default(ng-click="ok()") Register
+    button.btn.btn-default(ng-click="cancel()") Cancel

@@ -3,8 +3,13 @@
 var load_levels = ['None', 'Light', 'Medium', 'Heavy', 'Extra Heavy'];
 
 angular.module('GurpsCombatHelper')
-.controller('TravelCalculatorCtrl', ['$scope', '$uibModal', '$sce', 'dices',
-function($scope, $uibModal, $sce, dices) {
+.controller('TravelCalculatorCtrl', ['$scope', '$uibModal', '$sce', 'dices', 'UsersService',
+function($scope, $uibModal, $sce, dices, UsersService) {
+
+    $scope.$on('user_changed', function(event, user) {
+        $scope.user = user;
+    });
+
 
     $scope.travelers = []
     $scope.travel_time = 2;
@@ -50,7 +55,17 @@ function($scope, $uibModal, $sce, dices) {
     $scope.add_traveler = function() {
         var d = $uibModal.open({
             templateUrl: 'templates/add_traveler.html',
-            controller: 'TravelCalculatorAddTravelerCtrl'
+            controller: 'TravelCalculatorAddTravelerCtrl',
+            resolve: {
+                traveler: function() { return {
+                    name: '',
+                    move: 5,
+                    fp: 10,
+                    load: 'None',
+                    hiking: 5,
+                    carrier: false
+                } }
+            }
         }).result.then(function(traveler){
             $scope.travelers.push(traveler);
         });
@@ -60,15 +75,26 @@ function($scope, $uibModal, $sce, dices) {
         $scope.travelers.splice(index, 1);
     }
 
+    $scope.edit_traveler = function(index) {
+        $uibModal.open({
+            templateUrl: 'templates/add_traveler.html',
+            controller: 'TravelCalculatorAddTravelerCtrl',
+            resolve: {
+                traveler: function() { return $scope.travelers[index]}
+            }
+        }).result.then(function(traveler){
+            $scope.travelers[index] = traveler;
+        });
+    }
+
     $scope.save_party = function(){
         $uibModal.open({
-            templateUrl: 'templates/save_load_travelers.html',
-            controller: 'TravelCalculatorSaveLoadCtrl',
+            templateUrl: 'templates/save_travel_party.html',
+            controller: 'TravelCalculatorSavePartyCtrl',
             resolve: {
                 params: function() {
                     return {
-                        title: 'Save party',
-                        party: JSON.stringify($scope.travelers)
+                        party: $scope.travelers
                     }
                 }
             }
@@ -77,8 +103,8 @@ function($scope, $uibModal, $sce, dices) {
 
     $scope.load_party = function(){
         $uibModal.open({
-            templateUrl: 'templates/save_load_travelers.html',
-            controller: 'TravelCalculatorSaveLoadCtrl',
+            templateUrl: 'templates/load_travel_party.html',
+            controller: 'TravelCalculatorLoadPartyCtrl',
             resolve: {
                 params: function() {
                     return {
@@ -88,7 +114,7 @@ function($scope, $uibModal, $sce, dices) {
                 }
             }
         }).result.then(function(party) {
-            $scope.travelers = JSON.parse(party);
+            $scope.travelers = party;
         })
     }
 
@@ -99,31 +125,6 @@ function($scope, $uibModal, $sce, dices) {
 
         function fplose(traveler, hikingTime) {
             return (1 + load_levels.indexOf(traveler.load)) * hikingTime;
-        }
-
-        var hikingTime = $scope.travel_time;     
-        var encounterHappend = false;   
-
-        var tired;
-
-        for(var i = 0; i < hikingTime; ++i) {
-            tired = $scope.travelers.find(function(t) {
-                return Math.ceil(parseFloat(t.fp) / 3) <= fplose(t, i + 1);
-            });
-            if(tired) {
-                hikingTime = Math.min(i + 2, hikingTime);
-                break;
-            }
-        }
-
-        //check for encounter
-        for(var i = 0; i < hikingTime; ++i) {
-            if(dices.rollPercent() < $scope.encounter) {
-                tired = null;
-                hikingTime = i + 1;
-                encounterHappend = true;
-                break;
-            }   
         }
 
         //get max move
@@ -162,9 +163,58 @@ function($scope, $uibModal, $sce, dices) {
         }
 
         speed *= terrain_modifier;
+
+        var hikingTime = $scope.travel_time;     
+        var encounterHappend = false;   
+
+        var tired = null;
+
+        var max_travel_times = $scope.travelers.map(function(t){
+            var max_spent_fp = t.fp - Math.ceil(parseFloat(t.fp) / 3);
+            var lose_per_hour = fplose(t, 1);
+            if(t.carrier) {
+                lose_per_hour /= terrain_modifier;
+            }
+            return max_spent_fp / lose_per_hour;
+        })
+
+        console.log(max_travel_times);
+
+        hikingTime = max_travel_times.reduce(function(max, t){
+            return Math.min(max, t);
+        }, hikingTime);
+
+        console.log('hking time', hikingTime);
+
+        if(hikingTime < $scope.travel_time) {
+            tired = $scope.travelers[max_travel_times.indexOf(hikingTime)];
+        }
+
+        // for(var i = 0; i < hikingTime; ++i) {
+        //     tired = $scope.travelers.find(function(t) {
+        //         return Math.ceil(parseFloat(t.fp) / 3) <= fplose(t, i + 1) / terrain_modifier;
+        //     });
+        //     if(tired) {
+        //         hikingTime = Math.min(i + 2, hikingTime);
+        //         break;
+        //     }
+        // }
+
+        //check for encounter
+        for(var i = 0; i < hikingTime; ++i) {
+            if(dices.rollPercent() < $scope.encounter) {
+                tired = null;
+                hikingTime = i + 1;
+                encounterHappend = true;
+                break;
+            }   
+        }
+
         var fp_lose = $scope.travelers.map(function(person) {
-            var fp_lose = (1 + load_levels.indexOf(person.load)) * hikingTime;
+            var fp_lose = fplose(person, hikingTime);
             if($scope.hot_day) fp_lose += 1;
+            if(person.carrier) fp_lose /= terrain_modifier;        
+            fp_lose = Math.ceil(fp_lose);
             return {
                 name: person.name, 
                 fp_lost: fp_lose,
@@ -203,17 +253,11 @@ function($scope, $uibModal, $sce, dices) {
 }]);
 
 angular.module('GurpsCombatHelper')
-.controller('TravelCalculatorAddTravelerCtrl', ['$scope', '$uibModalInstance',
-function($scope, $uibModalInstance) {
+.controller('TravelCalculatorAddTravelerCtrl', ['$scope', '$uibModalInstance', 'traveler',
+function($scope, $uibModalInstance, traveler) {
 
     $scope.load_levels = load_levels;
-    $scope.traveler = {
-        name: '',
-        move: 5,
-        fp: 10,
-        load: 'None',
-        hiking: 5
-    }
+    $scope.traveler = traveler;
     
     $scope.ok = function () {
         $uibModalInstance.close($scope.traveler);
@@ -224,17 +268,60 @@ function($scope, $uibModalInstance) {
     };
 }]);
 
-angular.module('GurpsCombatHelper')
-.controller('TravelCalculatorSaveLoadCtrl', ['$scope', '$uibModalInstance', 'params',
-function($scope, $uibModalInstance, params) {
 
-    $scope.title = params.title;
-    $scope.party = params.party;
+angular.module('GurpsCombatHelper')
+.controller('TravelCalculatorSavePartyCtrl', ['$scope', '$uibModalInstance', 'params', '$http',
+function($scope, $uibModalInstance, params, $http) {
+
+    $scope.party_name = '';
     
     $scope.ok = function () {
-        $uibModalInstance.close($scope.party);
+        $http.post('/api/travel/save_party', {
+            name: $scope.party_name,
+            travelers: params.party
+
+        }).then(function(response){
+            if(response.data.status == 'ok') {
+                console.log('party saved');
+                $uibModalInstance.close();
+            } else {
+                console.log(response.error);
+            }
+        })
     };
 
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+}]);
+
+angular.module('GurpsCombatHelper')
+.controller('TravelCalculatorLoadPartyCtrl', ['$scope', '$uibModalInstance', 'params', '$http',
+function($scope, $uibModalInstance, params, $http) {
+
+    $scope.parties = [];
+
+    function update() {
+        $http.get('/api/travel/get_parties')
+        .then(function(response){
+            $scope.parties = response.data;
+        });
+    }
+
+    $scope.load = function(index) {
+        $uibModalInstance.close($scope.parties[index].travelers);
+    }
+
+    $scope.delete = function(index) {
+        $http.post('/api/travel/remove_party', {id: $scope.parties[index]._id})
+        .then(function(result){
+            console.log(result);
+            update();
+        })
+    }
+
+    update();
+    
     $scope.cancel = function () {
         $uibModalInstance.dismiss('cancel');
     };
@@ -258,7 +345,7 @@ function($scope, $uibModalInstance, $sce, result, dices) {
 
 function composeResult(result, dices) {
     var res = '';
-    res += '<p> You have traveled for an ' + result.time + ' hours and passed ' + result.range + ' kilometers</p>';
+    res += '<p> You have traveled for an ' + result.time.toFixed(1) + ' hours and passed ' + result.range.toFixed(1) + ' kilometers</p>';
     if(result.tired) {
         res += '<p> You can\'t go further, because ' + result.tired.name + ' has tired and require rest </p>';
     }

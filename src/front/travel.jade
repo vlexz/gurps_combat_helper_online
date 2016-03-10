@@ -3,33 +3,35 @@ include includes/head.jade
     include includes/navigation.jade
     .container(ng-controller="TravelCalculatorCtrl")
         .row
-            .col-md-6
+            .col-md-8
                 .container
                     .row
                         .col-md-12
                         h3 Travelers
                     .row
-                        .col-md-1 Name
+                        .col-md-1.col-md-offset-1 Name
                         .col-md-1 Move
                         .col-md-1 FP
                         .col-md-1 Load
                         .col-md-1 Hiking (HT-5)
+                        .col-md-1 Carrier
                     .row(ng-repeat="c in travelers")
+                        .col-md-1
+                            span.glyphicon.glyphicon-remove.cursor-hand(ng-click='remove_traveler($index)') &nbsp;
+                            span.glyphicon.glyphicon-pencil.cursor-hand(ng-click='edit_traveler($index)')
                         .col-md-1 {{c.name}}
                         .col-md-1 {{c.move}}
                         .col-md-1 {{c.fp}}
                         .col-md-1 {{c.load}}
                         .col-md-1 {{c.hiking}}
-                        .col-md-1
-                            button.btn.btn-default(ng-click='remove_traveler($index)') Del
-                                
+                        .col-md-1 {{c.carrier ? 'yes' : 'no'}}
                     .row
                         .col-md-12
                             .btn-group
                                 button.btn.btn-default(ng-click="add_traveler()") Add Traveler                        
-                                button.btn.btn-default(ng-click="save_party()") Save Party                        
-                                button.btn.btn-default(ng-click="load_party()") Load Party
-            .col-md-6
+                                button.btn.btn-default(ng-click="save_party()" ng-if="user.loggedIn") Save Party                        
+                                button.btn.btn-default(ng-click="load_party()" ng-if="user.loggedIn") Load Party
+            .col-md-4
                 .container
                     .row
                         .col-md-12

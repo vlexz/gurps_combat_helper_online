@@ -5,7 +5,8 @@ var
     jade = require('gulp-jade'),
     concat = require('gulp-concat'),
     watch = require('gulp-watch'),
-    rsync = require('gulp-rsync');
+    rsync = require('gulp-rsync'),
+    debug = require('gulp-debug');
 
 var jslibs = [
     'front/bower_components/angular/angular.min.js',
@@ -27,7 +28,7 @@ var css = [
 ];
 
 var html = [
-    'front/*.jade'
+    'front/*.jade'    
 ];
 
 var templates = [
@@ -54,6 +55,12 @@ gulp.task('js', function(){
     .pipe(gulp.dest(builddir + 'js'))
 })
 
+gulp.task('fonts', function(){
+    gulp.src('front/bower_components/bootstrap/dist/fonts/*')
+    .pipe(debug({title: 'fonts'}))
+    .pipe(gulp.dest(builddir + 'fonts'));
+});
+
 gulp.task('clean', function() {
     del.sync(builddir, {force: true});
 })
@@ -76,17 +83,27 @@ gulp.task('watch', function(){
     watch(templates, () => {gulp.start('templates')});
 });
 
-gulp.task('deploy:front', function() {
-    gulp.src(builddir + '**')
+gulp.task('deploy:templates', function() {
+    gulp.src(['../build/templates/*', '../build/fonts/*'])
+    .pipe(debug({title: 'templates'}))
     .pipe(rsync({
-        root: builddir,
+        root: '../build',
         hostname: 'vlexz.net',
         destination: 'gurps'
     }))
 });
 
-gulp.task('deploy:server', function(){
-    gulp.src('backend/**/')
+gulp.task('deploy:front', function() {
+    gulp.src(['../build/*', '../build/css/*', '../build/js/*'])
+    .pipe(rsync({
+        root: '../build',
+        hostname: 'vlexz.net',
+        destination: 'gurps'
+    }))
+});
+
+gulp.task('deploy:server', function() {
+    gulp.src(['./backend/*', './backend/config/*', './backend/services/*'])
     .pipe(rsync({
         root: 'backend',
         hostname: 'vlexz.net',
@@ -94,15 +111,19 @@ gulp.task('deploy:server', function(){
     }))
 });
 
-gulp.task('deploy', function() {
-    
-});
-
 gulp.task('build', [
         'clean',
         'css',
         'libs',
         'js',
+        'fonts',
         'html',
         'templates'
     ]);
+
+gulp.task('deploy', [
+    'build',
+    'deploy:templates',
+    'deploy:front',
+    'deploy:server'
+    ])

@@ -1,0 +1,10 @@
+.modal-header
+    h3.modal-title Load Party
+.modal-body
+    .row(ng-repeat="party in parties")
+        .col-md-2 {{party.name}}
+        .col-md-4.button-group
+            button.btn.btn-default(ng-click="load($index)") Load
+            button.btn.btn-default(ng-click="delete($index)") Delete
+.modal-footer    
+    button.btn.btn-default(ng-click="cancel()") Cancel

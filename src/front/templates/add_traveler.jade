@@ -1,5 +1,5 @@
 .modal-header
-    h3.modal-title Add Traveler
+    h3.modal-title Add/Edit Traveler
 .modal-body
     .container.form
         .row
@@ -8,26 +8,29 @@
                     label(for="traveler.name") Name            
                     input.form-control(type="text" ng-model="traveler.name" id="traveler.name")
         .row
-            .col-md-1
-                .form-group
-                    label(for="traveler.move") Move                    
-                    input.form-control(type="number" ng-model="traveler.move" id="traveler.move")
+            .col-md-4
+                label(for="traveler.move") Move                    
+                input.form-control(type="number" ng-model="traveler.move" id="traveler.move")
         .row
-            .col-md-1
+            .col-md-4
                 .form-group
                     label(for="traveler.fp") Fatigue                    
                     input.form-control(type="number" ng-model="traveler.fp" id="traveler.fp")
         .row
-            .col-md-2
+            .col-md-4
                 .form-group
                     label(for="traveler.load") Load Level                    
                     select.form-control(ng-model="traveler.load" id="traveler.load")
                         option(ng-repeat="level in load_levels") {{level}}
         .row
-            .col-md-1
+            .col-md-4
                 .form-group
                     label(for="traveler.hiking") Hiking (HT - 5)
                     input.form-control(type="number" ng-model="traveler.hiking" id="traveler.hiking")
+        .row
+            .col-md-3              
+                input(type="checkbox" ng-model="traveler.carrier")
+                label &nbsp;Carry a cart
 .modal-footer
     button.btn.btn-default(ng-click="ok()") Save
     button.btn.btn-default(ng-click="cancel()") Cancel
