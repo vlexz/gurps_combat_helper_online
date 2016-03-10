@@ -1,0 +1,36 @@
+.modal-header
+    h3.modal-title Add Armor
+.modal-body
+    .row
+        .col-md-4
+            label Name
+                input.form-control(type="text" ng-model="armor.name")
+    .row
+        .col-md-6 Locations: 
+            span(ng-repeat="location in armor.locations track by $index")          
+                span.glyphicon.glyphicon-remove(ng-click="remove_location($index)")                
+                span {{location}}
+    .row
+        .col-md-4
+            .input-group
+                select.form-control(ng-model="armor_loc")
+                    option(ng-repeat="location in locations" value="{{location}}") {{location}}
+                span.input-group-btn
+                    button.btn.btn-default(ng-click="add_location(armor_loc)" type="button") Add
+    .row
+        .col-md-2 DR
+        .col-md-2 EP Cut
+        .col-md-2 EP Imp
+        .col-md-2 HP
+    .row
+        .col-md-2
+            input.form-control(ng-model="armor.dr" type="number")
+        .col-md-2
+            input.form-control(ng-model="armor.ep_cut" type="number")
+        .col-md-2
+            input.form-control(ng-model="armor.ep_imp" type="number")
+        .col-md-2
+            input.form-control(ng-model="armor.hp" type="number")
+.modal-footer
+    button.btn.btn-default(ng-click="ok()") Save
+    button.btn.btn-default(ng-click="cancel()") Cancel

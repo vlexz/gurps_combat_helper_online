@@ -1,0 +1,48 @@
+include includes/head.jade
+    -var current = 'armor'
+    include includes/navigation.jade
+    .container(ng-controller="ArmorCtrl")
+        .row
+            .col-md-12
+                h3 Armor tables
+        .row
+            .col-md-4
+                .container
+                    .row
+                        .col-md-4
+                            h4 Categories
+                    .row(ng-repeat="category in categories")
+                        .col-md-4(ng-click="select_category($index)") 
+                            span.glyphicon.glyphicon-remove.cursor-hand(ng-click="del_category($index)" ng-if="user.loggedIn && category.itemCount==0")
+                            strong(ng-if="$index == current_category_index").cursor-hand {{category.name}}
+                            span(ng-if="$index != current_category_index").cursor-hand {{category.name}}
+                    .row(ng-if="user.loggedIn")
+                        .col-md-3.input-group.input-group-sm                          
+                            input.form-control(type="text" ng-model="new_category_name")
+                            span.input-group-btn
+                                button.btn.btn-default(ng-click="add_category(new_category_name)" type="button") Add
+            .col-md-8
+                .container
+                    .row
+                        .col-md-8
+                            h4 Armors
+                    .row(ng-if="current_category")
+                        .col-md-2.col-md-offset-1 Name
+                        .col-md-2 Locations
+                        .col-md-1 DR
+                        .col-md-1 EP Cut
+                        .col-md-1 EP Imp
+                        .col-md-1 Hp
+                    .row(ng-repeat="armor in armors")
+                        .col-md-1
+                            span.glyphicon.glyphicon-remove.cursor-hand(ng-click="remove_armor($index)" ng-if="user.loggedIn")
+                            span.glyphicon.glyphicon-pencil.cursor-hand(ng-click="edit_armor($index)" ng-if="user.loggedIn")
+                        .col-md-2 {{armor.name}}
+                        .col-md-2 {{armor.locations.join(', ')}}
+                        .col-md-1 {{armor.dr}}
+                        .col-md-1 {{armor.ep_cut}}
+                        .col-md-1 {{armor.ep_imp}}
+                        .col-md-1 {{armor.hp}}
+                    .row(ng-if="user.loggedIn && current_category")
+                        .col-md-3
+                            button.btn.btn-default(ng-click="add_armor()") Add Armor
