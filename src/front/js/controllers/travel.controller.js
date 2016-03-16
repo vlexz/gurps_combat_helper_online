@@ -3,11 +3,17 @@
 var load_levels = ['None', 'Light', 'Medium', 'Heavy', 'Extra Heavy'];
 
 angular.module('GurpsCombatHelper')
-.controller('TravelCalculatorCtrl', ['$scope', '$uibModal', '$sce', 'dices', 'UsersService',
-function($scope, $uibModal, $sce, dices, UsersService) {
+.controller('TravelCalculatorCtrl', ['$scope', '$uibModal', '$sce', 'dices', 'UsersService', '$http',
+function($scope, $uibModal, $sce, dices, UsersService, $http) {
 
     $scope.$on('user_changed', function(event, user) {
         $scope.user = user;
+        if(user.currents.travel) {
+            $http.post('/api/travel/get_party', {id: user.currents.travel})
+            .then(function(response){
+                $scope.travelers = response.data.travelers;
+            })
+        }
     });
 
 
@@ -114,7 +120,8 @@ function($scope, $uibModal, $sce, dices, UsersService) {
                 }
             }
         }).result.then(function(party) {
-            $scope.travelers = party;
+            $scope.travelers = party.travelers;
+            UsersService.setCurrent('travel', party._id);
         })
     }
 
@@ -309,7 +316,7 @@ function($scope, $uibModalInstance, params, $http) {
     }
 
     $scope.load = function(index) {
-        $uibModalInstance.close($scope.parties[index].travelers);
+        $uibModalInstance.close($scope.parties[index]);
     }
 
     $scope.delete = function(index) {

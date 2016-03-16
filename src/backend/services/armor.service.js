@@ -66,10 +66,23 @@ function add_armor(req, resp) {
     })
 }
 
+function update_armor(req, resp) {
+    var id = new ObjectId(req.body._id);
+    delete req.body._id;
+    mongo.db.collection('armors')
+    .update({_id: id}, req.body, function(err, res) {
+        if(err) {
+            resp.send({status: 'fail', err: err});
+        } else {
+            resp.send({status: 'ok'});
+        }
+    });
+}
+
 function del_armor(req, resp) {
     mongo.db.collection('armors')
-    .findAndRemove({_id: new ObjectId(req.body.id)})
-    .then(err, doc => {
+    .findAndRemove({_id: new ObjectId(req.body._id)})
+    .then((err, doc) => {
         if(doc){
             mongo.db.collection('armor_categories')
             .updateOne({_id: new ObjectId(doc.category)}, {$inc: {itemCount: -1}})
@@ -94,6 +107,7 @@ module.exports = {
         router.post('/api/armor/armors', get_armors);
         router.post('/api/armor/add_armor', auth.user, add_armor);
         router.post('/api/armor/del_armor', auth.user, del_armor);
+        router.post('/api/armor/update_armor', auth.user, update_armor);
         return router;
     }    
 }

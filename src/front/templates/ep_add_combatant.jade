@@ -8,21 +8,36 @@
         .col-md-4
             label Hp
                 input.form-control(type="number" ng-model="combatant.hp")
+    .row 
+        .col-md-6
+            h4 Armor
     .row
-        .col-md-2.col-md-offset-2 DR            
-        .col-md-2 EP Cut
-        .col-md-2 EP Imp
-        .col-md-2 HP
-    .row(ng-repeat="(area,drset) in combatant.armor")
-        .col-md-2 {{area}}
-        .col-md-2 
-            input.form-control(type="number" ng-model="drset.dr")
-        .col-md-2 
-            input.form-control(type="number" ng-model="drset.ep.cut")
-        .col-md-2 
-            input.form-control(type="number" ng-model="drset.ep.imp")
-        .col-md-2 
-            input.form-control(type="number" ng-model="drset.hp")
+        .col-md-4
+            select.form-control(ng-model="armor_category" ng-change="select_category(armor_category)")
+                option(ng-repeat="category in armor_categories" value="{{category._id}}") {{category.name}}
+        .col-md-4
+            select.form-control(ng-model="current_armor")
+                option(ng-repeat="armor in armors track by $index" value="{{$index}}") {{armor.name}}
+        .col-md-1
+            span.input-group-btn
+                button.btn.btn-default(ng-click="add_armor(current_armor)") Add
+
+    .row
+        .col-md-3.col-md-offset-1 Name
+        .col-md-3 Locations
+        .col-md-1 DR
+        .col-md-1 EP Cut
+        .col-md-1 EP Imp
+        .col-md-1 Hp
+    .row(ng-repeat="armor in combatant.armor_set track by $index")
+        .col-md-1
+            span.glyphicon.glyphicon-remove.cursor-hand(ng-click="remove_armor($index)")
+        .col-md-3 {{armor.name}}
+        .col-md-3 {{armor.locations.join(', ')}}
+        .col-md-1 {{armor.dr}}
+        .col-md-1 {{armor.ep_cut}}
+        .col-md-1 {{armor.ep_imp}}
+        .col-md-1 {{armor.hp}}
 
 .modal-footer
     button.btn.btn-default(ng-click="ok()") Save

@@ -8,9 +8,10 @@ function($http, $q, $rootScope) {
     function update_user() {
         $http.get('/api/users/get_user')
         .then(function(data) {
-            if(data.data.id) {
+            if(data.data._id) {
                 user.loggedIn = true;
-                user.id = data.data.id;
+                user.id = data.data._id;
+                user.currents = data.data.currents;
             } else {
                 user.loggedIn = false;
             }            
@@ -59,6 +60,17 @@ function($http, $q, $rootScope) {
         })
     }
 
+    function setCurrent(what, value) {
+        return $q(function(resolve, reject){
+            console.log('Set current', what, 'to', value);
+            $http.post('/api/users/set_current', {user: user.id, what: what, value: value})
+            .then(function(response) {
+                console.log(response);
+                user.currents[what] = value;
+            })
+        })
+    }
+
     update_user();
 
 
@@ -67,6 +79,7 @@ function($http, $q, $rootScope) {
         exists: check_username,
         register: register,
         login: login,
-        logout: logout
+        logout: logout,
+        setCurrent: setCurrent
     }
 }]);

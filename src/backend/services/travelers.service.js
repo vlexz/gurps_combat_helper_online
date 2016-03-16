@@ -10,7 +10,7 @@ function save_party(req, resp)
 {
     mongo.db.collection('travel_parties')
     .insertOne({        
-        user: req.user.id,
+        user: req.user._id,
         name: req.body.name,
         travelers: req.body.travelers
     }, function(err, result){
@@ -27,7 +27,7 @@ function save_party(req, resp)
 
 function get_all_parties(req, resp) {
     var cursor = mongo.db.collection('travel_parties')
-        .find({user: req.user.id})
+        .find({user: req.user._id})
     var result = [];
     cursor.each(function(err, party){
         if(party) {
@@ -36,6 +36,14 @@ function get_all_parties(req, resp) {
             resp.send(result);
         }
     })
+}
+
+function get_one(req, resp) {
+    mongo.db.collection('travel_parties')
+        .findOne({_id: new ObjectId(req.body.id)}, 
+            function(err, party){
+                resp.send(party);
+            })
 }
 
 function remove_party(req, resp) {   
@@ -59,6 +67,7 @@ module.exports = {
         router.post('/api/travel/save_party', auth.user, save_party);
         router.get('/api/travel/get_parties', auth.user, get_all_parties);
         router.post('/api/travel/remove_party', auth.user, remove_party);
+        router.post('/api/travel/get_party', auth.user, get_one);
         return router;
     }
 }

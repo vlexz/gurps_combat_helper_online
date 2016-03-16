@@ -66,6 +66,32 @@ function($scope, $uibModal, UsersService, $http) {
         })
     }
 
+    $scope.remove_armor = function(index) {
+        $http.post('/api/armor/del_armor', {_id: $scope.armors[index]._id})
+        .then(function(response){
+            console.log(response.data);
+            $scope.select_category($scope.current_category_index);
+        })
+    }
+
+    $scope.edit_armor = function(index) {
+        $uibModal.open({
+            templateUrl: '/templates/add_armor.html',
+            controller: 'ArmorAddCtrl',
+            resolve: {
+                params: function() {
+                    return $scope.armors[index];
+                }
+            }
+        }).result.then(function(armor){
+            $http.post('/api/armor/update_armor', armor)
+            .then(function(response){
+                console.log(response);
+                $scope.select_category($scope.current_category_index);
+            })
+        })
+    }
+
     update_categories();
 }]);
 
@@ -84,6 +110,10 @@ function($scope, $uibModalInstance, params, LookupTables) {
         if($scope.armor.locations.indexOf(loc) == -1){
             $scope.armor.locations.push(loc);
         }
+    }
+
+    $scope.remove_location = function(index) {
+        $scope.armor.locations.splice(index, 1);
     }
 
     $scope.ok = function () {
