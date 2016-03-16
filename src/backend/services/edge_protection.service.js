@@ -6,7 +6,7 @@ var
     ObjectId = require('mongodb').ObjectID;
 
 function combatants(req, resp) {   
-    mongo.all_from('combatants', {user: req.user.id})
+    mongo.all_from('combatants', {user: req.user._id})
     .then(result => resp.send(result));    
 }
 
@@ -26,10 +26,17 @@ function combats(req, resp) {
     .then(result => resp.send(result));        
 }
 
+function get_combat(req, resp) {
+    mongo.db.collection('combats')
+    .findOne({_id: new ObjectId(req.body.id)}, function(err, combat) {
+        resp.send(combat);
+    })
+}
+
 function add_combat(req, resp) {    
     req.body.user = req.user._id;
     mongo.add('combats', req.body)
-    .then(status => {resp.send(status)})
+    .then(result => {resp.send(result)})
 }
 
 function del_combat(req, resp) {    
@@ -51,6 +58,7 @@ module.exports = {
         router.post('/api/ep/add_combatant', auth.user, add_combatant);
         router.post('/api/ep/del_combatant', auth.user, del_combatant);
         router.post('/api/ep/combats', auth.user, combats);
+        router.post('/api/ep/get_combat', auth.user, get_combat);
         router.post('/api/ep/add_combat', auth.user, add_combat);
         router.post('/api/ep/del_combat', auth.user, del_combat);
         router.post('/api/ep/update_combat', auth.user, update_combat);

@@ -1,7 +1,20 @@
 
 angular.module('GurpsCombatHelper')
-.controller('EdgeProtectionCtrl', ['$scope', '$uibModal', '$sce', 'dices', 'LookupTables', '$http',
-function($scope, $uibModal, $sce, dices, LookupTables, $http) {
+.controller('EdgeProtectionCtrl', ['$scope', '$uibModal', '$sce', 'dices', 'LookupTables', '$http', 'UsersService',
+function($scope, $uibModal, $sce, dices, LookupTables, $http, UsersService) {
+
+    $scope.$on('user_changed', function(event, user) {
+        console.log(user.currents.combat);
+        $scope.user = user;
+        if(user.currents.combat) {
+            $http.post('/api/ep/get_combat', {id: user.currents.combat})
+            .then(function(response){
+                console.log(response.data);
+                $scope.combat = response.data;
+                $scope.combatants = response.data.object;
+            })
+        }
+    });
 
     $scope.combat = null;
 
@@ -88,6 +101,10 @@ function($scope, $uibModal, $sce, dices, LookupTables, $http) {
                     }
                 }
             }
+        }).result.then(function(saved_combat){      
+            console.log(saved_combat);
+            $scope.combat = saved_combat;
+            UsersService.setCurrent('combat', saved_combat._id);
         })
     }
 
@@ -103,8 +120,10 @@ function($scope, $uibModal, $sce, dices, LookupTables, $http) {
                 }
             }
         }).result.then(function(combat){
+            console.log(combat);
             $scope.combat = combat;
             $scope.combatants = combat.object;
+            UsersService.setCurrent('combat', combat._id);
         })
     }
 
@@ -117,6 +136,7 @@ function($scope, $uibModal, $sce, dices, LookupTables, $http) {
         $scope.combatants = [];
         $scope.combat = null;
         $scope.combat_log = [];
+        UsersService.setCurrent('combat', null);
     }
 
     $scope.strike = function(index) {        

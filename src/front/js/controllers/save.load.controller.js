@@ -45,12 +45,17 @@ function($scope, $uibModalInstance, params, $http) {
             name: $scope.name,
             object: params.object
         }).then(function(response){
-            if(response.data.status == 'ok') {
-                console.log('party saved');
-                $uibModalInstance.close();
-            } else {
+            if(response.data.status == 'fail') {
                 console.log(response.error);
+            } else {
+                $uibModalInstance.close(response.data)
             }
+            // if(response.data.status == 'ok') {
+            //     console.log('party saved');
+            //     $uibModalInstance.close();
+            // } else {
+                
+            // }
         })
     };
 

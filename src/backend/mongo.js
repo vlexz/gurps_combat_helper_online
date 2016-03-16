@@ -45,7 +45,8 @@ var exports = {
                 if (err) {
                     resolve({status: 'fail', err: err});
                 } else {
-                    resolve({status: 'ok'});
+                    object._id = result.insertedId;
+                    resolve(object);
                 }
             })
         })

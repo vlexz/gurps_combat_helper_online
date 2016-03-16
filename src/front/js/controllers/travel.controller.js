@@ -11,10 +11,13 @@ function($scope, $uibModal, $sce, dices, UsersService, $http) {
         if(user.currents.travel) {
             $http.post('/api/travel/get_party', {id: user.currents.travel})
             .then(function(response){
+                $scope.party_name = response.data.name;
                 $scope.travelers = response.data.travelers;
             })
         }
     });
+
+    $scope.party_name = null;
 
 
     $scope.travelers = []
@@ -104,6 +107,9 @@ function($scope, $uibModal, $sce, dices, UsersService, $http) {
                     }
                 }
             }
+        }).result.then(function(saved_party){
+            $scope.party_name = saved_party.name;
+            UsersService.setCurrent('travel', saved_party._id);
         })
     }
 
@@ -120,9 +126,18 @@ function($scope, $uibModal, $sce, dices, UsersService, $http) {
                 }
             }
         }).result.then(function(party) {
+            $scope.party_name = party.name;
             $scope.travelers = party.travelers;
             UsersService.setCurrent('travel', party._id);
         })
+    }
+
+    $scope.clear_party = function() {
+        $scope.party_name = null;
+        $scope.travelers = [];
+        UsersService.setCurrent('travel', null);
+        $scope.travel_results_text = '';
+        $scope.travel_results = null;
     }
 
     $scope.travel_results_text = '';
@@ -288,11 +303,11 @@ function($scope, $uibModalInstance, params, $http) {
             travelers: params.party
 
         }).then(function(response){
-            if(response.data.status == 'ok') {
-                console.log('party saved');
-                $uibModalInstance.close();
+            if(response.data.status == 'fail') {
+                console.log(response.data.err);
             } else {
-                console.log(response.error);
+                console.log('party saved');
+                $uibModalInstance.close(response.data);
             }
         })
     };

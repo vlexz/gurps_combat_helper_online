@@ -7,7 +7,8 @@ include includes/head.jade
                 .container
                     .row
                         .col-md-12
-                        h3 Travelers
+                        h3 Travelers 
+                            span(ng-if="party_name") ({{party_name}})
                     .row
                         .col-md-1.col-md-offset-1 Name
                         .col-md-1 Move
@@ -31,6 +32,7 @@ include includes/head.jade
                                 button.btn.btn-default(ng-click="add_traveler()") Add Traveler                        
                                 button.btn.btn-default(ng-click="save_party()" ng-if="user.loggedIn") Save Party                        
                                 button.btn.btn-default(ng-click="load_party()" ng-if="user.loggedIn") Load Party
+                                button.btn.btn-default(ng-click="clear_party()") Clear Party
             .col-md-4
                 .container
                     .row

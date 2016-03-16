@@ -8,19 +8,21 @@ var
 
 function save_party(req, resp)
 {
-    mongo.db.collection('travel_parties')
-    .insertOne({        
+    var party = {
         user: req.user._id,
         name: req.body.name,
         travelers: req.body.travelers
-    }, function(err, result){
+    }
+    mongo.db.collection('travel_parties')
+    .insertOne(party, function(err, result){
+        party._id = result.insertedId;        
         if(err) {
             resp.send({
                 status: 'fail',
                 error: err
             })
         } else {
-            resp.send({status: 'ok'});
+            resp.send(party);
         }
     });
 }

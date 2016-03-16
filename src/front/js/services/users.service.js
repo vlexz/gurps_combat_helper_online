@@ -2,7 +2,8 @@ angular.module('GurpsCombatHelper')
 .service('UsersService', ['$http', '$q', '$rootScope',
 function($http, $q, $rootScope) {
     var user = {
-        loggedIn: false
+        loggedIn: false,
+        currents: {}
     }    
 
     function update_user() {

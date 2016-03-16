@@ -25,26 +25,6 @@ passport.use(new localStrategy(function(username, password, done){
             }
             done(null, false, {message: 'Incorrect username or password!'});
         });
-
-
-
-    // db.users.findOne({
-    //     where: {
-    //         name: username
-    //     }
-    // }).then(user => {
-    //     if(user) {
-    //         var hash = cryp.createHash('sha256');
-    //         hash.update(password);
-    //         var d = hash.digest('hex');
-    //         log.info(username, user.password, d, password);
-    //         if(d == user.password) {
-    //             return done(null, user.id);
-    //         }
-    //     }
-    //     log.info('Incorrect password');
-    //     done(null, false, {message: 'Incorrect username or password!'});
-    // })
 }));
 
 passport.serializeUser(function(id, done) {
@@ -54,19 +34,8 @@ passport.serializeUser(function(id, done) {
 passport.deserializeUser(function(id, done) {
     mongo.db.collection('users').findOne({_id: new ObjectId(id)}, {password: 0}, 
         function(err, user){
-            console.log(user);
             done(null, user);
         });
-    // db.users.findOne({
-    //     where: {
-    //         id: id
-    //     }
-    // }).then(user => {
-    //     done(null, {
-    //         id: user.id,
-    //         name: user.name
-    //     });
-    // })
 })
 
 function check_user(req, resp, next) {
@@ -105,26 +74,6 @@ function register(req, resp, next) {
                 })
             }
         });
-    // db.users.findOne({
-    //     where: {
-    //         name: req.body.username
-    //     }
-    // }).then(user => {
-    //     if(user) {
-    //         return resp.send({status: 'fail', message: 'User already exists'});
-    //     } else {
-            // var hash = cryp.createHash('sha256');
-            // hash.update(req.body.password);
-            // var d = hash.digest('hex');
-            // log.info('register with', req.body.password, d);
-            // db.users.create({                
-            //     name: req.body.username,                
-            //     password: d
-            // }).then(() => {
-            //     resp.send({status: 'ok'});
-            // })
-    //     }
-    // })
 }
 
 function check_username(req, resp) {
