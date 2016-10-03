@@ -2,7 +2,7 @@ package services
 
 import com.google.inject.Inject
 import daos.CharlistDao
-import models.Charlist.CharlistData
+import models.charlist.Charlist
 import org.mongodb.scala.Completed
 import org.mongodb.scala.result.{DeleteResult, UpdateResult}
 import play.api.libs.json.{JsObject, JsValue, Json}
@@ -14,7 +14,7 @@ import scala.concurrent.Future
   */
 class CharlistService @Inject()(charlistDao: CharlistDao) {
 
-  def save(charlist: CharlistData): Future[Completed] =
+  def save(charlist: Charlist): Future[Completed] =
     charlistDao
       .save(Json.toJson(charlist))
 
@@ -26,7 +26,7 @@ class CharlistService @Inject()(charlistDao: CharlistDao) {
     charlistDao
       .find(id)
 
-  def update(charlist: CharlistData): Future[UpdateResult] =
+  def update(charlist: Charlist): Future[UpdateResult] =
     charlistDao
       .update(Json.toJson(charlist))
 

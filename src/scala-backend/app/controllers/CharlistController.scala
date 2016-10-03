@@ -3,7 +3,7 @@ package controllers
 import java.util.NoSuchElementException
 
 import com.google.inject.Inject
-import models.Charlist.CharlistData
+import models.charlist.Charlist
 import org.mongodb.scala.MongoWriteException
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
@@ -24,7 +24,7 @@ class CharlistController @Inject()(charlistService: CharlistService) extends Con
         .save(
           request
             .body
-            .validate[CharlistData]
+            .validate[Charlist]
             .get
             .copy(_id = Random.nextLong.toString, timestamp = System.currentTimeMillis)
         )
@@ -72,7 +72,7 @@ class CharlistController @Inject()(charlistService: CharlistService) extends Con
         .update(
           request
             .body
-            .validate[CharlistData]
+            .validate[Charlist]
             .get
         )
         .map(re => Ok(Json.obj("success" -> re.toString)))
