@@ -5,7 +5,7 @@ import daos.CharlistDao
 import models.charlist.Charlist
 import org.mongodb.scala.Completed
 import org.mongodb.scala.result.{DeleteResult, UpdateResult}
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsObject, JsValue}
 
 import scala.concurrent.Future
 
@@ -16,7 +16,7 @@ class CharlistService @Inject()(charlistDao: CharlistDao) {
 
   def save(charlist: Charlist): Future[Completed] =
     charlistDao
-      .save(Json.toJson(charlist))
+      .save(charlist)
 
   def find: Future[Seq[JsObject]] =
     charlistDao
@@ -28,7 +28,7 @@ class CharlistService @Inject()(charlistDao: CharlistDao) {
 
   def update(charlist: Charlist): Future[UpdateResult] =
     charlistDao
-      .update(Json.toJson(charlist))
+      .update(charlist)
 
   def delete(id: String): Future[DeleteResult] =
     charlistDao

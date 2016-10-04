@@ -1,6 +1,7 @@
 package daos
 
 import com.google.inject.{ImplementedBy, Inject, Singleton}
+import models.charlist.Charlist
 import models.charlist.CharlistFields._
 import org.mongodb.scala.model.Filters
 import org.mongodb.scala.result.{DeleteResult, UpdateResult}
@@ -17,13 +18,13 @@ import scala.concurrent.Future
 @ImplementedBy(classOf[MongoCharlistDao])
 trait CharlistDao {
 
-  def save(charlist: JsValue): Future[Completed]
+  def save(charlist: Charlist): Future[Completed]
 
   def find: Future[Seq[JsObject]]
 
   def find(id: String): Future[JsValue]
 
-  def update(charlist: JsValue): Future[UpdateResult]
+  def update(charlist: Charlist): Future[UpdateResult]
 
   def delete(id: String): Future[DeleteResult]
 
@@ -34,9 +35,9 @@ class MongoCharlistDao @Inject()(mongo: Mongo) extends CharlistDao {
 
   private val charlists: MongoCollection[Document] = mongo.db.getCollection("charlist")
 
-  override def save(charlist: JsValue): Future[Completed] = {
+  override def save(charlist: Charlist): Future[Completed] = {
     charlists
-      .insertOne(Document(charlist.toString))
+      .insertOne(Document(Json.toJson(charlist).toString))
       .head
   }
 
@@ -54,11 +55,11 @@ class MongoCharlistDao @Inject()(mongo: Mongo) extends CharlistDao {
       .map[JsValue](doc => Json.parse(doc.toJson))
   }
 
-  override def update(charlist: JsValue): Future[UpdateResult] = {
+  override def update(charlist: Charlist): Future[UpdateResult] = {
     charlists
       .updateOne(
-        Filters.equal(ID, (charlist \ ID).as[String]),
-        Document(charlist.toString)
+        Filters.equal(ID, charlist._id),
+        Document(Json.toJson(charlist).toString)
       )
       .head
   }
