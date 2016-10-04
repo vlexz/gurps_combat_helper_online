@@ -10,3 +10,10 @@ case class CharlistHeader(
                            cp: Int = 0,
                            name: String = ""
                          )
+
+object CharlistHeader {
+
+  import play.api.libs.json.Json
+
+  implicit val charlistHeaderFormat = Json.format[CharlistHeader]
+}

@@ -7,8 +7,9 @@ case class Charlist(
                      _id: String = "",
                      timestamp: Long = 0,
                      player: String = "",
-                     cp: Int = 0,
                      name: String = "",
+                     cp: Int = 0,
+                     var cpTotal: Int = 0,
                      description: Description = Description(),
                      stats: Stats = Stats(),
                      features: Seq[Feature] = Seq(),
@@ -40,6 +41,11 @@ case class Charlist(
     case a if a == SkillBaseAttributes.PER => stats.per.value
   }))
   techniques.foreach(t => t.calcLvl(skills.find(_.name == t.skill).getOrElse(Skill()).lvl))
+  cpTotal = 0
+  cpTotal += stats.cp
+  features.foreach(cpTotal += _.cp)
+  skills.foreach(cpTotal += _.cp)
+  techniques.foreach(cpTotal += _.cp)
 }
 
 /** Charlist subnamespace for json field name strings */
@@ -145,6 +151,9 @@ case class Stats(
         .toInt
     this
   }
+
+  def cp = st.cp + dx.cp + iq.cp + ht.cp + will.cp + per.cp + liftSt.cp + strikeSt.cp + hp.cp + fp.cp +
+    basicSpeed.cp + basicMove.cp + basicDodge.cp
 }
 
 /** Charlist subcontainer for character attribute storage */
