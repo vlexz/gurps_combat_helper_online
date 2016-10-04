@@ -4,28 +4,42 @@ package models.charlist
   * Created by crimson on 9/23/16.
   */
 case class Charlist(
-                     _id: String,
-                     timestamp: Long,
-                     player: String,
-                     cp: Int,
-                     name: String,
-                     description: Description,
-                     coreStats: Stats,
-                     features: Seq[Feature],
-                     skills: Seq[Skill],
-                     techniques: Seq[Technique],
-                     equip: Equipment
+                     _id: String = "",
+                     timestamp: Long = 0,
+                     player: String = "",
+                     cp: Int = 0,
+                     name: String = "",
+                     description: Description = Description(),
+                     stats: Stats = Stats(),
+                     features: Seq[Feature] = Seq(),
+                     skills: Seq[Skill] = Seq(),
+                     techniques: Seq[Technique] = Seq(),
+                     equip: Equipment = Equipment(),
+                     conditions: Conditions = Conditions()
                    ) {
-  /*thrDmg = st.value match {
+  //noinspection ScalaRedundantConversion
+  val thr = stats.strikeSt.value match {
     case x if x < 1 => (0, 0)
     case x if x < 11 => (1, ((x - 1) / 2).toInt - 6)
     case x => (((x - 3) / 8).toInt, ((x - 3) / 2).toInt % 4 - 1)
   }
-  swDmg = st.value match {
+  //noinspection ScalaRedundantConversion
+  val sw = stats.strikeSt.value match {
     case x if x < 1 => (0, 0)
     case x if x < 9 => (1, ((x - 1) / 2).toInt - 5)
     case x => (((x - 5) / 4).toInt, (x - 5) % 4 - 1)
-  }*/
+  }
+  stats.calcDmg(thr, sw)
+  stats.calcEncumbrance(equip.totalCombWt, equip.totalTravWt)
+  skills.foreach(s => s.calcLvl(s.attr match {
+    case a if a == SkillBaseAttributes.ST => stats.st.value
+    case a if a == SkillBaseAttributes.DX => stats.dx.value
+    case a if a == SkillBaseAttributes.IQ => stats.iq.value
+    case a if a == SkillBaseAttributes.HT => stats.ht.value
+    case a if a == SkillBaseAttributes.WILL => stats.will.value
+    case a if a == SkillBaseAttributes.PER => stats.per.value
+  }))
+  techniques.foreach(t => t.calcLvl(skills.find(_.name == t.skill).getOrElse(Skill()).lvl))
 }
 
 /** Charlist subnamespace for json field name strings */
@@ -48,69 +62,142 @@ case class Description(
 
 /** Charlist subcontainer for basic and secondary attributes */
 case class Stats(
-                  st: Stat[Int] = Stat[Int](),
-                  dx: Stat[Int] = Stat[Int](),
-                  iq: Stat[Int] = Stat[Int](),
-                  ht: Stat[Int] = Stat[Int](),
-                  will: Stat[Int] = Stat[Int](),
-                  per: Stat[Int] = Stat[Int](),
-                  liftSt: Stat[Int] = Stat[Int](),
-                  strikeSt: Stat[Int] = Stat[Int](),
-                  var thrDmg: String = "", // TODO: calculation on higher level
-                  var swDmg: String = "", // TODO: calculation on higher level
+                  st: StatInt = StatInt(),
+                  dx: StatInt = StatInt(),
+                  iq: StatInt = StatInt(),
+                  ht: StatInt = StatInt(),
+                  will: StatInt = StatInt(),
+                  per: StatInt = StatInt(),
+                  liftSt: StatInt = StatInt(),
+                  strikeSt: StatInt = StatInt(),
+                  var thrDmg: String = "",
+                  var swDmg: String = "",
                   var bl: Int = 0,
-                  var encumbrance: Int = 0, // TODO: calculation on higher level
-                  var defenseBonus: Int = 0, // TODO: calculation on higher level
-                  reactionBonus: Int = 0, // TODO: make calculable
-                  hp: Points = Points(),
-                  fp: Points = Points(),
-                  basicSpeed: Stat[Float] = Stat[Float](),
-                  basicMove: Stat[Int] = Stat[Int](),
-                  basicDodge: Stat[Int] = Stat[Int](),
-                  var move: Int = 0, // TODO: calculation on higher level
-                  var dodge: Int = 0, // TODO: calculation on higher level
+                  var combatEncumbrance: Int = 0,
+                  var travelEncumbrance: Int = 0,
+                  hp: StatPoints = StatPoints(),
+                  fp: StatPoints = StatPoints(),
+                  basicSpeed: StatFrac = StatFrac(),
+                  basicMove: StatInt = StatInt(),
+                  basicDodge: StatInt = StatInt(),
+                  var combMove: Int = 0,
+                  var travMove: Int = 0,
+                  var dodge: Int = 0,
                   sm: Int = 0
                 ) {
-  st.calcValue(10).calcCp(10)
-  dx.calcValue(10).calcCp(20)
-  iq.calcValue(10).calcCp(20)
-  ht.calcValue(10).calcCp(10)
-  will.calcValue(10).calcCp(5)
-  per.calcValue(10).calcCp(5)
-  liftSt.calcValue(st.value).calcCp(3)
-  strikeSt.calcValue(st.value).calcCp(5)
+  st.calcStat(10, 10)
+  dx.calcStat(10, 20)
+  iq.calcStat(10, 20)
+  ht.calcStat(10, 10)
+  will.calcStat(10, 5)
+  per.calcStat(10, 5)
+  liftSt.calcStat(st.value, 3)
+  strikeSt.calcStat(st.value, 5)
   bl = math.round(liftSt.value ^ 2 / 5)
-  hp.calcValue(st.value).calcCp(2)
-  fp.calcValue(ht.value).calcCp(3)
-  basicSpeed.calcValue((dx.value + ht.value) / 4).calcCp(20)
-  basicMove.calcValue(basicSpeed.value.toInt).calcCp(5)
-  basicDodge.calcValue(basicSpeed.value.toInt + 3).calcCp(15)
-}
+  hp.calcStat(st.value, 2)
+  fp.calcStat(ht.value, 3)
+  basicSpeed.calcStat((dx.value + ht.value) / 4, 20)
+  //noinspection ScalaRedundantConversion
+  basicMove.calcStat(basicSpeed.value.toInt, 5)
+  //noinspection ScalaRedundantConversion
+  basicDodge.calcStat(basicSpeed.value.toInt + 3, 15)
 
-/** Charlist subcontainer for character stat storage */
-case class Stat[A](
-                    delta: A = 0.asInstanceOf[A],
-                    bonus: A = 0.asInstanceOf[A], // TODO: make calculable
-                    notes: String = "",
-                    var value: A = 0.asInstanceOf[A],
-                    var cp: Int = 0
-                  ) {
-
-  def calcValue(default: A) = {
-    value = (default.asInstanceOf[Float] + delta.asInstanceOf[Float] + bonus.asInstanceOf[Float]).asInstanceOf[A]
+  def calcDmg(thr: (Int, Int), sw: (Int, Int)) = {
+    thrDmg = s"${thr._1}d${if (thr._2 < 0) thr._2 else if (thr._2 == 0) "" else "+" + thr._2}"
+    swDmg = s"${sw._1}d${if (sw._2 < 0) sw._2 else if (sw._2 == 0) "" else "+" + sw._2}"
     this
   }
 
-  def calcCp(cost: Int) = {
-    cp = (delta.asInstanceOf[Float] * cost).asInstanceOf[Int]
+  def calcEncumbrance(combWt: Float, travWt: Float) = {
+    assert(combWt < bl * 10, s"combat encumbrance value is over 10 times basic lift ($combWt, $bl)")
+    assert(travWt < bl * 10, s"travel encumbrance value is over 10 times basic lift ($travWt, $bl)")
+    combatEncumbrance = combWt / bl match {
+      case x if x < 1 => 0
+      case x if x < 2 => 1
+      case x if x < 3 => 2
+      case x if x < 6 => 3
+      case x if x < 10 => 4
+    }
+    travelEncumbrance = travWt / bl match {
+      case x if x < 1 => 0
+      case x if x < 2 => 1
+      case x if x < 3 => 2
+      case x if x < 6 => 3
+      case x if x < 10 => 4
+    }
+    combMove =
+      math
+        .ceil(
+          basicMove.value / 5 * (5 - combatEncumbrance) / (if (hp.compromised || fp.compromised) 2 else 1)
+        )
+        .toInt
+    travMove =
+      math
+        .ceil(
+          basicMove.value / 5 * (5 - travelEncumbrance) / (if (hp.compromised || fp.compromised) 2 else 1)
+        )
+        .toInt
+    dodge =
+      math
+        .ceil(
+          (basicDodge.value - combatEncumbrance) / (if (hp.compromised || fp.compromised) 2 else 1)
+        )
+        .toInt
+    this
+  }
+}
+
+/** Charlist subcontainer for character attribute storage */
+case class StatInt(
+                    delta: Int = 0,
+                    bonus: Int = 0,
+                    notes: String = "",
+                    var value: Int = 0,
+                    var cp: Int = 0
+                  ) {
+
+  def calcStat(default: Int, cost: Int) = {
+    value = default + delta + bonus
+    cp = delta * cost
+    this
+  }
+}
+
+/** Charlist subcontainer for character attribute storage */
+case class StatFrac(
+                     delta: Float = 0,
+                     bonus: Float = 0,
+                     notes: String = "",
+                     var value: Float = 0,
+                     var cp: Int = 0
+                   ) {
+
+  def calcStat(default: Float, cost: Int) = {
+    value = default + delta + bonus
+    cp = (delta * cost).toInt
     this
   }
 }
 
 /** Charlist subcontainer for HP and FP attributes' stats */
-case class Points(
-                   lost: Int = 0
-                 ) extends Stat[Int]
+case class StatPoints(
+                       delta: Int = 0,
+                       bonus: Int = 0,
+                       notes: String = "",
+                       var value: Int = 0,
+                       var cp: Int = 0,
+                       lost: Int = 0,
+                       var compromised: Boolean = false,
+                       var collapsing: Boolean = false
+                     ) {
+  def calcStat(default: Int, cost: Int) = {
+    value = default + delta + bonus
+    cp = delta * cost
+    if (value * 2 / 3 < lost) compromised = true
+    if (value <= lost) collapsing = true
+    this
+  }
+}
 
 /** Charlist subcontainer for features list's element stats */
 case class Feature(
@@ -125,16 +212,22 @@ case class Skill(
                   diff: String = "",
                   defaults: Seq[String] = Seq(), // For future functionality
                   prerequisites: Seq[String] = Seq(), // For future functionality
-                  bonus: Int = 0, // TODO: make calculable
+                  bonus: Int = 0,
                   notes: String = "",
                   cp: Int = 1,
                   var relLvl: Int = 0,
-                  var lvl: Int = 0 // TODO: calculation on higher level
+                  var lvl: Int = 0
                 ) {
   assert(SkillBaseAttributes.isValid(attr), s"invalid skill's attribute ($attr in $name)")
   assert(SkillDifficulties.isValid(diff), s"invalid skill's difficulty ($diff in $name")
   assert(cp >= 0, s"skill's CP value is negative or 0 ($cp in $name")
+  //noinspection ScalaRedundantConversion
   relLvl = SkillDifficulties.values(diff) + (if (cp > 1) 1 else 0) + (cp / 4).toInt + bonus
+
+  def calcLvl(attrVal: Int) = {
+    lvl = attrVal + relLvl
+    this
+  }
 }
 
 /** Charlist subnamespace for skill difficulties strings and validation method */
@@ -172,12 +265,17 @@ case class Technique(
                       notes: String = "",
                       cp: Int = 0,
                       var relLvl: Int = 0,
-                      var lvl: Int = 0 // TODO: calculation on higher level
+                      var lvl: Int = 0
                     ) {
   assert(TechniqueDifficulties.isValid(diff), s"invalid technique's difficulty string ($diff in $name)")
   assert(cp >= 0 && cp <= (maxLvl - defLvl + (if (diff == TechniqueDifficulties.HARD) 1 else 0)),
     s"technique's cp value out of bounds ($cp in $name")
   relLvl = math.max(cp + defLvl - (if (diff == TechniqueDifficulties.HARD) 1 else 0), defLvl)
+
+  def calcLvl(skill: Int) = {
+    lvl = skill + relLvl
+    this
+  }
 }
 
 /** Charlist subnamespace for technique difficulties strings and validation method */
@@ -196,10 +294,11 @@ case class Equipment(
                       items: Seq[Item] = Seq(),
                       var totalCost: Double = 0,
                       var totalCombWt: Float = 0,
-                      var totalTravWt: Float = 0
+                      var totalTravWt: Float = 0,
+                      var totalDb: Int = 0
                     ) {
 
-  import ItemState._
+  import ItemStates._
 
   totalCost = 0
   weapons.foreach(totalCost += _.totalCost)
@@ -207,6 +306,7 @@ case class Equipment(
   items.foreach(totalCost += _.totalCost)
   totalCombWt = 0
   val comb = Set(READY, EQUIPPED, COMBAT)
+  val equip = Set(READY, EQUIPPED)
   weapons
     .withFilter(item => comb.contains(item.carried))
     .foreach(totalCombWt += _.totalWt)
@@ -232,7 +332,7 @@ case class Equipment(
   * all its stats and attacks it can make as subcontainers. */
 case class Weapon(
                    name: String = "",
-                   carried: String = ItemState.STASH,
+                   carried: String = ItemStates.STASH,
                    attacksMelee: Seq[MeleeAttack] = Seq(),
                    attacksRanged: Seq[RangedAttack] = Seq(),
                    grips: Seq[String] = Seq(), // For future functionality
@@ -251,7 +351,7 @@ case class Weapon(
                    var totalWt: Float = 0,
                    var totalCost: Double = 0
                  ) {
-  assert(ItemState.isValid(carried), s"invalid weapon's carrying state ($carried in $name)")
+  assert(ItemStates.isValid(carried), s"invalid weapon's carrying state ($carried in $name)")
   assert(bulk <= 0, s"positive bulk value ($bulk in $name)")
   assert(db >= 0 && db < 4, s"defense bonus value out of bounds ($db in $name)")
   assert(dr >= 0, s"negative item's DR value ($dr in $name)")
@@ -295,12 +395,45 @@ case class MeleeDamage(
                         dmgMod: Int = 0,
                         armorDiv: Float = 1,
                         dmgType: String = DamageType.CRUSHING,
-                        var dmgString: String = "" // TODO: calculation on higher level
+                        var dmgString: String = ""
                       ) {
   assert(AttackType.isValid(attackType), s"invalid melee attack type ($attackType)")
   assert(dmgDice >= 0, s"melee damage's dice value is negative ($dmgDice)")
   assert(ArmorDivisors.isValid(armorDiv), s"invalid armor divisor value ($armorDiv)")
   assert(DamageType.isValid(dmgType), s"invalid damage type ($dmgType)")
+
+  def calcDmg(thr: (Int, Int), sw: (Int, Int)) = {
+    import AttackType._
+    var dice = dmgDice
+    var mod = dmgMod
+    if (attackType == THRUSTING) {
+      dice += thr._1
+      mod += thr._2
+    } else if (attackType == SWINGING) {
+      dice += sw._1
+      mod += sw._2
+    }
+    if (mod > 0) {
+      dice += (mod / 3.5).toInt
+      mod = (mod % 3.5).toInt
+    }
+    assert(dice > 0 || mod >= 0, s"invalid weapon melee damage stats")
+    import DamageType._
+    dmgString = dmgType match {
+      case t if t == SPECIAL => t
+      case t if t == AFFLICTION => s"HT${if (dmgMod > 0) "+" + dmgMod else if (dmgMod < 0) dmgMod else ""}"
+      case _ => "" + dice + "d" + (
+        if (mod > 0) "+" + mod
+        else if (mod < 0) "" + mod
+        else ""
+        ) + (
+        if (armorDiv < 1) "(" + armorDiv + ")"
+        else if (armorDiv > 1) "(" + armorDiv.toInt + ")"
+        else ""
+        ) + " " + dmgType
+    }
+    this
+  }
 }
 
 /** Charlist subnamespace that holds melee attack types strings and validation method */
@@ -353,13 +486,22 @@ case class RangedDamage(
   assert(ArmorDivisors.isValid(armorDiv), s"invalid armor divisor value ($armorDiv)")
   assert(DamageType.isValid(dmgType), s"invalid damage type ($dmgType)")
   assert(fragDice >= 0, s"negative fragmentation damage's dice value ($fragDice)")
-  dmgString = if (dmgType == DamageType.SPECIAL) "spec."
-  else
-    (if (dmgType == DamageType.AFFLICTION) "HT"
-    else s"${dmgDice}d${if (diceMult != 1) "x" + diceMult else ""}") +
-      s"${"" + (if (dmgMod > 0) "+" else "") + (if (dmgMod != 0) dmgMod else "")}" +
-      s"${if (armorDiv != 1) "(" + armorDiv + ")" else ""} $dmgType " +
-      s"${if (fragDice > 0) "[" + fragDice + "d]" else ""}"
+
+  import DamageType._
+
+  dmgString = dmgType match {
+    case t if t == SPECIAL => t
+    case t if t == AFFLICTION => s"HT${if (dmgMod > 0) "+" + dmgMod else if (dmgMod < 0) dmgMod else ""}"
+    case _ => "" + dmgDice + "d" + (
+      if (diceMult != 1) "x" + diceMult else ""
+      ) + (
+      if (dmgMod > 0) "+" + dmgMod else if (dmgMod < 0) "" + dmgMod else ""
+      ) + (
+      if (armorDiv < 1) "(" + armorDiv + ")" else if (armorDiv > 1) "(" + armorDiv.toInt + ")" else ""
+      ) + " " + dmgType + (
+      if (fragDice > 0) " [" + fragDice + "d]" else ""
+      )
+  }
 }
 
 /** Charlist subnamespace that holds armor divisors validation method */
@@ -431,7 +573,8 @@ case class RangedShots(
 /** Charlist subcontainer for armor list's element, holds its stats */
 case class Armor(
                   name: String = "",
-                  carried: String = ItemState.EQUIPPED,
+                  carried: String = ItemStates.EQUIPPED,
+                  db: Int = 0,
                   dr: Int = 0,
                   ep: Int = 0,
                   epi: Int = 0,
@@ -447,7 +590,8 @@ case class Armor(
                   wt: Float = 0,
                   cost: Double = 0
                 ) {
-  assert(ItemState.isValid(carried), s"invalid armor's carrying state ($carried in $name)")
+  assert(ItemStates.isValid(carried), s"invalid armor's carrying state ($carried in $name)")
+  assert(db >= 0 && db < 4, s"defense bonus value out of bounds ($db in $name)")
   assert(dr >= 0, s"negative armor's DR value ($dr in $name)")
   assert(ep >= 0, s"negative armor's EP value ($ep in $name)")
   assert(epi >= 0, s"negative armor's EPi value ($epi in $name)")
@@ -494,7 +638,7 @@ object HitLocations {
 /** Charlist subcontainer for items list's element, holds its stats and calculates element's total weight and cost */
 case class Item(
                  name: String = "",
-                 carried: String = ItemState.STASH,
+                 carried: String = ItemStates.STASH,
                  dr: Int = 0,
                  hp: Int = 1,
                  hpLeft: Int = 1,
@@ -507,7 +651,7 @@ case class Item(
                  var totalWt: Float = 0,
                  var totalCost: Double = 0
                ) {
-  assert(ItemState.isValid(carried), s"invalid item's carrying state ($carried in $name)")
+  assert(ItemStates.isValid(carried), s"invalid item's carrying state ($carried in $name)")
   assert(dr >= 0, s"negative item's DR value ($dr in $name)")
   assert(hp >= 0, s"negative item's HP value ($hp in $name)")
   assert(hpLeft >= 0 && hpLeft <= hp, s"item's current HP value out of bounds ($hpLeft in $name)")
@@ -521,7 +665,7 @@ case class Item(
 }
 
 /** Charlist subnamespace that holds item carrying states strings and validation method */
-object ItemState {
+object ItemStates {
   val READY = "Ready"
   val EQUIPPED = "Equipped"
   val COMBAT = "Combat"
@@ -531,12 +675,68 @@ object ItemState {
   def isValid(key: String) = Set(READY, EQUIPPED, COMBAT, TRAVEL, STASH).contains(key)
 }
 
+/** Charlist subcontainer for conditions switches */
+case class Conditions(
+                       unconscious: Boolean = false,
+                       mortallyWounded: Boolean = false,
+                       dead: Boolean = false,
+                       shock: Int = 0,
+                       stunned: Boolean = false,
+                       afflictions: Afflictions = Afflictions(),
+                       cripplingInjuries: Seq[String] = Seq(),
+                       posture: String = Postures.STANDING,
+                       closeCombat: Boolean = false,
+                       grappled: Boolean = false,
+                       pinned: Boolean = false,
+                       sprinting: Boolean = false,
+                       mounted: Boolean = false
+                     ) {
+  assert(shock >= 0 && shock <= 4, s"shock value out of bounds ($shock)")
+  assert(Postures.isValid(posture), s"invalid posture string ($posture)")
+}
+
+/** Charlist subcontainer for afflictions switches */
+case class Afflictions(
+                        coughing: Boolean = false,
+                        drowsy: Boolean = false,
+                        drunk: Boolean = false,
+                        euphoria: Boolean = false,
+                        nauseated: Boolean = false,
+                        pain: Boolean = false,
+                        tipsy: Boolean = false,
+                        agony: Boolean = false,
+                        choking: Boolean = false,
+                        daze: Boolean = false,
+                        ecstasy: Boolean = false,
+                        hallucinating: Boolean = false,
+                        paralysis: Boolean = false,
+                        retching: Boolean = false,
+                        seizure: Boolean = false,
+                        coma: Boolean = false,
+                        heartAttack: Boolean = false
+                      )
+
+/** Charlist subnamespace for posture strings and validation method */
+object Postures {
+  val STANDING = "Standing"
+  val CROUCHING = "Crouching"
+  val SITTING = "Sitting"
+  val KNEELING = "Kneeling"
+  val CRAWLING = "Crawling"
+  val LYING_PRONE = "Prone"
+  val LYING_FACE_UP = "On Back"
+
+  def isValid(posture: String) =
+    Set(STANDING, CROUCHING, SITTING, KNEELING, CRAWLING, LYING_PRONE, LYING_FACE_UP)
+      .contains(posture)
+}
+
 object Charlist {
 
   import play.api.libs.json.Json
 
-  implicit val pairFormat = Json.format[(Int, Int)]
-  // TODO: try with tuples
+  implicit val afflictionsFormat = Json.format[Afflictions]
+  implicit val conditionsFormat = Json.format[Conditions]
   implicit val itemFormat = Json.format[Item]
   implicit val armorElementFormat = Json.format[Armor]
   implicit val rangedShotsFormat = Json.format[RangedShots]
@@ -550,8 +750,9 @@ object Charlist {
   implicit val techniqueFormat = Json.format[Technique]
   implicit val skillFormat = Json.format[Skill]
   implicit val featuresFormat = Json.format[Feature]
-  implicit val statIntFormat = Json.format[Stat[Int]]
-  implicit val statFloatFormat = Json.format[Stat[Float]]
+  implicit val statIntFormat = Json.format[StatInt]
+  implicit val statFracFormat = Json.format[StatFrac]
+  implicit val statPointsFormat = Json.format[StatPoints]
   implicit val statsFormat = Json.format[Stats]
   implicit val descriptionFormat = Json.format[Description]
   implicit val charlistFormat = Json.format[Charlist]
