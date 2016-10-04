@@ -47,3 +47,9 @@ Taking next connection to: 59415
 Checking to see if clients are empty...
 We have 1 non-daemon clients, continuing serving connections.
 Taking next connection to: 59415
+Checking to see if clients are empty...
+No non-daemon clients connected after 3 min. Shutting down.
+Server socket thread exiting.
+0 clients open, will close them...
+All client sockets have been closed.
+Closing the 4904@Crimson-MacBook.local logs at Tue Oct 04 17:57:15 EEST 2016, goodbye.

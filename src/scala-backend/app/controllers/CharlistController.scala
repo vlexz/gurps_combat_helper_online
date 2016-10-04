@@ -20,17 +20,34 @@ class CharlistController @Inject()(charlistService: CharlistService) extends Con
 
   def add() = Action.async(BodyParsers.parse.json)(implicit request =>
     try {
+      val id = Random.nextLong.toString
       charlistService
         .save(
           request
             .body
             .validate[Charlist]
             .get
-            .copy(_id = Random.nextLong.toString, timestamp = System.currentTimeMillis)
+            .copy(_id = id, timestamp = System.currentTimeMillis)
         )
-        .map(re => Ok(Json.obj("success" -> re.toString)))
+        .map(re => Ok(Json.obj("id" -> id)))
         .recoverWith {
           case e: MongoWriteException => Future(Forbidden)
+          case _ => Future(Forbidden)
+        }
+    } catch {
+      case e: NoSuchElementException => Future(BadRequest(Json.obj("message" -> e.getMessage)))
+      case a: AssertionError => Future(BadRequest(Json.obj("message" -> s"Charlist ${a.getMessage}")))
+      case t: Throwable => Future(InternalServerError)
+    }
+  )
+
+  def create() = Action.async(implicit request =>
+    try {
+      val char = Charlist(_id = Random.nextLong.toString, timestamp = System.currentTimeMillis)
+      charlistService
+        .save(char)
+        .map(re => Ok(Json toJson char))
+        .recoverWith {
           case _ => Future(Forbidden)
         }
     } catch {
@@ -66,7 +83,7 @@ class CharlistController @Inject()(charlistService: CharlistService) extends Con
     }
   )
 
-  def update = Action.async(BodyParsers.parse.json)(implicit request =>
+  def update() = Action.async(BodyParsers.parse.json)(implicit request =>
     try {
       charlistService
         .update(

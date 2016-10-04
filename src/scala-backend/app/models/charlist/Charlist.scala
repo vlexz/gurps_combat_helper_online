@@ -337,8 +337,8 @@ case class Equipment(
     .foreach(totalTravWt += _.totalWt)
 }
 
-/** Charlist subcontainer for weapons list's element, calculates weapon weight and cost including ammunition if applicable, holds
-  * all its stats and attacks it can make as subcontainers. */
+/** Charlist subcontainer for weapons list's element, calculates weapon weight and cost including ammunition if
+  * applicable, holds all its stats and attacks it can make as subcontainers. */
 case class Weapon(
                    name: String = "",
                    carried: String = ItemStates.STASH,

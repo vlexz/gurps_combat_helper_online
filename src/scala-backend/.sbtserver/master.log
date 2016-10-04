@@ -339,3 +339,10 @@ All newly invalidated sources after taking into account (previously) recompiled 
 Total time: 27 s, completed Oct 4, 2016 5:54:53 PM
 > server-post-command-cleanup
 > server-handle-next-server-request
+Done executing sbt server engine, result Right(Exit(0))
+Closing listening server socket
+Waiting for socket thread
+Waiting for request processor thread
+Waiting for command engine result
+Returning control to sbt launcher with result Exit(0)
+Closing the 4904@Crimson-MacBook.local logs at Tue Oct 04 17:57:15 EEST 2016, goodbye.
