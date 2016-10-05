@@ -217,8 +217,8 @@ case class Feature(
 /** Charlist subcontainer for skills list's element stats, calculates its relative level */
 case class Skill(
                   name: String = "",
-                  attr: String = "",
-                  diff: String = "",
+                  attr: String = SkillBaseAttributes.DX,
+                  diff: String = SkillDifficulties.EASY,
                   defaults: Seq[String] = Seq(), // For future functionality
                   prerequisites: Seq[String] = Seq(), // For future functionality
                   bonus: Int = 0,
@@ -307,15 +307,15 @@ case class Equipment(
                       var totalDb: Int = 0
                     ) {
 
-  import ItemStates._
+  import ItemCarryingStates._
 
   totalCost = 0
   weapons.foreach(totalCost += _.totalCost)
   armor.foreach(totalCost += _.cost)
   items.foreach(totalCost += _.totalCost)
-  totalCombWt = 0
   val comb = Set(READY, EQUIPPED, COMBAT)
   val equip = Set(READY, EQUIPPED)
+  totalCombWt = 0
   weapons
     .withFilter(item => comb.contains(item.carried))
     .foreach(totalCombWt += _.totalWt)
@@ -335,13 +335,20 @@ case class Equipment(
   items
     .withFilter(_.carried == TRAVEL)
     .foreach(totalTravWt += _.totalWt)
+  totalDb = 0
+  weapons
+    .withFilter(item => equip.contains(item.carried))
+    .foreach(totalDb += _.db)
+  armor
+    .withFilter(item => equip.contains(item.carried))
+    .foreach(totalDb += _.db)
 }
 
 /** Charlist subcontainer for weapons list's element, calculates weapon weight and cost including ammunition if
   * applicable, holds all its stats and attacks it can make as subcontainers. */
 case class Weapon(
                    name: String = "",
-                   carried: String = ItemStates.STASH,
+                   carried: String = ItemCarryingStates.STASH,
                    attacksMelee: Seq[MeleeAttack] = Seq(),
                    attacksRanged: Seq[RangedAttack] = Seq(),
                    grips: Seq[String] = Seq(), // For future functionality
@@ -360,7 +367,7 @@ case class Weapon(
                    var totalWt: Float = 0,
                    var totalCost: Double = 0
                  ) {
-  assert(ItemStates.isValid(carried), s"invalid weapon's carrying state ($carried in $name)")
+  assert(ItemCarryingStates.isValid(carried), s"invalid weapon's carrying state ($carried in $name)")
   assert(bulk <= 0, s"positive bulk value ($bulk in $name)")
   assert(db >= 0 && db < 4, s"defense bonus value out of bounds ($db in $name)")
   assert(dr >= 0, s"negative item's DR value ($dr in $name)")
@@ -582,7 +589,7 @@ case class RangedShots(
 /** Charlist subcontainer for armor list's element, holds its stats */
 case class Armor(
                   name: String = "",
-                  carried: String = ItemStates.EQUIPPED,
+                  carried: String = ItemCarryingStates.EQUIPPED,
                   db: Int = 0,
                   dr: Int = 0,
                   ep: Int = 0,
@@ -599,7 +606,7 @@ case class Armor(
                   wt: Float = 0,
                   cost: Double = 0
                 ) {
-  assert(ItemStates.isValid(carried), s"invalid armor's carrying state ($carried in $name)")
+  assert(ItemCarryingStates.isValid(carried), s"invalid armor's carrying state ($carried in $name)")
   assert(db >= 0 && db < 4, s"defense bonus value out of bounds ($db in $name)")
   assert(dr >= 0, s"negative armor's DR value ($dr in $name)")
   assert(ep >= 0, s"negative armor's EP value ($ep in $name)")
@@ -649,7 +656,7 @@ object HitLocations {
 /** Charlist subcontainer for items list's element, holds its stats and calculates element's total weight and cost */
 case class Item(
                  name: String = "",
-                 carried: String = ItemStates.STASH,
+                 carried: String = ItemCarryingStates.STASH,
                  dr: Int = 0,
                  hp: Int = 1,
                  hpLeft: Int = 1,
@@ -662,7 +669,7 @@ case class Item(
                  var totalWt: Float = 0,
                  var totalCost: Double = 0
                ) {
-  assert(ItemStates.isValid(carried), s"invalid item's carrying state ($carried in $name)")
+  assert(ItemCarryingStates.isValid(carried), s"invalid item's carrying state ($carried in $name)")
   assert(dr >= 0, s"negative item's DR value ($dr in $name)")
   assert(hp >= 0, s"negative item's HP value ($hp in $name)")
   assert(hpLeft >= 0 && hpLeft <= hp, s"item's current HP value out of bounds ($hpLeft in $name)")
@@ -676,7 +683,7 @@ case class Item(
 }
 
 /** Charlist subnamespace that holds item carrying states strings and validation method */
-object ItemStates {
+object ItemCarryingStates {
   val READY = "Ready"
   val EQUIPPED = "Equipped"
   val COMBAT = "Combat"
