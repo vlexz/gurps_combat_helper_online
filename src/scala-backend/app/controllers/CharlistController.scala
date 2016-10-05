@@ -41,7 +41,7 @@ class CharlistController @Inject()(charlistService: CharlistService) extends Con
     }
   )
 
-  def create() = Action.async(implicit request =>
+  def create() = Action.async(
     try {
       val char = Charlist(_id = Random.nextLong.toString, timestamp = System.currentTimeMillis)
       charlistService

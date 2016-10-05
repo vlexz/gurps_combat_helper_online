@@ -12,7 +12,7 @@ case class Charlist(
                      var cpTotal: Int = 0,
                      description: Description = Description(),
                      stats: Stats = Stats(),
-                     features: Seq[Feature] = Seq(),
+                     traits: Seq[Trait] = Seq(),
                      skills: Seq[Skill] = Seq(),
                      techniques: Seq[Technique] = Seq(),
                      equip: Equipment = Equipment(),
@@ -43,7 +43,7 @@ case class Charlist(
   techniques.foreach(t => t.calcLvl(skills.find(_.name == t.skill).getOrElse(Skill()).lvl))
   cpTotal = 0
   cpTotal += stats.cp
-  features.foreach(cpTotal += _.cp)
+  traits.foreach(cpTotal += _.cp)
   skills.foreach(cpTotal += _.cp)
   techniques.foreach(cpTotal += _.cp)
 }
@@ -209,9 +209,9 @@ case class StatPoints(
 }
 
 /** Charlist subcontainer for features list's element stats */
-case class Feature(
-                    feature: String = "",
-                    cp: Int = 0
+case class Trait(
+                  name: String = "",
+                  cp: Int = 0
                   )
 
 /** Charlist subcontainer for skills list's element stats, calculates its relative level */
@@ -767,7 +767,7 @@ object Charlist {
   implicit val equipmentFormat = Json.format[Equipment]
   implicit val techniqueFormat = Json.format[Technique]
   implicit val skillFormat = Json.format[Skill]
-  implicit val featuresFormat = Json.format[Feature]
+  implicit val featuresFormat = Json.format[Trait]
   implicit val statIntFormat = Json.format[StatInt]
   implicit val statFracFormat = Json.format[StatFrac]
   implicit val statPointsFormat = Json.format[StatPoints]
