@@ -6,7 +6,11 @@ var
     concat = require('gulp-concat'),
     watch = require('gulp-watch'),
     rsync = require('gulp-rsync'),
-    debug = require('gulp-debug');
+    debug = require('gulp-debug'),
+    series = require('gulp-sequence'),
+    imagemin = require('gulp-imagemin');
+
+console.log(series);
 
 var jslibs = [
     'front/bower_components/angular/angular.min.js',
@@ -28,63 +32,76 @@ var css = [
 ];
 
 var html = [
-    'front/*.jade'    
+    'front/*.jade'
 ];
 
 var templates = [
     'front/templates/*.jade'
 ];
 
+var images = [
+    'front/images/*'
+];
+
 var builddir = '../build/';
 
 gulp.task('css', function(){
-    gulp.src(css)
+    return gulp.src(css)
     .pipe(concat('main.css'))
     .pipe(gulp.dest(builddir + 'css/'));
 })
 
 gulp.task('libs', function(){
-    gulp.src(jslibs)
+    return gulp.src(jslibs)
     .pipe(concat('libs.js'))
     .pipe(gulp.dest(builddir + 'js'));
 });
 
 gulp.task('js', function(){
-    gulp.src(js)
+    return gulp.src(js)
     .pipe(concat('main.js'))
     .pipe(gulp.dest(builddir + 'js'))
 })
 
 gulp.task('fonts', function(){
-    gulp.src('front/bower_components/bootstrap/dist/fonts/*')
+    return gulp.src('front/bower_components/bootstrap/dist/fonts/*')
     .pipe(debug({title: 'fonts'}))
     .pipe(gulp.dest(builddir + 'fonts'));
 });
 
+gulp.task('images', function(){
+    return gulp.src(images)
+    .pipe(imagemin({progressive: true}))
+    .pipe(gulp.dest(builddir + 'images'));
+});
+
 gulp.task('clean', function() {
-    del.sync(builddir, {force: true});
+    return del.sync(builddir, {force: true});
 })
 
 gulp.task('html', function(){
-    gulp.src(html)
+    return gulp.src(html)
     .pipe(jade())
     .pipe(gulp.dest(builddir));
 });
 
 gulp.task('templates', function() {
-    gulp.src(templates)
+    return gulp.src(templates)
+    .pipe(debug({title: templates}))
     .pipe(jade())
     .pipe(gulp.dest(builddir + 'templates'));
 })
 
 gulp.task('watch', function(){
     watch(html, () => {gulp.start('html')});
+    watch('front/includes/*', () => {gulp.start('html')});
     watch(js, () => {gulp.start('js')});
     watch(templates, () => {gulp.start('templates')});
+    watch(css, () => {gulp.start('css')});
 });
 
 gulp.task('deploy:templates', function() {
-    gulp.src(['../build/templates/*', '../build/fonts/*'])
+    return gulp.src(['../build/templates/*', '../build/fonts/*'])
     .pipe(debug({title: 'templates'}))
     .pipe(rsync({
         root: '../build',
@@ -94,7 +111,7 @@ gulp.task('deploy:templates', function() {
 });
 
 gulp.task('deploy:front', function() {
-    gulp.src(['../build/*', '../build/css/*', '../build/js/*'])
+    return gulp.src(['../build/*', '../build/css/*', '../build/js/*', '../build/images/*'])
     .pipe(rsync({
         root: '../build',
         hostname: 'vlexz.net',
@@ -103,7 +120,7 @@ gulp.task('deploy:front', function() {
 });
 
 gulp.task('deploy:server', function() {
-    gulp.src(['./backend/*', './backend/config/*', './backend/services/*'])
+    return gulp.src(['./backend/*', './backend/config/*', './backend/services/*'])
     .pipe(rsync({
         root: 'backend',
         hostname: 'vlexz.net',
@@ -111,19 +128,20 @@ gulp.task('deploy:server', function() {
     }))
 });
 
-gulp.task('build', [
+gulp.task('build', series(
         'clean',
         'css',
         'libs',
         'js',
         'fonts',
         'html',
-        'templates'
-    ]);
+        'templates',
+        'images'
+    ));
 
-gulp.task('deploy', [
+gulp.task('deploy', series(
     'build',
     'deploy:templates',
     'deploy:front',
     'deploy:server'
-    ])
+    ));

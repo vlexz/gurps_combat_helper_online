@@ -74,7 +74,17 @@ var exports = {
                     }
                 })
         })
-    }
+    },
+    // add_handler: function(collection, user_specific) {
+    //     return function(req, resp) {
+    //         object = req.body;
+    //         if(user_specific) {
+    //             object.user = req.user.id;
+    //         }
+    //         exports.add(collection, object)
+    //         .then()
+    //     }
+    // }
 }
 
 module.exports = exports;

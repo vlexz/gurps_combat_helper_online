@@ -72,7 +72,8 @@ function($scope, $uibModal, $sce, dices, UsersService, $http) {
                     fp: 10,
                     load: 'None',
                     hiking: 5,
-                    carrier: false
+                    carrier: false,
+                    fit: 'Average',
                 } }
             }
         }).result.then(function(traveler){
@@ -141,7 +142,7 @@ function($scope, $uibModal, $sce, dices, UsersService, $http) {
     }
 
     $scope.travel_results_text = '';
-    $scope.travel_results = null;
+    $scope.travel_results = [];
 
     $scope.travel = function() {
 
@@ -247,9 +248,10 @@ function($scope, $uibModal, $sce, dices, UsersService, $http) {
 
         function appendLog(piece) {
             console.log('result:', piece);
-            $scope.travel_results_text = '<p>Travel ' + ++travel_count + ' total passed ' + total_passed + 'km' + '</p>'
-                                        + piece + '<p><hr/></p>' + $scope.travel_results_text;            
-            $scope.travel_results = $sce.trustAsHtml($scope.travel_results_text);
+            $scope.travel_results_text = '<div class="well well-travel-result"><p">Travel ' + ++travel_count + ' total passed ' + total_passed + 'km' + '</p>'
+                                        + piece  + '</div>';// + $scope.travel_results_text;
+            $scope.travel_results.unshift($sce.trustAsHtml($scope.travel_results_text));
+            // $scope.travel_results = $sce.trustAsHtml($scope.travel_results_text);
         }
 
         var result = {
@@ -280,6 +282,14 @@ function($scope, $uibModalInstance, traveler) {
 
     $scope.load_levels = load_levels;
     $scope.traveler = traveler;
+
+    $scope.fits = [
+        'Very Unfit',
+        'Unfit',
+        'Average',
+        'Fit',
+        'Very Fit'
+    ]
     
     $scope.ok = function () {
         $uibModalInstance.close($scope.traveler);

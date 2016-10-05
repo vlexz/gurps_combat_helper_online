@@ -1,6 +1,7 @@
 include includes/head.jade
     -var current = 'armor'
     include includes/navigation.jade
+    img.center-block.header-image(src="/images/armor-header.png")
     .container(ng-controller="ArmorCtrl")
         .row
             .col-md-12
@@ -12,10 +13,10 @@ include includes/head.jade
                         .col-md-4
                             h4 Categories
                     .row(ng-repeat="category in categories")
-                        .col-md-4(ng-click="select_category($index)") 
+                        .col-md-4
                             span.glyphicon.glyphicon-remove.cursor-hand(ng-click="del_category($index)" ng-if="user.loggedIn && category.itemCount==0")
-                            strong(ng-if="$index == current_category_index").cursor-hand {{category.name}}
-                            span(ng-if="$index != current_category_index").cursor-hand {{category.name}}
+                            strong(ng-if="$index == current_category_index" ng-click="select_category($index)").cursor-hand {{category.name}}
+                            span(ng-if="$index != current_category_index" ng-click="select_category($index)").cursor-hand {{category.name}}
                     .row(ng-if="user.loggedIn")
                         .col-md-3.input-group.input-group-sm                          
                             input.form-control(type="text" ng-model="new_category_name")
@@ -26,23 +27,44 @@ include includes/head.jade
                     .row
                         .col-md-8
                             h4 Armors
-                    .row(ng-if="current_category")
-                        .col-md-2.col-md-offset-1 Name
-                        .col-md-2 Locations
-                        .col-md-1 DR
-                        .col-md-1 EP Cut
-                        .col-md-1 EP Imp
-                        .col-md-1 Hp
-                    .row(ng-repeat="armor in armors")
-                        .col-md-1
-                            span.glyphicon.glyphicon-remove.cursor-hand(ng-click="remove_armor($index)" ng-if="user.loggedIn")
-                            span.glyphicon.glyphicon-pencil.cursor-hand(ng-click="edit_armor($index)" ng-if="user.loggedIn")
-                        .col-md-2 {{armor.name}}
-                        .col-md-2 {{armor.locations.join(', ')}}
-                        .col-md-1 {{armor.dr}}
-                        .col-md-1 {{armor.ep_cut}}
-                        .col-md-1 {{armor.ep_imp}}
-                        .col-md-1 {{armor.hp}}
+                    .row
+                        .col-md-8
+                            table.table.table-condensed(ng-if="current_category")
+                                tr
+                                    th 
+                                    th Name
+                                    th Locations
+                                    th DR
+                                    th EP Cut
+                                    th EP Imp
+                                    th HP
+                                tr(ng-repeat="armor in armors")
+                                    td 
+                                        span.glyphicon.glyphicon-remove.cursor-hand(ng-click="remove_armor($index)" ng-if="user.loggedIn")
+                                        span.glyphicon.glyphicon-pencil.cursor-hand(ng-click="edit_armor($index)" ng-if="user.loggedIn")
+                                    td {{armor.name}}
+                                    td {{armor.locations.join(', ')}}
+                                    td {{armor.dr}}
+                                    td {{armor.ep_cut}}
+                                    td {{armor.ep_imp}}
+                                    td {{armor.hp}}
+                    //-     .row(ng-if="current_category")
+                    //-     .col-md-2.col-md-offset-1 Name
+                    //-     .col-md-2 Locations
+                    //-     .col-md-1 DR
+                    //-     .col-md-1 EP Cut
+                    //-     .col-md-1 EP Imp
+                    //-     .col-md-1 Hp
+                    //- .row(ng-repeat="armor in armors")
+                    //-     .col-md-1
+                    //-         span.glyphicon.glyphicon-remove.cursor-hand(ng-click="remove_armor($index)" ng-if="user.loggedIn")
+                    //-         span.glyphicon.glyphicon-pencil.cursor-hand(ng-click="edit_armor($index)" ng-if="user.loggedIn")
+                    //-     .col-md-2 {{armor.name}}
+                    //-     .col-md-2 {{armor.locations.join(', ')}}
+                    //-     .col-md-1 {{armor.dr}}
+                    //-     .col-md-1 {{armor.ep_cut}}
+                    //-     .col-md-1 {{armor.ep_imp}}
+                    //-     .col-md-1 {{armor.hp}}
                     .row(ng-if="user.loggedIn && current_category")
                         .col-md-3
                             button.btn.btn-default(ng-click="add_armor()") Add Armor

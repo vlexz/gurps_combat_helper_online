@@ -1,6 +1,7 @@
 include includes/head.jade
     -var current = 'edge_protection'
     include includes/navigation.jade
+    img.center-block.header-image(src="/images/ep-header.png")
     .container(ng-controller="EdgeProtectionCtrl")
         .row
             .col-md-12
@@ -38,7 +39,7 @@ include includes/head.jade
                     option(ng-repeat="loc in locations" value="{{loc}}") {{loc}}
             .col-md-2
                 button.btn.btn-default(ng-click="strike($index)") Strike!
-        .row
+        .row.shift-down
             .col-md-12
                 .btn-group
                     button.btn.btn-default(ng-click="create_combatant()") Create Combatant
@@ -47,6 +48,6 @@ include includes/head.jade
                     button.btn.btn-default(ng-click="load_combat()") Load Combat
                     button.btn.btn-default(ng-click="save_current()" ng-if="combat") Save Current Combat
                     button.btn.btn-default(ng-click="clear()") Clear Combat
-        .row
+        .row.shift-down
             .col-md-12
-                p(ng-repeat="part in combat_log track by $index") {{part}}
+                p.well.well-sm(ng-repeat="part in combat_log track by $index") {{part}}

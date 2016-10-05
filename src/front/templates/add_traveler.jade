@@ -25,6 +25,12 @@
         .row
             .col-md-4
                 .form-group
+                    label(for="traveler.fit") Fit                    
+                    select.form-control(ng-model="traveler.fit" id="traveler.fit")
+                        option(ng-repeat="fit in fits") {{fit}}
+        .row
+            .col-md-4
+                .form-group
                     label(for="traveler.hiking") Hiking (HT - 5)
                     input.form-control(type="number" ng-model="traveler.hiking" id="traveler.hiking")
         .row

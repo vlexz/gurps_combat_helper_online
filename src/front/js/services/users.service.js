@@ -11,6 +11,7 @@ function($http, $q, $rootScope) {
         .then(function(data) {
             if(data.data._id) {
                 user.loggedIn = true;
+                user.name = data.data.name;
                 user.id = data.data._id;
                 user.currents = data.data.currents;
             } else {

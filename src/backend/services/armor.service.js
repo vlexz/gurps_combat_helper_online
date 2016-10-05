@@ -3,7 +3,7 @@
 var
     express = require('express'),
     mongo = require('../mongo.js'),
-    log = require('log4js').getLogger('travel'),
+    log = require('log4js').getLogger('armor'),
     ObjectId = require('mongodb').ObjectID;
 
 function get_categories(req, resp) {
@@ -81,18 +81,33 @@ function update_armor(req, resp) {
 
 function del_armor(req, resp) {
     mongo.db.collection('armors')
-    .findAndRemove({_id: new ObjectId(req.body._id)})
-    .then((err, doc) => {
-        if(doc){
-            mongo.db.collection('armor_categories')
-            .updateOne({_id: new ObjectId(doc.category)}, {$inc: {itemCount: -1}})
-            .then(err, res => {
-                resp.send({status: 'ok'});
-            })
-        } else {
-            resp.send({status: 'fail', err: 'no such armor'});
-        }
-    })
+    .findAndRemove({_id: new ObjectId(req.body._id)}, 
+        function(err, doc){
+            var category = doc.value.category;
+            mongo.db.collection('armors')
+            .count({category: category}, 
+                function(err, count){
+                    log.info('Category now have only', count, 'armors');
+                    mongo.db.collection('armor_categories')
+                    .updateOne({_id: new ObjectId(category)}, {$set: {itemCount: count}}, 
+                        function(err, res){
+                            console.log(err, res);
+                            resp.send({status: 'ok'});
+                        })
+                })
+        });
+    // .then((err, doc) => {
+    //     if(doc){
+    //         log.info('found armor');
+    //         mongo.db.collection('armor_categories')
+    //         .updateOne({_id: new ObjectId(doc.category)}, {$inc: {itemCount: -1}})
+    //         .then(err, res => {
+    //             resp.send({status: 'ok'});
+    //         })
+    //     } else {
+    //         resp.send({status: 'fail', err: 'no such armor'});
+    //     }
+    // })
 }
 
 

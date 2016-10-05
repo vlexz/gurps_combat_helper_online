@@ -1,0 +1,65 @@
+include includes/head.jade
+    -var current = 'characters'
+    include includes/navigation.jade
+    img.center-block.header-image(src="/images/characters-header.png")
+    .container(ng-controller="CharactersCtrl")
+        .row
+            .col-md-12
+                h3 Characters
+        .row
+            .col-md-3
+                .container
+                    .row
+                        .col-md-4
+                            h4 Categories
+                    .row(ng-repeat="category in categories")
+                        .col-md-4
+                            span.glyphicon.glyphicon-remove.cursor-hand(ng-click="del_category($index)" ng-if="user.loggedIn && category.itemCount==0")
+                            strong(ng-if="$index == current_category_index" ng-click="select_category($index)").cursor-hand {{category.name}}
+                            span(ng-if="$index != current_category_index" ng-click="select_category($index)").cursor-hand {{category.name}}
+                    .row(ng-if="user.loggedIn")
+                        .col-md-3.input-group.input-group-sm                          
+                            input.form-control(type="text" ng-model="new_category_name")
+                            span.input-group-btn
+                                button.btn.btn-default(ng-click="add_category(new_category_name)" type="button") Add
+            .col-md-9
+                .container
+                    .row
+                        .col-md-9
+                            .button-group
+                                button.btn.btn-default(ng-click="add_character()") Add Character
+                    .row
+                        .col-md-9
+                            table.table.table-condensed
+                                tr
+                                    th 
+                                    th Name
+                                    th ST
+                                    th DX
+                                    th IQ
+                                    th HT
+                                    th Will
+                                    th Per
+                                    th HP
+                                    th FP
+                                    th BS
+                                    th Move
+                                    th Dodge
+                                    th Parry
+                                tr(ng-repeat="char in characters")
+                                    td
+                                        +delbtn('remove_character($index)')
+                                        +editbtn('edit_character($index)')
+                                    td {{char.name}}
+                                    td {{char.st}}
+                                    td {{char.dx}}
+                                    td {{char.iq}}
+                                    td {{char.ht}}
+                                    td {{char.will}}
+                                    td {{char.per}}
+                                    td {{char.hp}}
+                                    td {{char.fp}}
+                                    td {{char.bs}}
+                                    td {{char.move}}
+                                    td {{char.dodge}}
+                                    td {{char.parry}}
