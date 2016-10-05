@@ -619,6 +619,7 @@ object HitLocations {
   val EYES = "eyes"
   val SKULL = "skull"
   val FACE = "face"
+  val HEAD = "head"
   val NECK = "face"
   val LEG_RIGHT = "right leg"
   val LEG_LEFT = "left leg"
@@ -626,10 +627,11 @@ object HitLocations {
   val ARM_RIGHT = "right arm"
   val ARM_LEFT = "left arm"
   val ARMS = "arms"
-  val TORSO = "torso"
+  val CHEST = "chest"
   val VITALS = "vitals"
   val ABDOMEN = "abdomen"
   val GROIN = "groin"
+  val TORSO = "torso"
   val HANDS = "hands"
   val HAND_LEFT = "left hand"
   val HAND_RIGHT = "right hand"
@@ -638,8 +640,8 @@ object HitLocations {
   val FOOT_LEFT = "left foot"
 
   def isValid(loc: Seq[String]) = {
-    val all = Set(EYES, SKULL, FACE, NECK, LEG_LEFT, LEG_RIGHT, LEGS, ARM_LEFT, ARM_RIGHT, ARMS, TORSO, VITALS,
-      ABDOMEN, GROIN, HANDS, HAND_LEFT, HAND_RIGHT, FEET, FOOT_LEFT, FOOT_RIGHT)
+    val all = Set(EYES, SKULL, FACE, HEAD, NECK, LEG_LEFT, LEG_RIGHT, LEGS, ARM_LEFT, ARM_RIGHT, ARMS, CHEST, VITALS,
+      ABDOMEN, GROIN, TORSO, HANDS, HAND_LEFT, HAND_RIGHT, FEET, FOOT_LEFT, FOOT_RIGHT)
     loc.forall(all.contains)
   }
 }
