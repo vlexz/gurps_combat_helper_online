@@ -108,7 +108,7 @@ case class Stats(
   bl = (liftSt.value * liftSt.value / 5).toInt
   hp.calcStat(st.value, 2)
   fp.calcStat(ht.value, 3)
-  basicSpeed.calcStat((dx.value + ht.value).toFloat / 4, 20)
+  basicSpeed.calcStat((dx.value + ht.value).toDouble / 4, 20)
   basicMove.calcStat(basicSpeed.value.toInt, 5)
   basicDodge.calcStat(basicSpeed.value.toInt + 3, 15)
 
@@ -118,7 +118,7 @@ case class Stats(
     this
   }
 
-  def calcEncumbrance(combWt: Float, travWt: Float) = {
+  def calcEncumbrance(combWt: Double, travWt: Double) = {
     assert(combWt <= bl * 10, s"combat encumbrance value is over 10 times basic lift ($combWt, $bl)")
     assert(travWt <= bl * 10, s"travel encumbrance value is over 10 times basic lift ($travWt, $bl)")
     combatEncumbrance = combWt / bl match {
@@ -178,14 +178,14 @@ case class StatInt(
 
 /** Charlist subcontainer for character attribute storage */
 case class StatFrac(
-                     delta: Float = 0,
-                     bonus: Float = 0,
+                     delta: Double = 0,
+                     bonus: Double = 0,
                      notes: String = "",
-                     var value: Float = 0,
+                     var value: Double = 0,
                      var cp: Int = 0
                    ) {
 
-  def calcStat(default: Float, cost: Int) = {
+  def calcStat(default: Double, cost: Int) = {
     value = default + delta + bonus
     cp = (delta * cost).toInt
     this
@@ -216,7 +216,7 @@ case class StatPoints(
 case class Trait(
                   name: String = "",
                   cp: Int = 0
-                  )
+                )
 
 /** Charlist subcontainer for skills list's element stats, calculates its relative level */
 case class Skill(
@@ -303,12 +303,15 @@ object TechniqueDifficulties {
   * possessions items subcontainers. */
 case class Equipment(
                       weapons: Seq[Weapon] = Seq(),
-                      armor: Seq[Armor] = Seq(),
+                      armor: Seq[Armor] = Seq(Armor(name = "Skull", dr = 2, drType = DrTypes.SKIN,
+                        locations = Seq(HitLocations.SKULL), hp = 0, hpLeft = 0, lc = 5)),
                       items: Seq[Item] = Seq(),
+                      frontDR: DamageResistanceTotal = DamageResistanceTotal(),
+                      rearDR: DamageResistanceTotal = DamageResistanceTotal(),
+                      var totalDb: Int = 0,
                       var totalCost: Double = 0,
-                      var totalCombWt: Float = 0,
-                      var totalTravWt: Float = 0,
-                      var totalDb: Int = 0
+                      var totalCombWt: Double = 0,
+                      var totalTravWt: Double = 0
                     ) {
 
   import ItemCarryingStates._
@@ -341,11 +344,17 @@ case class Equipment(
     .foreach(totalTravWt += _.totalWt)
   totalDb = 0
   weapons
-    .withFilter(item => equip.contains(item.carried))
+    .withFilter(item => equip.contains(item.carried) && !item.broken)
     .foreach(totalDb += _.db)
   armor
-    .withFilter(item => equip.contains(item.carried))
+    .withFilter(item => equip.contains(item.carried) && !item.broken)
     .foreach(totalDb += _.db)
+  armor
+    .withFilter(_.front)
+    .foreach(item => item.locations.foreach(frontDR.add(item.dr, item.ep, item.epi, _)))
+  armor
+    .withFilter(_.back)
+    .foreach(item => item.locations.foreach(rearDR.add(item.dr, item.ep, item.epi, _)))
 }
 
 /** Charlist subcontainer for weapons list's element, calculates weapon weight and cost including ammunition if
@@ -363,12 +372,13 @@ case class Weapon(
                    dr: Int = 0,
                    hp: Int = 1,
                    hpLeft: Int = 1,
-                   lc: Int = 0,
+                   broken: Boolean = false,
+                   lc: Int = 5,
                    tl: Int = 0,
                    notes: String = "",
-                   wt: Float = 0,
+                   wt: Double = 0,
                    cost: Double = 0,
-                   var totalWt: Float = 0,
+                   var totalWt: Double = 0,
                    var totalCost: Double = 0
                  ) {
   assert(ItemCarryingStates.isValid(carried), s"invalid weapon's carrying state ($carried in $name)")
@@ -413,7 +423,7 @@ case class MeleeDamage(
                         attackType: String = "",
                         dmgDice: Int = 0,
                         dmgMod: Int = 0,
-                        armorDiv: Float = 1,
+                        armorDiv: Double = 1,
                         dmgType: String = DamageType.CRUSHING,
                         var dmgString: String = ""
                       ) {
@@ -488,7 +498,7 @@ case class RangedAttack(
   assert(accMod >= 0, s"negative scope bonus value ($accMod in $name)")
   assert(rcl > 0, s"negative or 0 recoil ($rcl in $name)")
   assert(st > 0, s"negative or 0 min ST value ($st in $name)")
-  assert(malf < 18 && malf > 3, s"ranged attack's malfunction value is out of bounds ($malf in $name)")
+  assert(malf < 19 && malf > 3, s"ranged attack's malfunction value is out of bounds ($malf in $name)")
 }
 
 /** Charlist subcontainer for ranged damage stat, calculates damage string */
@@ -496,7 +506,7 @@ case class RangedDamage(
                          dmgDice: Int = 0,
                          diceMult: Int = 1,
                          dmgMod: Int = 0,
-                         armorDiv: Float = 1,
+                         armorDiv: Double = 1,
                          dmgType: String = DamageType.CRUSHING,
                          fragDice: Int = 0,
                          var dmgString: String = ""
@@ -526,7 +536,7 @@ case class RangedDamage(
 
 /** Charlist subnamespace that holds armor divisors validation method */
 object ArmorDivisors {
-  def isValid(div: Float) = Set(0.1, 0.2, 0.5, 1, 2, 3, 5, 10, 100).contains(div)
+  def isValid(div: Double) = Set(0.1, 0.2, 0.5, 1, 2, 3, 5, 10, 100).contains(div)
 }
 
 /** Charlist subnamespace that holds damage types strings and validation method */
@@ -573,10 +583,10 @@ case class RangedShots(
                         reload: String = "",
                         shotsLoaded: Int = 0,
                         shotsCarried: Int = 0,
-                        shotWt: Float = 0,
+                        shotWt: Double = 0,
                         shotCost: Double = 0,
                         var shotsString: String = "",
-                        var totalWt: Float = 0,
+                        var totalWt: Double = 0,
                         var totalCost: Double = 0
                       ) {
   assert(shots >= 0, s"negative shots' number ($shots)")
@@ -600,14 +610,15 @@ case class Armor(
                   epi: Int = 0,
                   front: Boolean = true,
                   back: Boolean = true,
-                  soft: Boolean = false,
+                  drType: String = DrTypes.HARD,
                   locations: Seq[String] = Seq(),
                   hp: Int = 1,
                   hpLeft: Int = 1,
-                  lc: Int = 0,
+                  broken: Boolean = false,
+                  lc: Int = 5,
                   tl: Int = 0,
                   notes: String = "",
-                  wt: Float = 0,
+                  wt: Double = 0,
                   cost: Double = 0
                 ) {
   assert(ItemCarryingStates.isValid(carried), s"invalid armor's carrying state ($carried in $name)")
@@ -616,6 +627,7 @@ case class Armor(
   assert(ep >= 0, s"negative armor's EP value ($ep in $name)")
   assert(epi >= 0, s"negative armor's EPi value ($epi in $name)")
   assert(front || back, s"armor covers neither front nor back (false & false in $name)")
+  assert(DrTypes.isValid(drType), s"invalid DR type string ($drType in $name)")
   assert(HitLocations.isValid(locations), s"invalid armor's locations string set ($locations in $name)")
   assert(hp >= 0, s"negative armor's HP value ($hp in $name)")
   assert(hpLeft >= 0 && hpLeft <= hp, s"armor's current HP value out of bounds ($hpLeft in $name)")
@@ -625,13 +637,23 @@ case class Armor(
   assert(cost >= 0, s"negative item's cost ($cost in $name)")
 }
 
+/** Charlist subnamespace that holds DR types strings and validation method */
+object DrTypes {
+  val HARD = "hard"
+  val SOFT = "soft"
+  val FIELD = "force field"
+  val SKIN = "tough skin"
+
+  def isValid(dr: String) = Set(HARD, SOFT, FIELD, SKIN).contains(dr)
+}
+
 /** Charlist subnamespace that holds hit locations strings and validation method */
 object HitLocations {
   val EYES = "eyes"
   val SKULL = "skull"
   val FACE = "face"
   val HEAD = "head"
-  val NECK = "face"
+  val NECK = "neck"
   val LEG_RIGHT = "right leg"
   val LEG_LEFT = "left leg"
   val LEGS = "legs"
@@ -649,10 +671,12 @@ object HitLocations {
   val FEET = "feet"
   val FOOT_RIGHT = "right foot"
   val FOOT_LEFT = "left foot"
+  val SKIN = "skin"
+  val BODY = "body"
 
   def isValid(loc: Seq[String]) = {
     val all = Set(EYES, SKULL, FACE, HEAD, NECK, LEG_LEFT, LEG_RIGHT, LEGS, ARM_LEFT, ARM_RIGHT, ARMS, CHEST, VITALS,
-      ABDOMEN, GROIN, TORSO, HANDS, HAND_LEFT, HAND_RIGHT, FEET, FOOT_LEFT, FOOT_RIGHT)
+      ABDOMEN, GROIN, TORSO, HANDS, HAND_LEFT, HAND_RIGHT, FEET, FOOT_LEFT, FOOT_RIGHT, SKIN, BODY)
     loc.forall(all.contains)
   }
 }
@@ -664,13 +688,14 @@ case class Item(
                  dr: Int = 0,
                  hp: Int = 1,
                  hpLeft: Int = 1,
-                 lc: Int = 0,
+                 broken: Boolean = false,
+                 lc: Int = 5,
                  tl: Int = 0,
                  notes: String = "",
-                 wt: Float = 0,
+                 wt: Double = 0,
                  cost: Double = 0,
                  n: Int = 1,
-                 var totalWt: Float = 0,
+                 var totalWt: Double = 0,
                  var totalCost: Double = 0
                ) {
   assert(ItemCarryingStates.isValid(carried), s"invalid item's carrying state ($carried in $name)")
@@ -697,6 +722,74 @@ object ItemCarryingStates {
   def isValid(key: String) = Set(READY, EQUIPPED, COMBAT, TRAVEL, STASH).contains(key)
 }
 
+/** Charlist subcontainer for total DR coverage stats, holds its calculation method */
+case class DamageResistanceTotal(
+                                  skull: HitLocation = HitLocation(),
+                                  eyes: HitLocation = HitLocation(),
+                                  face: HitLocation = HitLocation(),
+                                  neck: HitLocation = HitLocation(),
+                                  armLeft: HitLocation = HitLocation(),
+                                  armRight: HitLocation = HitLocation(),
+                                  handLeft: HitLocation = HitLocation(),
+                                  handRight: HitLocation = HitLocation(),
+                                  chest: HitLocation = HitLocation(),
+                                  vitals: HitLocation = HitLocation(),
+                                  abdomen: HitLocation = HitLocation(),
+                                  groin: HitLocation = HitLocation(),
+                                  legLeft: HitLocation = HitLocation(),
+                                  legRight: HitLocation = HitLocation(),
+                                  footLeft: HitLocation = HitLocation(),
+                                  footRight: HitLocation = HitLocation()
+                                ) {
+  def add(dr: Int, ep: Int, epi: Int, loc: String) = {
+    import HitLocations._
+    val locs = loc match {
+      case s if s == EYES => Set(eyes)
+      case s if s == SKULL => Set(skull)
+      case s if s == FACE => Set(face)
+      case s if s == HEAD => Set(skull, face)
+      case s if s == NECK => Set(neck)
+      case s if s == LEG_RIGHT => Set(legRight)
+      case s if s == LEG_LEFT => Set(legLeft)
+      case s if s == LEGS => Set(legLeft, legRight)
+      case s if s == ARM_RIGHT => Set(armRight)
+      case s if s == ARM_LEFT => Set(armLeft)
+      case s if s == ARMS => Set(armLeft, armRight)
+      case s if s == CHEST => Set(chest)
+      case s if s == VITALS => Set(vitals)
+      case s if s == ABDOMEN => Set(abdomen)
+      case s if s == GROIN => Set(groin)
+      case s if s == TORSO => Set(chest, abdomen, vitals)
+      case s if s == HANDS => Set(handLeft, handRight)
+      case s if s == HAND_LEFT => Set(handLeft)
+      case s if s == HAND_RIGHT => Set(handRight)
+      case s if s == FEET => Set(footLeft, footRight)
+      case s if s == FOOT_LEFT => Set(footLeft)
+      case s if s == FOOT_RIGHT => Set(footRight)
+      case s if s == SKIN => Set(skull, face, neck, armLeft, armRight, handLeft, handRight, chest, vitals, abdomen,
+        groin, legLeft, legRight, footLeft, footRight)
+      case s if s == BODY => Set(skull, eyes, face, neck, armLeft, armRight, handRight, handLeft, chest, vitals,
+        abdomen, groin, legRight, legLeft, footRight, footLeft)
+    }
+    locs.foreach(_.increment(dr, ep, epi))
+    this
+  }
+}
+
+/** Charlist subcontainer for hit location DR stats, holds its calculation method */
+case class HitLocation(
+                        var dr: Int = 0,
+                        var ep: Int = 0,
+                        var epi: Int = 0
+                      ) {
+  def increment(drDelta: Int, epDelta: Int, epiDelta: Int) = {
+    dr += drDelta
+    ep += epDelta
+    epi += epiDelta
+    this
+  }
+}
+
 /** Charlist subcontainer for conditions switches */
 case class Conditions(
                        unconscious: Boolean = false,
@@ -713,7 +806,7 @@ case class Conditions(
                        sprinting: Boolean = false,
                        mounted: Boolean = false
                      ) {
-  assert(shock >= 0 && shock <= 4, s"shock value out of bounds ($shock)")
+  assert(shock >= 0 && shock <= 8, s"shock value out of bounds ($shock)")
   assert(Postures.isValid(posture), s"invalid posture string ($posture)")
 }
 
@@ -767,7 +860,9 @@ object Charlist {
   implicit val rangedAttackFormat = Json.format[RangedAttack]
   implicit val meleeDamageFormat = Json.format[MeleeDamage]
   implicit val meleeAttackFormat = Json.format[MeleeAttack]
-  implicit val meleeFormat = Json.format[Weapon]
+  implicit val weaponFormat = Json.format[Weapon]
+  implicit val hitLocationFormat = Json.format[HitLocation]
+  implicit val damageResistanceTotalFormat = Json.format[DamageResistanceTotal]
   implicit val equipmentFormat = Json.format[Equipment]
   implicit val techniqueFormat = Json.format[Technique]
   implicit val skillFormat = Json.format[Skill]

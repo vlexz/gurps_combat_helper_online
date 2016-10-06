@@ -13,6 +13,6 @@ POST          /api/char/           controllers.CharlistController.add()
 GET           /api/char            controllers.CharlistController.create()
 GET           /api/chars           controllers.CharlistController.list
 GET           /api/char/:id        controllers.CharlistController.get(id:String)
-POST          /api/char/:id        controllers.CharlistController.replace(id: String)
+PUT           /api/char/:id        controllers.CharlistController.replace(id: String)
 #PATCH         /api/char/           controllers.CharlistController.update()
 DELETE        /api/char/:id        controllers.CharlistController.delete(id: String)

@@ -25,37 +25,45 @@ class CharlistControllerSpec extends PlaySpec with Results with MockitoSugar {
     "send OK with charlist json on no id request with valid charlist json" in {
       val mockCharlistService = mock[CharlistService]
       /*val charlist = Charlist(
-          "",
-          0,
-          "vlex",
-          "Bjorn Masterson",
-          262, 0,
-          Description("35", "6f6i", "250", "somelink", "longbio"),
-          Stats(StatInt(), StatInt(3), StatInt(), StatInt(2), StatInt(2), StatInt(2), StatInt(), StatInt(), "", "", 0,
-            0, 0, StatPoints(), StatPoints(), StatFrac(-0.25f), StatInt(), StatInt(), 0, 0, 0, 0),
-          Seq[Feature](Feature("Combat Reflexes", 5), Feature("Sorcery 2", 30), Feature("Hot Pilot 3", 15)),
-          Seq[Skill](Skill("Guns(Pistol", SkillBaseAttributes.DX, SkillDifficulties.AVERAGE, Seq[String](),
-            Seq[String](), 0, "", 4, 0, 0)),
-          Seq[Technique](Technique("Off-hand weapon training", "Guns(Pistol)", TechniqueDifficulties.HARD,
-            "Trench Warfare", -4, 0, "", 5, 0, 0)),
-          Equipment(
-            Seq[Weapon](Weapon("Brawling", ItemCarryingStates.READY, Seq[MeleeAttack](
-              MeleeAttack("Punch", true, MeleeDamage(AttackType.THRUSTING, 0, 0, 1, DamageType.CRUSHING, ""),
-                Seq[MeleeDamage](MeleeDamage(AttackType.WEAPON, 4, 0, 1, DamageType.BURNING)),
-                Seq[MeleeDamage](MeleeDamage(AttackType.WEAPON, 2, 0, 1, DamageType.TOXIC)),
-                "Brawling", 0, "", "", 1, "", "C", "")
-            ), Seq[RangedAttack](), Seq[String](), false, -1, false, 0, 0, 4, 4, 4, 0, "", 0, 0, 0, 0),
-              Weapon("Revolver", ItemCarryingStates.READY, Seq[MeleeAttack](), Seq[RangedAttack](
-                RangedAttack("LE", true, RangedDamage(1, 1, 2, 0.5f, DamageType.PIERCING_LARGE, 0, ""),
-                  Seq[RangedDamage](RangedDamage(1, 1, 1, 1, DamageType.CRUSHING_EXPLOSION, 1, "")),
-                  Seq[RangedDamage](RangedDamage(2, 1, 0, 1, DamageType.TOXIC, 0, "")), "Guns(Pistol)", 2, 0, "50/200",
-                  RangedRoF(1, 1), 2, RangedShots(6, "(3i)", 6, 30, 0.1f, 2, "", 0, 0), 9, "", 17, "")),
-                Seq[String](), true, -2, false, 0, 7, 10, 10, 4, 5, "", 4.1f, 350, 0, 0
-              )), Seq[Armor](Armor("Boots", ItemCarryingStates.EQUIPPED, 0, 1, 1, 1, true, true, false,
-              Seq[String](HitLocations.FEET), 5, 5, 5, 5, "", 2, 50)),
-            Seq[Item](Item("Belt Revolver Holster", ItemCarryingStates.EQUIPPED, 1, 5, 5, 5, 5, "", 0.5f, 75, 1, 0, 0),
-              Item("Small Backpack", ItemCarryingStates.TRAVEL, 0, 5, 5, 5, 5, "", 3, 60, 1, 0, 0)), 0, 0, 0, 0),
-          Conditions())*/
+        player = "vlex",
+        name = "Bjorn Masterson",
+        cp = 262,
+        description = Description("35", "6f6i", "250", "somelink", "longbio"),
+        stats = Stats(dx = StatInt(3), ht = StatInt(2), will = StatInt(2), per = StatInt(2),
+          basicSpeed = StatFrac(-0.25)),
+        traits = Seq[Trait](Trait("Combat Reflexes", 5), Trait("Sorcery 2", 30), Trait("Hot Pilot 3", 15)),
+        skills = Seq[Skill](Skill(name = "Guns(Pistol", attr = SkillBaseAttributes.DX,
+          diff = SkillDifficulties.AVERAGE, cp = 4)),
+        techniques = Seq[Technique](Technique(name = "Off-hand weapon training", skill = "Guns(Pistol)",
+          diff = TechniqueDifficulties.HARD, style = "Trench Warfare", defLvl = -4, cp = 5)),
+        equip = Equipment(
+          weapons = Seq[Weapon](
+            Weapon(name = "Brawling", carried = ItemCarryingStates.READY,
+              attacksMelee = Seq[MeleeAttack](
+                MeleeAttack(name = "Punch", available = true, damage = MeleeDamage(attackType = AttackType.THRUSTING),
+                  followup = Seq[MeleeDamage](MeleeDamage(dmgDice = 4, dmgType = DamageType.BURNING)),
+                  linked = Seq[MeleeDamage](MeleeDamage(dmgDice = 2, dmgType = DamageType.TOXIC)), skill = "Brawling",
+                  st = 1, reach = "C")), bulk = -1, hp = 4, hpLeft = 4),
+            Weapon(name = "Revolver", carried = ItemCarryingStates.READY,
+              attacksRanged = Seq[RangedAttack](
+                RangedAttack(name = "LE", available = true, damage = RangedDamage(dmgDice = 1, dmgMod = 2,
+                  armorDiv = 0.5, dmgType = DamageType.PIERCING_LARGE), followup = Seq[RangedDamage](
+                  RangedDamage(dmgDice = 1, dmgMod = 1, dmgType = DamageType.CRUSHING_EXPLOSION, fragDice = 1)),
+                  linked = Seq[RangedDamage](RangedDamage(dmgDice = 2, dmgType = DamageType.TOXIC)),
+                  skill = "Guns(Pistol)", acc = 2, rng = "50/200", shots = RangedShots(shots = 6, reload = "(3i)",
+                    shotsLoaded = 6, shotsCarried = 30, shotWt = 0.1, shotCost = 2), st = 9, malf = 17)),
+              offHand = true, bulk = -2, dr = 7, hp = 10, hpLeft = 10, lc = 4, tl = 5, wt = 4.1, cost = 350)
+          ),
+          armor = Seq[Armor](
+            Armor(name = "Boots", carried = ItemCarryingStates.EQUIPPED, dr = 1, ep = 1, epi = 1,
+            locations = Seq[String](HitLocations.FEET), hp = 5, hpLeft = 5, tl = 5, wt = 2, cost = 50)
+          ),
+          items = Seq[Item](Item(name = "Belt Revolver Holster", carried = ItemCarryingStates.EQUIPPED, dr = 1, hp = 5,
+            hpLeft = 5, tl = 5, wt = 0.5, cost = 75), Item(name = "Small Backpack", carried = ItemCarryingStates.TRAVEL,
+            hp = 5, hpLeft = 5, tl = 5, wt = 3, cost = 60)
+          )
+        )
+      )*/
       when(mockCharlistService save anyObject[Charlist]) thenReturn Future(Completed())
       val charlistController = new CharlistController(mockCharlistService)
       val fakeRequest: Request[JsValue] =
@@ -63,8 +71,8 @@ class CharlistControllerSpec extends PlaySpec with Results with MockitoSugar {
           POST,
           controllers.routes.CharlistController.add().url,
           FakeHeaders(),
-          //          Json.toJson(charlist),
-          Json.parse("""  {"_id":"","timestamp":0,"player":"vlex","access":[],"name":"Bjorn Masterson","cp":262,"cpTotal":154,"description":{"age":"35","height":"6f6i","weight":"250","portrait":"somelink","bio":"longbio"},"stats":{"st":{"delta":0,"bonus":0,"notes":"","value":10,"cp":0},"dx":{"delta":3,"bonus":0,"notes":"","value":13,"cp":60},"iq":{"delta":0,"bonus":0,"notes":"","value":10,"cp":0},"ht":{"delta":2,"bonus":0,"notes":"","value":12,"cp":20},"will":{"delta":2,"bonus":0,"notes":"","value":12,"cp":10},"per":{"delta":2,"bonus":0,"notes":"","value":12,"cp":10},"liftSt":{"delta":0,"bonus":0,"notes":"","value":10,"cp":0},"strikeSt":{"delta":0,"bonus":0,"notes":"","value":10,"cp":0},"thrDmg":"1d-2","swDmg":"1d","bl":10,"combatEncumbrance":1,"travelEncumbrance":1,"hp":{"delta":0,"bonus":0,"notes":"","value":10,"cp":0,"lost":0,"compromised":false,"collapsing":false},"fp":{"delta":0,"bonus":0,"notes":"","value":12,"cp":0,"lost":0,"compromised":false,"collapsing":false},"basicSpeed":{"delta":-0.25,"bonus":0,"notes":"","value":5.75,"cp":-5},"basicMove":{"delta":0,"bonus":0,"notes":"","value":5,"cp":0},"basicDodge":{"delta":0,"bonus":0,"notes":"","value":8,"cp":0},"combMove":4,"travMove":4,"dodge":7,"sm":0},"traits":[{"name":"Combat Reflexes","cp":5},{"name":"Sorcery 2","cp":30},{"name":"Hot Pilot 3","cp":15}],"skills":[{"name":"Guns(Pistol","attr":"DX","diff":"Average","defaults":[],"prerequisites":[],"bonus":0,"notes":"","cp":4,"relLvl":1,"lvl":14}],"techniques":[{"name":"Off-hand weapon training","skill":"Guns(Pistol)","diff":"Hard","style":"Trench Warfare","defLvl":-4,"maxLvl":0,"notes":"","cp":5,"relLvl":0,"lvl":0}],"equip":{"weapons":[{"name":"Brawling","carried":"Ready","attacksMelee":[{"name":"Punch","available":true,"damage":{"attackType":"thr","dmgDice":0,"dmgMod":0,"armorDiv":1,"dmgType":"cr","dmgString":""},"followup":[{"attackType":"","dmgDice":4,"dmgMod":0,"armorDiv":1,"dmgType":"burn","dmgString":""}],"linked":[{"attackType":"","dmgDice":2,"dmgMod":0,"armorDiv":1,"dmgType":"tox","dmgString":""}],"skill":"Brawling","parry":0,"parryType":"","parryString":"0","st":1,"hands":"","reach":"C","notes":""}],"attacksRanged":[],"grips":[],"offHand":false,"bulk":-1,"block":false,"db":0,"dr":0,"hp":4,"hpLeft":4,"lc":4,"tl":0,"notes":"","wt":0,"cost":0,"totalWt":0,"totalCost":0},{"name":"Revolver","carried":"Ready","attacksMelee":[],"attacksRanged":[{"name":"LE","available":true,"damage":{"dmgDice":1,"diceMult":1,"dmgMod":2,"armorDiv":0.5,"dmgType":"pi+","fragDice":0,"dmgString":"1d+2(0.5) pi+"},"followup":[{"dmgDice":1,"diceMult":1,"dmgMod":1,"armorDiv":1,"dmgType":"cr ex","fragDice":1,"dmgString":"1d+1 cr ex [1d]"}],"linked":[{"dmgDice":2,"diceMult":1,"dmgMod":0,"armorDiv":1,"dmgType":"tox","fragDice":0,"dmgString":"2d tox"}],"skill":"Guns(Pistol)","acc":2,"accMod":0,"rng":"50/200","rof":{"rof":1,"rofMult":1,"rofFA":false,"rofJet":false,"rofString":"1"},"rcl":2,"shots":{"shots":6,"reload":"(3i)","shotsLoaded":6,"shotsCarried":30,"shotWt":0.10000000149011612,"shotCost":2,"shotsString":"6/6(3i) 30","totalWt":3.6000001430511475,"totalCost":72},"st":9,"hands":"","malf":17,"notes":""}],"grips":[],"offHand":true,"bulk":-2,"block":false,"db":0,"dr":7,"hp":10,"hpLeft":10,"lc":4,"tl":5,"notes":"","wt":4.099999904632568,"cost":350,"totalWt":7.699999809265137,"totalCost":422}],"armor":[{"name":"Boots","carried":"Equipped","db":0,"dr":1,"ep":1,"epi":1,"front":true,"back":true,"soft":false,"locations":["feet"],"hp":5,"hpLeft":5,"lc":5,"tl":5,"notes":"","wt":2,"cost":50}],"items":[{"name":"Belt Revolver Holster","carried":"Equipped","dr":1,"hp":5,"hpLeft":5,"lc":5,"tl":5,"notes":"","wt":0.5,"cost":75,"n":1,"totalWt":0.5,"totalCost":75},{"name":"Small Backpack","carried":"Travel","dr":0,"hp":5,"hpLeft":5,"lc":5,"tl":5,"notes":"","wt":3,"cost":60,"n":1,"totalWt":3,"totalCost":60}],"totalCost":607,"totalCombWt":10.199999809265137,"totalTravWt":13.199999809265137,"totalDb":0},"conditions":{"unconscious":false,"mortallyWounded":false,"dead":false,"shock":0,"stunned":false,"afflictions":{"coughing":false,"drowsy":false,"drunk":false,"euphoria":false,"nauseated":false,"pain":false,"tipsy":false,"agony":false,"choking":false,"daze":false,"ecstasy":false,"hallucinating":false,"paralysis":false,"retching":false,"seizure":false,"coma":false,"heartAttack":false},"cripplingInjuries":[],"posture":"Standing","closeCombat":false,"grappled":false,"pinned":false,"sprinting":false,"mounted":false}} """)
+          //                    Json.toJson(charlist)
+          Json.parse("""  {"_id":"","timestamp":0,"player":"vlex","access":[],"name":"Bjorn Masterson","cp":262,"cpTotal":154,"description":{"age":"35","height":"6f6i","weight":"250","portrait":"somelink","bio":"longbio"},"stats":{"st":{"delta":0,"bonus":0,"notes":"","value":10,"cp":0},"dx":{"delta":3,"bonus":0,"notes":"","value":13,"cp":60},"iq":{"delta":0,"bonus":0,"notes":"","value":10,"cp":0},"ht":{"delta":2,"bonus":0,"notes":"","value":12,"cp":20},"will":{"delta":2,"bonus":0,"notes":"","value":12,"cp":10},"per":{"delta":2,"bonus":0,"notes":"","value":12,"cp":10},"liftSt":{"delta":0,"bonus":0,"notes":"","value":10,"cp":0},"strikeSt":{"delta":0,"bonus":0,"notes":"","value":10,"cp":0},"thrDmg":"1d-2","swDmg":"1d","bl":20,"combatEncumbrance":0,"travelEncumbrance":0,"hp":{"delta":0,"bonus":0,"notes":"","value":10,"cp":0,"lost":0,"compromised":false,"collapsing":false},"fp":{"delta":0,"bonus":0,"notes":"","value":12,"cp":0,"lost":0,"compromised":false,"collapsing":false},"basicSpeed":{"delta":-0.25,"bonus":0,"notes":"","value":6,"cp":-5},"basicMove":{"delta":0,"bonus":0,"notes":"","value":6,"cp":0},"basicDodge":{"delta":0,"bonus":0,"notes":"","value":9,"cp":0},"combMove":5,"travMove":5,"dodge":9,"sm":0},"traits":[{"name":"Combat Reflexes","cp":5},{"name":"Sorcery 2","cp":30},{"name":"Hot Pilot 3","cp":15}],"skills":[{"name":"Guns(Pistol","attr":"DX","diff":"Average","defaults":[],"prerequisites":[],"bonus":0,"notes":"","cp":4,"relLvl":1,"lvl":14}],"techniques":[{"name":"Off-hand weapon training","skill":"Guns(Pistol)","diff":"Hard","style":"Trench Warfare","defLvl":-4,"maxLvl":0,"notes":"","cp":5,"relLvl":0,"lvl":0}],"equip":{"weapons":[{"name":"Brawling","carried":"Ready","attacksMelee":[{"name":"Punch","available":true,"damage":{"attackType":"thr","dmgDice":0,"dmgMod":0,"armorDiv":1,"dmgType":"cr","dmgString":"1d-2 cr"},"followup":[{"attackType":"","dmgDice":4,"dmgMod":0,"armorDiv":1,"dmgType":"burn","dmgString":"4d burn"}],"linked":[{"attackType":"","dmgDice":2,"dmgMod":0,"armorDiv":1,"dmgType":"tox","dmgString":"2d tox"}],"skill":"Brawling","parry":0,"parryType":"","parryString":"0","st":1,"hands":"","reach":"C","notes":""}],"attacksRanged":[],"grips":[],"offHand":false,"bulk":-1,"block":false,"db":0,"dr":0,"hp":4,"hpLeft":4,"broken":false,"lc":5,"tl":0,"notes":"","wt":0,"cost":0,"totalWt":0,"totalCost":0},{"name":"Revolver","carried":"Ready","attacksMelee":[],"attacksRanged":[{"name":"LE","available":true,"damage":{"dmgDice":1,"diceMult":1,"dmgMod":2,"armorDiv":0.5,"dmgType":"pi+","fragDice":0,"dmgString":"1d+2(0.5) pi+"},"followup":[{"dmgDice":1,"diceMult":1,"dmgMod":1,"armorDiv":1,"dmgType":"cr ex","fragDice":1,"dmgString":"1d+1 cr ex [1d]"}],"linked":[{"dmgDice":2,"diceMult":1,"dmgMod":0,"armorDiv":1,"dmgType":"tox","fragDice":0,"dmgString":"2d tox"}],"skill":"Guns(Pistol)","acc":2,"accMod":0,"rng":"50/200","rof":{"rof":1,"rofMult":1,"rofFA":false,"rofJet":false,"rofString":"1"},"rcl":2,"shots":{"shots":6,"reload":"(3i)","shotsLoaded":6,"shotsCarried":30,"shotWt":0.1,"shotCost":2,"shotsString":"6/6(3i) 30","totalWt":3.6,"totalCost":72},"st":9,"hands":"","malf":17,"notes":""}],"grips":[],"offHand":true,"bulk":-2,"block":false,"db":0,"dr":7,"hp":10,"hpLeft":10,"broken":false,"lc":4,"tl":5,"notes":"","wt":4.1,"cost":350,"totalWt":7.699999999999999,"totalCost":422}],"armor":[{"name":"Boots","carried":"Equipped","db":0,"dr":1,"ep":1,"epi":1,"front":true,"back":true,"drType":"hard","locations":["feet"],"hp":5,"hpLeft":5,"broken":false,"lc":5,"tl":5,"notes":"","wt":2,"cost":50}],"items":[{"name":"Belt Revolver Holster","carried":"Equipped","dr":1,"hp":5,"hpLeft":5,"broken":false,"lc":5,"tl":5,"notes":"","wt":0.5,"cost":75,"n":1,"totalWt":0.5,"totalCost":75},{"name":"Small Backpack","carried":"Travel","dr":0,"hp":5,"hpLeft":5,"broken":false,"lc":5,"tl":5,"notes":"","wt":3,"cost":60,"n":1,"totalWt":3,"totalCost":60}],"frontDR":{"skull":{"dr":0,"ep":0,"epi":0},"eyes":{"dr":0,"ep":0,"epi":0},"face":{"dr":0,"ep":0,"epi":0},"neck":{"dr":0,"ep":0,"epi":0},"armLeft":{"dr":0,"ep":0,"epi":0},"armRight":{"dr":0,"ep":0,"epi":0},"handLeft":{"dr":0,"ep":0,"epi":0},"handRight":{"dr":0,"ep":0,"epi":0},"chest":{"dr":0,"ep":0,"epi":0},"vitals":{"dr":0,"ep":0,"epi":0},"abdomen":{"dr":0,"ep":0,"epi":0},"groin":{"dr":0,"ep":0,"epi":0},"legLeft":{"dr":0,"ep":0,"epi":0},"legRight":{"dr":0,"ep":0,"epi":0},"footLeft":{"dr":1,"ep":1,"epi":1},"footRight":{"dr":0,"ep":0,"epi":0}},"rearDR":{"skull":{"dr":0,"ep":0,"epi":0},"eyes":{"dr":0,"ep":0,"epi":0},"face":{"dr":0,"ep":0,"epi":0},"neck":{"dr":0,"ep":0,"epi":0},"armLeft":{"dr":0,"ep":0,"epi":0},"armRight":{"dr":0,"ep":0,"epi":0},"handLeft":{"dr":0,"ep":0,"epi":0},"handRight":{"dr":0,"ep":0,"epi":0},"chest":{"dr":0,"ep":0,"epi":0},"vitals":{"dr":0,"ep":0,"epi":0},"abdomen":{"dr":0,"ep":0,"epi":0},"groin":{"dr":0,"ep":0,"epi":0},"legLeft":{"dr":0,"ep":0,"epi":0},"legRight":{"dr":0,"ep":0,"epi":0},"footLeft":{"dr":1,"ep":1,"epi":1},"footRight":{"dr":0,"ep":0,"epi":0}},"totalDb":0,"totalCost":607,"totalCombWt":10.2,"totalTravWt":13.2},"conditions":{"unconscious":false,"mortallyWounded":false,"dead":false,"shock":0,"stunned":false,"afflictions":{"coughing":false,"drowsy":false,"drunk":false,"euphoria":false,"nauseated":false,"pain":false,"tipsy":false,"agony":false,"choking":false,"daze":false,"ecstasy":false,"hallucinating":false,"paralysis":false,"retching":false,"seizure":false,"coma":false,"heartAttack":false},"cripplingInjuries":[],"posture":"Standing","closeCombat":false,"grappled":false,"pinned":false,"sprinting":false,"mounted":false}} """)
         )
       val result: Future[Result] = charlistController.add()(fakeRequest)
       assertResult(OK)(status(result))
