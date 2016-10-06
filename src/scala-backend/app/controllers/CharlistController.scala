@@ -17,12 +17,21 @@ import scala.util.Random
   */
 class CharlistController @Inject()(charlistService: CharlistService) extends Controller {
 
-  def create() = Action.async(
+  def add() = Action.async(BodyParsers.parse.json)(implicit request =>
     try {
-      val char = Charlist(_id = Random.nextLong.toString, timestamp = System.currentTimeMillis)
+      val id = Random.nextLong.toString
+      val charlist =
+        request
+          .body
+          .validate[Charlist]
+          .get
+          .copy(
+            _id = Random.nextLong.toString,
+            timestamp = System.currentTimeMillis
+          )
       charlistService
-        .save(char)
-        .map(re => Ok(Json toJson char))
+        .save(charlist)
+        .map(re => Ok(Json.toJson(charlist)))
         .recoverWith {
           case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage)))
         }
@@ -59,26 +68,10 @@ class CharlistController @Inject()(charlistService: CharlistService) extends Con
     }
   )
 
-  def add() = Action.async(BodyParsers.parse.json)(implicit request =>
+  def create() = Action.async(
     try {
-      val id = Random.nextLong.toString
-      val charlist =
-        request
-          .body
-          .validate[Charlist]
-          .get
-          .copy(
-            _id = Random.nextLong.toString,
-            timestamp = System.currentTimeMillis
-          )
-      charlistService
-        .save(charlist)
-        .map(re => Ok(Json.toJson(charlist)))
-        .recoverWith {
-          case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage)))
-        }
+      Future(Ok(Json.toJson(Charlist(_id = Random.nextLong.toString, timestamp = System.currentTimeMillis))))
     } catch {
-      case e: NoSuchElementException => Future(BadRequest(Json.obj("message" -> e.getMessage)))
       case a: AssertionError => Future(BadRequest(Json.obj("message" -> s"Charlist ${a.getMessage}")))
       case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage)))
     }
