@@ -115,21 +115,21 @@ case class Stats(
   }
 
   def calcEncumbrance(combWt: Float, travWt: Float) = {
-    assert(combWt < bl * 10, s"combat encumbrance value is over 10 times basic lift ($combWt, $bl)")
-    assert(travWt < bl * 10, s"travel encumbrance value is over 10 times basic lift ($travWt, $bl)")
+    assert(combWt <= bl * 10, s"combat encumbrance value is over 10 times basic lift ($combWt, $bl)")
+    assert(travWt <= bl * 10, s"travel encumbrance value is over 10 times basic lift ($travWt, $bl)")
     combatEncumbrance = combWt / bl match {
       case x if x < 1 => 0
       case x if x < 2 => 1
       case x if x < 3 => 2
       case x if x < 6 => 3
-      case x if x < 10 => 4
+      case x if x <= 10 => 4
     }
     travelEncumbrance = travWt / bl match {
       case x if x < 1 => 0
       case x if x < 2 => 1
       case x if x < 3 => 2
       case x if x < 6 => 3
-      case x if x < 10 => 4
+      case x if x <= 10 => 4
     }
     combMove =
       math

@@ -9,10 +9,10 @@
 GET           /assets/*file        controllers.Assets.at(path="/public", file)
 
 #Charlists storage
-GET           /api/char            controllers.CharlistController.create()
+POST          /api/char/           controllers.CharlistController.add()
+#GET           /api/char            controllers.CharlistController.create()
 GET           /api/chars           controllers.CharlistController.list
 GET           /api/char/:id        controllers.CharlistController.get(id:String)
-POST          /api/char/           controllers.CharlistController.add()
 POST          /api/char/:id        controllers.CharlistController.replace(id: String)
 #PATCH         /api/char/           controllers.CharlistController.update()
 DELETE        /api/char/:id        controllers.CharlistController.delete(id: String)
