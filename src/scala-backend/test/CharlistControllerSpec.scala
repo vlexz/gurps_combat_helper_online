@@ -98,11 +98,6 @@ class CharlistControllerSpec extends PlaySpec with Results with MockitoSugar {
     }
   }
 
-  /*it should {
-
-    "send OK with "
-  }*/
-
   "CharlistController#GET" should {
 
     "send OK with charlist on request" in {
