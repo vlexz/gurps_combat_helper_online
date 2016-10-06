@@ -4,7 +4,6 @@ import java.util.NoSuchElementException
 
 import com.google.inject.Inject
 import models.charlist.Charlist
-import org.mongodb.scala.MongoWriteException
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc.{Action, BodyParsers, Controller}
@@ -18,29 +17,6 @@ import scala.util.Random
   */
 class CharlistController @Inject()(charlistService: CharlistService) extends Controller {
 
-  def add() = Action.async(BodyParsers.parse.json)(implicit request =>
-    try {
-      val id = Random.nextLong.toString
-      charlistService
-        .save(
-          request
-            .body
-            .validate[Charlist]
-            .get
-            .copy(_id = id, timestamp = System.currentTimeMillis)
-        )
-        .map(re => Ok(Json.obj("id" -> id)))
-        .recoverWith {
-          case e: MongoWriteException => Future(Forbidden)
-          case _ => Future(Forbidden)
-        }
-    } catch {
-      case e: NoSuchElementException => Future(BadRequest(Json.obj("message" -> e.getMessage)))
-      case a: AssertionError => Future(BadRequest(Json.obj("message" -> s"Charlist ${a.getMessage}")))
-      case t: Throwable => Future(InternalServerError)
-    }
-  )
-
   def create() = Action.async(
     try {
       val char = Charlist(_id = Random.nextLong.toString, timestamp = System.currentTimeMillis)
@@ -48,12 +24,12 @@ class CharlistController @Inject()(charlistService: CharlistService) extends Con
         .save(char)
         .map(re => Ok(Json toJson char))
         .recoverWith {
-          case _ => Future(Forbidden)
+          case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage)))
         }
     } catch {
       case e: NoSuchElementException => Future(BadRequest(Json.obj("message" -> e.getMessage)))
       case a: AssertionError => Future(BadRequest(Json.obj("message" -> s"Charlist ${a.getMessage}")))
-      case t: Throwable => Future(InternalServerError)
+      case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage)))
     }
   )
 
@@ -63,10 +39,10 @@ class CharlistController @Inject()(charlistService: CharlistService) extends Con
         .find
         .map(cl => Ok(Json toJson cl))
         .recoverWith {
-          case _ => Future(Forbidden)
+          case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage)))
         }
     } catch {
-      case e: Exception => Future(BadRequest)
+      case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage)))
     }
   )
 
@@ -76,14 +52,39 @@ class CharlistController @Inject()(charlistService: CharlistService) extends Con
         .find(id)
         .map(cl => Ok(cl))
         .recoverWith {
-          case _ => Future(Forbidden)
+          case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage)))
         }
     } catch {
-      case e: Exception => Future(BadRequest)
+      case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage)))
     }
   )
 
-  def update() = Action.async(BodyParsers.parse.json)(implicit request =>
+  def add() = Action.async(BodyParsers.parse.json)(implicit request =>
+    try {
+      val id = Random.nextLong.toString
+      val charlist =
+        request
+          .body
+          .validate[Charlist]
+          .get
+          .copy(
+            _id = Random.nextLong.toString,
+            timestamp = System.currentTimeMillis
+          )
+      charlistService
+        .save(charlist)
+        .map(re => Ok(Json.toJson(charlist)))
+        .recoverWith {
+          case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage)))
+        }
+    } catch {
+      case e: NoSuchElementException => Future(BadRequest(Json.obj("message" -> e.getMessage)))
+      case a: AssertionError => Future(BadRequest(Json.obj("message" -> s"Charlist ${a.getMessage}")))
+      case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage)))
+    }
+  )
+
+  def replace(id: String) = Action.async(BodyParsers.parse.json)(implicit request =>
     try {
       charlistService
         .update(
@@ -91,14 +92,16 @@ class CharlistController @Inject()(charlistService: CharlistService) extends Con
             .body
             .validate[Charlist]
             .get
+            .copy(_id = id)
         )
         .map(re => Ok(Json.obj("success" -> re.toString)))
         .recoverWith {
-          case e: MongoWriteException => Future(Forbidden)
-          case _ => Future(Forbidden)
+          case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage)))
         }
     } catch {
-      case e: Exception => Future(BadRequest)
+      case e: NoSuchElementException => Future(BadRequest(Json.obj("message" -> e.getMessage)))
+      case a: AssertionError => Future(BadRequest(Json.obj("message" -> s"Charlist ${a.getMessage}")))
+      case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage)))
     }
   )
 
@@ -108,11 +111,10 @@ class CharlistController @Inject()(charlistService: CharlistService) extends Con
         .delete(id)
         .map(re => Ok(Json.obj("success" -> re.toString)))
         .recoverWith {
-          case e: MongoWriteException => Future(Forbidden)
-          case _ => Future(Forbidden)
+          case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage)))
         }
     } catch {
-      case e: Exception => Future(BadRequest)
+      case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage)))
     }
   )
 }

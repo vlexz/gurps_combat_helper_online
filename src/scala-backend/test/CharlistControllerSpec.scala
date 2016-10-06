@@ -20,9 +20,9 @@ import scala.concurrent.Future
   */
 class CharlistControllerSpec extends PlaySpec with Results with MockitoSugar {
 
-  "CharlistController#add()" should {
+  "CharlistController#POST" should {
 
-    "send OK on request with valid charlist json" in {
+    "send OK with charlist json on no id request with valid charlist json" in {
       val mockCharlistService = mock[CharlistService]
       /*val charlist = Charlist(
           "",
@@ -73,7 +73,7 @@ class CharlistControllerSpec extends PlaySpec with Results with MockitoSugar {
 
   it should {
 
-    "send BAD_REQUEST on request with invalid charlist json" in {
+    "send BAD_REQUEST on no id request with invalid charlist json" in {
       val mockCharlistService = mock[CharlistService]
       when(mockCharlistService save anyObject[Charlist]) thenReturn Future(Completed())
       val charlistController = new CharlistController(mockCharlistService)
@@ -90,7 +90,12 @@ class CharlistControllerSpec extends PlaySpec with Results with MockitoSugar {
     }
   }
 
-  "CharlistController#create" should {
+  it should {
+
+    "send OK with "
+  }
+
+  "CharlistController#GET" should {
 
     "send OK with charlist on request" in {
       val mockCharlistService = mock[CharlistService]

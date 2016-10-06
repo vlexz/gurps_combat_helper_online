@@ -68,6 +68,7 @@ case class Description(
                       )
 
 /** Charlist subcontainer for basic and secondary attributes */
+//noinspection ScalaRedundantConversion
 case class Stats(
                   st: StatInt = StatInt(),
                   dx: StatInt = StatInt(),
@@ -100,13 +101,11 @@ case class Stats(
   per.calcStat(10, 5)
   liftSt.calcStat(st.value, 3)
   strikeSt.calcStat(st.value, 5)
-  bl = math.round(liftSt.value ^ 2 / 5)
+  bl = (liftSt.value * liftSt.value / 5).toInt
   hp.calcStat(st.value, 2)
   fp.calcStat(ht.value, 3)
   basicSpeed.calcStat((dx.value + ht.value) / 4, 20)
-  //noinspection ScalaRedundantConversion
   basicMove.calcStat(basicSpeed.value.toInt, 5)
-  //noinspection ScalaRedundantConversion
   basicDodge.calcStat(basicSpeed.value.toInt + 3, 15)
 
   def calcDmg(thr: (Int, Int), sw: (Int, Int)) = {

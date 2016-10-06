@@ -6489,3 +6489,319 @@ Total time: 6 s, completed Oct 6, 2016 8:51:52 AM
 > server-post-command-error-handler
 > server-post-command-cleanup
 > server-handle-next-server-request
+> compile
+Evaluating tasks: compile:compile
+Running task... Cancel: sbt.server.ServerTaskCancellation@4b0e777f, check cycles: false
+
+Initial source changes: 
+	removed:Set()
+	added: Set()
+	modified: Set(/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/app/bootstrap/InitSetup.scala)
+Removed products: Set()
+External API changes: API Changes: Set()
+Modified binary dependencies: Set()
+Initial directly invalidated sources: Set(/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/app/bootstrap/InitSetup.scala)
+
+Sources indirectly invalidated by:
+	product: Set()
+	binary dep: Set()
+	external source: Set()
+All initially invalidated sources: Set(/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/app/bootstrap/InitSetup.scala)
+
+Read from stdout: Compiling 1 Scala source to /Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/scala-2.11/classes...
+Compiling 1 Scala source to /Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/scala-2.11/classes...
+Getting compiler-interface from component compiler for Scala 2.11.7
+Other repositories:
+Default repositories:
+Getting compiler-interface from component compiler for Scala 2.11.7
+Other repositories:
+Default repositories:
+Running cached compiler 73fa3e18, interfacing (CompilerInterface) with Scala compiler version 2.11.7
+Calling Scala compiler with arguments  (CompilerInterface):
+	-deprecation
+	-unchecked
+	-encoding
+	utf8
+	-bootclasspath
+	/Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/resources.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/rt.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/sunrsasign.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/jsse.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/jce.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/charsets.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/jfr.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/classes:/Users/crimson/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.11.7.jar
+	-classpath
+	/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/scala-2.11/classes:/Users/crimson/.ivy2/cache/com.typesafe.play/twirl-api_2.11/jars/twirl-api_2.11-1.1.1.jar:/Users/crimson/.ivy2/cache/org.apache.commons/commons-lang3/jars/commons-lang3-3.4.jar:/Users/crimson/.ivy2/cache/org.scala-lang.modules/scala-xml_2.11/bundles/scala-xml_2.11-1.0.1.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.typesafe.play/play-server_2.11/2.5.0/jars/play-server_2.11.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.typesafe.play/play_2.11/2.5.0/jars/play_2.11.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.typesafe.play/build-link/2.5.0/jars/build-link.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.typesafe.play/play-exceptions/2.5.0/jars/play-exceptions.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.typesafe.play/play-iteratees_2.11/2.5.0/jars/play-iteratees_2.11.jar:/Users/crimson/.ivy2/cache/org.scala-stm/scala-stm_2.11/jars/scala-stm_2.11-0.7.jar:/Users/crimson/.ivy2/cache/com.typesafe/config/bundles/config-1.3.0.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.typesafe.play/play-json_2.11/2.5.0/jars/play-json_2.11.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.typesafe.play/play-functional_2.11/2.5.0/jars/play-functional_2.11.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.typesafe.play/play-datacommons_2.11/2.5.0/jars/play-datacommons_2.11.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/joda-time/joda-time/2.9.2/jars/joda-time.jar:/Users/crimson/.ivy2/cache/org.joda/joda-convert/jars/joda-convert-1.8.1.jar:/Users/crimson/.ivy2/cache/org.scala-lang/scala-reflect/jars/scala-reflect-2.11.7.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.fasterxml.jackson.core/jackson-core/2.7.1/bundles/jackson-core.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.fasterxml.jackson.core/jackson-annotations/2.7.1/bundles/jackson-annotations.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.fasterxml.jackson.core/jackson-databind/2.7.1/bundles/jackson-databind.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.fasterxml.jackson.datatype/jackson-datatype-jdk8/2.7.1/bundles/jackson-datatype-jdk8.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.fasterxml.jackson.datatype/jackson-datatype-jsr310/2.7.1/bundles/jackson-datatype-jsr310.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.typesafe.play/play-netty-utils/2.5.0/jars/play-netty-utils.jar:/Users/crimson/.ivy2/cache/org.slf4j/slf4j-api/jars/slf4j-api-1.7.16.jar:/Users/crimson/.ivy2/cache/org.slf4j/jul-to-slf4j/jars/jul-to-slf4j-1.7.16.jar:/Users/crimson/.ivy2/cache/org.slf4j/jcl-over-slf4j/jars/jcl-over-slf4j-1.7.16.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.typesafe.play/play-streams_2.11/2.5.0/jars/play-streams_2.11.jar:/Users/crimson/.ivy2/cache/org.reactivestreams/reactive-streams/jars/reactive-streams-1.0.0.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.typesafe.akka/akka-stream_2.11/2.4.2/jars/akka-stream_2.11.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.typesafe.akka/akka-actor_2.11/2.4.2/jars/akka-actor_2.11.jar:/Users/crimson/.ivy2/cache/org.scala-lang.modules/scala-java8-compat_2.11/bundles/scala-java8-compat_2.11-0.7.0.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.typesafe/ssl-config-akka_2.11/0.1.3/bundles/ssl-config-akka_2.11.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.typesafe/ssl-config-core_2.11/0.1.3/bundles/ssl-config-core_2.11.jar:/Users/crimson/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.11/bundles/scala-parser-combinators_2.11-1.0.4.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.typesafe.akka/akka-slf4j_2.11/2.4.2/jars/akka-slf4j_2.11.jar:/Users/crimson/.ivy2/cache/commons-codec/commons-codec/jars/commons-codec-1.10.jar:/Users/crimson/.ivy2/cache/xerces/xercesImpl/jars/xercesImpl-2.11.0.jar:/Users/crimson/.ivy2/cache/xml-apis/xml-apis/jars/xml-apis-1.4.01.jar:/Users/crimson/.ivy2/cache/javax.transaction/jta/jars/jta-1.1.jar:/Users/crimson/.ivy2/cache/com.google.inject/guice/jars/guice-4.0.jar:/Users/crimson/.ivy2/cache/javax.inject/javax.inject/jars/javax.inject-1.jar:/Users/crimson/.ivy2/cache/aopalliance/aopalliance/jars/aopalliance-1.0.jar:/Users/crimson/.ivy2/cache/com.google.inject.extensions/guice-assistedinject/jars/guice-assistedinject-4.0.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.typesafe.play/play-netty-server_2.11/2.5.0/jars/play-netty-server_2.11.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.typesafe.netty/netty-reactive-streams-http/1.0.2/jars/netty-reactive-streams-http.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.typesafe.netty/netty-reactive-streams/1.0.2/jars/netty-reactive-streams.jar:/Users/crimson/.ivy2/cache/io.netty/netty-transport-native-epoll/jars/netty-transport-native-epoll-4.0.33.Final.jar:/Users/crimson/.ivy2/cache/com.typesafe.play/play-logback_2.11/jars/play-logback_2.11-2.5.0.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/ch.qos.logback/logback-core/1.1.4/jars/logback-core.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/ch.qos.logback/logback-classic/1.1.4/jars/logback-classic.jar:/Users/crimson/.ivy2/cache/com.typesafe.play/play-jdbc_2.11/jars/play-jdbc_2.11-2.5.0.jar:/Users/crimson/.ivy2/cache/com.typesafe.play/play-jdbc-api_2.11/jars/play-jdbc-api_2.11-2.5.0.jar:/Users/crimson/.ivy2/cache/com.jolbox/bonecp/bundles/bonecp-0.8.0.RELEASE.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.zaxxer/HikariCP/2.4.3/bundles/HikariCP.jar:/Users/crimson/.ivy2/cache/com.googlecode.usc/jdbcdslog/jars/jdbcdslog-1.0.6.2.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.h2database/h2/1.4.191/jars/h2.jar:/Users/crimson/.ivy2/cache/tyrex/tyrex/jars/tyrex-1.0.1.jar:/Users/crimson/.ivy2/cache/com.typesafe.play/play-cache_2.11/jars/play-cache_2.11-2.5.0.jar:/Users/crimson/.ivy2/cache/net.sf.ehcache/ehcache-core/jars/ehcache-core-2.6.11.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.typesafe.play/play-ws_2.11/2.5.0/jars/play-ws_2.11.jar:/Users/crimson/.ivy2/cache/com.google.guava/guava/bundles/guava-19.0.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/org.asynchttpclient/async-http-client/2.0.0-RC9/jars/async-http-client.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/io.netty/netty-codec-http/4.0.34.Final/jars/netty-codec-http.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/io.netty/netty-codec/4.0.34.Final/jars/netty-codec.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/io.netty/netty-transport/4.0.34.Final/jars/netty-transport.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/io.netty/netty-buffer/4.0.34.Final/jars/netty-buffer.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/io.netty/netty-common/4.0.34.Final/jars/netty-common.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/io.netty/netty-handler/4.0.34.Final/jars/netty-handler.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/org.asynchttpclient/netty-resolver-dns/2.0.0-RC9/jars/netty-resolver-dns.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/org.asynchttpclient/netty-resolver/2.0.0-RC9/jars/netty-resolver.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/org.asynchttpclient/netty-codec-dns/2.0.0-RC9/jars/netty-codec-dns.jar:/Users/crimson/.ivy2/cache/org.javassist/javassist/bundles/javassist-3.20.0-GA.jar:/Users/crimson/.ivy2/cache/oauth.signpost/signpost-core/jars/signpost-core-1.2.1.2.jar:/Users/crimson/.ivy2/cache/oauth.signpost/signpost-commonshttp4/jars/signpost-commonshttp4-1.2.1.2.jar:/Users/crimson/.ivy2/cache/org.apache.httpcomponents/httpcore/jars/httpcore-4.0.1.jar:/Users/crimson/.ivy2/cache/org.apache.httpcomponents/httpclient/jars/httpclient-4.0.1.jar:/Users/crimson/.ivy2/cache/commons-logging/commons-logging/jars/commons-logging-1.1.1.jar:/Users/crimson/.ivy2/cache/com.typesafe.play/filters-helpers_2.11/jars/filters-helpers_2.11-2.5.0.jar:/Users/crimson/.ivy2/cache/com.typesafe.play/play-java_2.11/jars/play-java_2.11-2.5.0.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/org.yaml/snakeyaml/1.16/bundles/snakeyaml.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/org.hibernate/hibernate-validator/5.2.4.Final/jars/hibernate-validator.jar:/Users/crimson/.ivy2/cache/javax.validation/validation-api/jars/validation-api-1.1.0.Final.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/org.jboss.logging/jboss-logging/3.2.1.Final/jars/jboss-logging.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/com.fasterxml/classmate/1.1.0/bundles/classmate.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/javax.el/javax.el-api/3.0.0/jars/javax.el-api.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/org.springframework/spring-context/4.2.4.RELEASE/jars/spring-context.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/org.springframework/spring-core/4.2.4.RELEASE/jars/spring-core.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/org.springframework/spring-beans/4.2.4.RELEASE/jars/spring-beans.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/org.reflections/reflections/0.9.10/jars/reflections.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/net.jodah/typetools/0.4.4/bundles/typetools.jar:/Users/crimson/.ivy2/cache/com.google.code.findbugs/jsr305/jars/jsr305-3.0.1.jar:/Users/crimson/Downloads/activator-dist-1.3.10/repository/org.apache.tomcat/tomcat-servlet-api/8.0.32/jars/tomcat-servlet-api.jar:/Users/crimson/.ivy2/cache/org.mongodb.scala/mongo-scala-driver_2.11/jars/mongo-scala-driver_2.11-1.0.1.jar:/Users/crimson/.ivy2/cache/org.mongodb.scala/mongo-scala-bson_2.11/jars/mongo-scala-bson_2.11-1.0.1.jar:/Users/crimson/.ivy2/cache/org.mongodb/mongodb-driver-async/jars/mongodb-driver-async-3.1.0.jar:/Users/crimson/.ivy2/cache/org.mongodb/bson/jars/bson-3.1.0.jar:/Users/crimson/.ivy2/cache/org.mongodb/mongodb-driver-core/jars/mongodb-driver-core-3.1.0.jar:/Users/crimson/.ivy2/cache/com.github.t3hnar/scala-bcrypt_2.11/jars/scala-bcrypt_2.11-2.5.jar:/Users/crimson/.ivy2/cache/de.svenkubiak/jBCrypt/jars/jBCrypt-0.4.jar:/Users/crimson/.ivy2/cache/org.mockito/mockito-core/jars/mockito-core-1.10.19.jar:/Users/crimson/.ivy2/cache/org.hamcrest/hamcrest-core/jars/hamcrest-core-1.1.jar:/Users/crimson/.ivy2/cache/org.objenesis/objenesis/jars/objenesis-2.1.jar
+Scala compilation took 0.556419955 s
+New invalidations:
+	Set()
+Initial set of included nodes: Set()
+Previously invalidated, but (transitively) depend on new invalidations:
+	Set()
+All newly invalidated sources after taking into account (previously) recompiled sources:Set()
+Total time: 1 s, completed Oct 6, 2016 9:29:26 AM
+> server-post-command-cleanup
+> server-handle-next-server-request
+> test
+Evaluating tasks: test:test
+Running task... Cancel: sbt.server.ServerTaskCancellation@3f9aa38d, check cycles: false
+
+Initial source changes: 
+	removed:Set()
+	added: Set()
+	modified: Set()
+Removed products: Set()
+External API changes: API Changes: Set()
+Modified binary dependencies: Set()
+Initial directly invalidated sources: Set()
+
+Sources indirectly invalidated by:
+	product: Set()
+	binary dep: Set()
+	external source: Set()
+All initially invalidated sources: Set()
+
+Copy resource mappings: 
+	(/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/conf/application.conf,/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/scala-2.11/classes/application.conf)
+	(/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/conf/logback.xml,/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/scala-2.11/classes/logback.xml)
+	(/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/conf/messages,/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/scala-2.11/classes/messages)
+	(/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/conf/routes,/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/scala-2.11/classes/routes)
+
+Initial source changes: 
+	removed:Set()
+	added: Set()
+	modified: Set()
+Removed products: Set()
+External API changes: API Changes: Set()
+Modified binary dependencies: Set()
+Initial directly invalidated sources: Set()
+
+Sources indirectly invalidated by:
+	product: Set()
+	binary dep: Set()
+	external source: Set()
+All initially invalidated sources: Set()
+
+Copy resource mappings: 
+	(/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/web/public/test/public,/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/scala-2.11/test-classes/public)
+	(/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/web/public/test/public/images,/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/scala-2.11/test-classes/public/images)
+	(/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/web/public/test/public/javascripts,/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/scala-2.11/test-classes/public/javascripts)
+	(/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/web/public/test/public/lib,/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/scala-2.11/test-classes/public/lib)
+	(/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/web/public/test/public/stylesheets,/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/scala-2.11/test-classes/public/stylesheets)
+	(/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/web/public/test/public/images/favicon.png,/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/scala-2.11/test-classes/public/images/favicon.png)
+	(/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/web/public/test/public/javascripts/jquery-1.9.0.min.js,/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/scala-2.11/test-classes/public/javascripts/jquery-1.9.0.min.js)
+	(/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/web/public/test/public/lib/ggmtools,/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/scala-2.11/test-classes/public/lib/ggmtools)
+	(/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/web/public/test/public/lib/ismet-scalongo-seed,/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/scala-2.11/test-classes/public/lib/ismet-scalongo-seed)
+	(/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/web/public/test/public/lib/ismet-scalongo-seed/images,/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/scala-2.11/test-classes/public/lib/ismet-scalongo-seed/images)
+	(/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/web/public/test/public/lib/ismet-scalongo-seed/javascripts,/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/scala-2.11/test-classes/public/lib/ismet-scalongo-seed/javascripts)
+	(/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/web/public/test/public/lib/ismet-scalongo-seed/stylesheets,/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/scala-2.11/test-classes/public/lib/ismet-scalongo-seed/stylesheets)
+	(/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/web/public/test/public/lib/ismet-scalongo-seed/images/favicon.png,/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/scala-2.11/test-classes/public/lib/ismet-scalongo-seed/images/favicon.png)
+	(/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/web/public/test/public/lib/ismet-scalongo-seed/javascripts/jquery-1.9.0.min.js,/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/scala-2.11/test-classes/public/lib/ismet-scalongo-seed/javascripts/jquery-1.9.0.min.js)
+	(/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/web/public/test/public/lib/ismet-scalongo-seed/stylesheets/main.css,/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/scala-2.11/test-classes/public/lib/ismet-scalongo-seed/stylesheets/main.css)
+	(/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/web/public/test/public/stylesheets/main.css,/Users/crimson/IdeaProjects/gurps_combat_helper_online/src/scala-backend/target/scala-2.11/test-classes/public/stylesheets/main.css)
+Framework implementation 'org.scalacheck.ScalaCheckFramework' not present.
+Framework implementation 'org.specs2.runner.Specs2Framework' not present.
+Framework implementation 'org.specs2.runner.SpecsFramework' not present.
+Framework implementation 'org.specs.runner.SpecsFramework' not present.
+Subclass fingerprints: List((org.scalatest.Suite,false,org.scalatest.tools.Framework$$anon$1@4626fae7), (junit.framework.TestCase,false,com.novocode.junit.JUnit3Fingerprint@c1675ea))
+Annotation fingerprints: List((org.scalatest.WrapWith,false,org.scalatest.tools.Framework$$anon$2@1bad818c), (org.junit.runner.RunWith,false,com.novocode.junit.RunWithFingerprint@5ab6713c), (org.junit.Test,false,com.novocode.junit.JUnitFingerprint@2b36594f))
+Forking tests - parallelism = false
+Create a single-thread test executor
+Runner for org.scalatest.tools.Framework produced 1 initial tasks for 1 tests.
+  Running TaskDef(CharlistControllerSpec, sbt.ForkMain$SubclassFingerscan@3c026e53, false, [SuiteSelector])
+Read from stdout: CharlistControllerSpec:
+CharlistControllerSpec:
+Read from stdout: CharlistController#add()
+CharlistController#add()
+Read from stdout: - should send OK on request with valid charlist json
+- should send OK on request with valid charlist json
+Read from stdout: CharlistController#add()
+CharlistController#add()
+Read from stdout: - should send BAD_REQUEST on request with invalid charlist json
+- should send BAD_REQUEST on request with invalid charlist json
+Read from stdout: CharlistController#create
+CharlistController#create
+Reporter completed abruptly with an exception after receiving event: TestFailed(Ordinal(0, 12),No content to map due to end-of-input
+ at [Source:  ; line: 1, column: 0],CharlistControllerSpec,CharlistControllerSpec,Some(CharlistControllerSpec),CharlistController#create should send OK with charlist on request,send OK with charlist on request,Vector(),Some(com.fasterxml.jackson.databind.JsonMappingException: No content to map due to end-of-input
+ at [Source:  ; line: 1, column: 0]),Some(7),Some(IndentedText(- should send OK with charlist on request,should send OK with charlist on request,1)),Some(SeeStackDepthException),Some(CharlistControllerSpec),None,pool-1-thread-1-ScalaTest-running-CharlistControllerSpec,1475735377589).
+java.io.NotSerializableException: com.fasterxml.jackson.core.json.ReaderBasedJsonParser
+	at java.io.ObjectOutputStream.writeObject0(ObjectOutputStream.java:1184)
+	at java.io.ObjectOutputStream.defaultWriteFields(ObjectOutputStream.java:1548)
+	at java.io.ObjectOutputStream.writeSerialData(ObjectOutputStream.java:1509)
+	at java.io.ObjectOutputStream.writeOrdinaryObject(ObjectOutputStream.java:1432)
+	at java.io.ObjectOutputStream.writeObject0(ObjectOutputStream.java:1178)
+	at java.io.ObjectOutputStream.defaultWriteFields(ObjectOutputStream.java:1548)
+	at java.io.ObjectOutputStream.writeSerialData(ObjectOutputStream.java:1509)
+	at java.io.ObjectOutputStream.writeOrdinaryObject(ObjectOutputStream.java:1432)
+	at java.io.ObjectOutputStream.writeObject0(ObjectOutputStream.java:1178)
+	at java.io.ObjectOutputStream.defaultWriteFields(ObjectOutputStream.java:1548)
+	at java.io.ObjectOutputStream.writeSerialData(ObjectOutputStream.java:1509)
+	at java.io.ObjectOutputStream.writeOrdinaryObject(ObjectOutputStream.java:1432)
+	at java.io.ObjectOutputStream.writeObject0(ObjectOutputStream.java:1178)
+	at java.io.ObjectOutputStream.writeObject(ObjectOutputStream.java:348)
+	at org.scalatest.tools.SocketReporter.apply(SocketReporter.scala:31)
+	at org.scalatest.DispatchReporter$Propagator$$anonfun$run$1.apply(DispatchReporter.scala:240)
+	at org.scalatest.DispatchReporter$Propagator$$anonfun$run$1.apply(DispatchReporter.scala:239)
+	at scala.collection.immutable.List.foreach(List.scala:381)
+	at org.scalatest.DispatchReporter$Propagator.run(DispatchReporter.scala:239)
+	at java.lang.Thread.run(Thread.java:745)
+Exception in thread "Thread-21" java.io.WriteAbortedException: writing aborted; java.io.NotSerializableException: com.fasterxml.jackson.core.json.ReaderBasedJsonParser
+	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1357)
+	at java.io.ObjectInputStream.defaultReadFields(ObjectInputStream.java:2018)
+	at java.io.ObjectInputStream.readSerialData(ObjectInputStream.java:1942)
+	at java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:1808)
+	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1353)
+	at java.io.ObjectInputStream.defaultReadFields(ObjectInputStream.java:2018)
+	at java.io.ObjectInputStream.readSerialData(ObjectInputStream.java:1942)
+	at java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:1808)
+	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1353)
+	at java.io.ObjectInputStream.defaultReadFields(ObjectInputStream.java:2018)
+	at java.io.ObjectInputStream.readSerialData(ObjectInputStream.java:1942)
+	at java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:1808)
+	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1353)
+	at java.io.ObjectInputStream.readObject(ObjectInputStream.java:373)
+	at org.scalatest.tools.Framework$ScalaTestRunner$Skeleton$1$React.react(Framework.scala:795)
+	at org.scalatest.tools.Framework$ScalaTestRunner$Skeleton$1.run(Framework.scala:784)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.io.NotSerializableException: com.fasterxml.jackson.core.json.ReaderBasedJsonParser
+	at java.io.ObjectOutputStream.writeObject0(ObjectOutputStream.java:1184)
+	at java.io.ObjectOutputStream.defaultWriteFields(ObjectOutputStream.java:1548)
+	at java.io.ObjectOutputStream.writeSerialData(ObjectOutputStream.java:1509)
+	at java.io.ObjectOutputStream.writeOrdinaryObject(ObjectOutputStream.java:1432)
+	at java.io.ObjectOutputStream.writeObject0(ObjectOutputStream.java:1178)
+	at java.io.ObjectOutputStream.defaultWriteFields(ObjectOutputStream.java:1548)
+	at java.io.ObjectOutputStream.writeSerialData(ObjectOutputStream.java:1509)
+	at java.io.ObjectOutputStream.writeOrdinaryObject(ObjectOutputStream.java:1432)
+	at java.io.ObjectOutputStream.writeObject0(ObjectOutputStream.java:1178)
+	at java.io.ObjectOutputStream.defaultWriteFields(ObjectOutputStream.java:1548)
+	at java.io.ObjectOutputStream.writeSerialData(ObjectOutputStream.java:1509)
+	at java.io.ObjectOutputStream.writeOrdinaryObject(ObjectOutputStream.java:1432)
+	at java.io.ObjectOutputStream.writeObject0(ObjectOutputStream.java:1178)
+	at java.io.ObjectOutputStream.writeObject(ObjectOutputStream.java:348)
+	at org.scalatest.tools.SocketReporter.apply(SocketReporter.scala:31)
+	at org.scalatest.DispatchReporter$Propagator$$anonfun$run$1.apply(DispatchReporter.scala:240)
+	at org.scalatest.DispatchReporter$Propagator$$anonfun$run$1.apply(DispatchReporter.scala:239)
+	at scala.collection.immutable.List.foreach(List.scala:381)
+	at org.scalatest.DispatchReporter$Propagator.run(DispatchReporter.scala:239)
+	... 1 more
+Read from stdout: - should send OK with charlist on request *** FAILED ***
+- should send OK with charlist on request *** FAILED ***
+Read from stdout: com.fasterxml.jackson.databind.JsonMappingException: No content to map due to end-of-input
+Read from stdout: at [Source:  ; line: 1, column: 0]
+  com.fasterxml.jackson.databind.JsonMappingException: No content to map due to end-of-input
+ at [Source:  ; line: 1, column: 0]
+Read from stdout: at com.fasterxml.jackson.databind.JsonMappingException.from(JsonMappingException.java:216)
+  at com.fasterxml.jackson.databind.JsonMappingException.from(JsonMappingException.java:216)
+Read from stdout: at com.fasterxml.jackson.databind.ObjectMapper._initForReading(ObjectMapper.java:3832)
+  at com.fasterxml.jackson.databind.ObjectMapper._initForReading(ObjectMapper.java:3832)
+Read from stdout: at com.fasterxml.jackson.databind.ObjectMapper._readValue(ObjectMapper.java:3746)
+  at com.fasterxml.jackson.databind.ObjectMapper._readValue(ObjectMapper.java:3746)
+Read from stdout: at com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:2042)
+  at com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:2042)
+Read from stdout: at play.api.libs.json.jackson.JacksonJson$.parseJsValue(JacksonJson.scala:226)
+  at play.api.libs.json.jackson.JacksonJson$.parseJsValue(JacksonJson.scala:226)
+Read from stdout: at play.api.libs.json.Json$.parse(Json.scala:21)
+  at play.api.libs.json.Json$.parse(Json.scala:21)
+Read from stdout: at CharlistControllerSpec$$anonfun$3$$anonfun$apply$mcV$sp$3.apply$mcV$sp(CharlistControllerSpec.scala:104)
+  at CharlistControllerSpec$$anonfun$3$$anonfun$apply$mcV$sp$3.apply$mcV$sp(CharlistControllerSpec.scala:104)
+Read from stdout: at CharlistControllerSpec$$anonfun$3$$anonfun$apply$mcV$sp$3.apply(CharlistControllerSpec.scala:95)
+  at CharlistControllerSpec$$anonfun$3$$anonfun$apply$mcV$sp$3.apply(CharlistControllerSpec.scala:95)
+Read from stdout: at CharlistControllerSpec$$anonfun$3$$anonfun$apply$mcV$sp$3.apply(CharlistControllerSpec.scala:95)
+  at CharlistControllerSpec$$anonfun$3$$anonfun$apply$mcV$sp$3.apply(CharlistControllerSpec.scala:95)
+Read from stdout: at org.scalatest.Transformer$$anonfun$apply$1.apply$mcV$sp(Transformer.scala:22)
+  at org.scalatest.Transformer$$anonfun$apply$1.apply$mcV$sp(Transformer.scala:22)
+Read from stdout: ...
+  ...
+Reporter completed abruptly with an exception after receiving event: ScopeClosed(Ordinal(0, 13),CharlistController#create,NameInfo(CharlistControllerSpec,CharlistControllerSpec,Some(CharlistControllerSpec),None),Some(MotionToSuppress),Some(LineInFile(93,CharlistControllerSpec.scala)),None,pool-1-thread-1-ScalaTest-running-CharlistControllerSpec,1475735377701).
+java.net.SocketException: Broken pipe
+	at java.net.SocketOutputStream.socketWrite0(Native Method)
+	at java.net.SocketOutputStream.socketWrite(SocketOutputStream.java:109)
+	at java.net.SocketOutputStream.write(SocketOutputStream.java:153)
+	at java.io.ObjectOutputStream$BlockDataOutputStream.drain(ObjectOutputStream.java:1877)
+	at java.io.ObjectOutputStream$BlockDataOutputStream.setBlockDataMode(ObjectOutputStream.java:1786)
+	at java.io.ObjectOutputStream.writeNonProxyDesc(ObjectOutputStream.java:1286)
+	at java.io.ObjectOutputStream.writeClassDesc(ObjectOutputStream.java:1231)
+	at java.io.ObjectOutputStream.writeOrdinaryObject(ObjectOutputStream.java:1427)
+	at java.io.ObjectOutputStream.writeObject0(ObjectOutputStream.java:1178)
+	at java.io.ObjectOutputStream.writeFatalException(ObjectOutputStream.java:1577)
+	at java.io.ObjectOutputStream.writeObject(ObjectOutputStream.java:351)
+	at org.scalatest.tools.SocketReporter.apply(SocketReporter.scala:31)
+	at org.scalatest.DispatchReporter$Propagator$$anonfun$run$1.apply(DispatchReporter.scala:240)
+	at org.scalatest.DispatchReporter$Propagator$$anonfun$run$1.apply(DispatchReporter.scala:239)
+	at scala.collection.immutable.List.foreach(List.scala:381)
+	at org.scalatest.DispatchReporter$Propagator.run(DispatchReporter.scala:239)
+	at java.lang.Thread.run(Thread.java:745)
+    Produced 0 nested tasks and 3 events.
+Reporter completed abruptly with an exception after receiving event: SuiteCompleted(Ordinal(0, 14),CharlistControllerSpec,CharlistControllerSpec,Some(CharlistControllerSpec),Some(1946),Some(MotionToSuppress),Some(TopOfClass(CharlistControllerSpec)),None,None,pool-1-thread-1,1475735377715).
+java.net.SocketException: Broken pipe
+	at java.net.SocketOutputStream.socketWrite0(Native Method)
+	at java.net.SocketOutputStream.socketWrite(SocketOutputStream.java:109)
+	at java.net.SocketOutputStream.write(SocketOutputStream.java:153)
+	at java.io.ObjectOutputStream$BlockDataOutputStream.drain(ObjectOutputStream.java:1877)
+	at java.io.ObjectOutputStream$BlockDataOutputStream.setBlockDataMode(ObjectOutputStream.java:1786)
+	at java.io.ObjectOutputStream.writeNonProxyDesc(ObjectOutputStream.java:1286)
+	at java.io.ObjectOutputStream.writeClassDesc(ObjectOutputStream.java:1231)
+	at java.io.ObjectOutputStream.writeOrdinaryObject(ObjectOutputStream.java:1427)
+	at java.io.ObjectOutputStream.writeObject0(ObjectOutputStream.java:1178)
+	at java.io.ObjectOutputStream.writeFatalException(ObjectOutputStream.java:1577)
+	at java.io.ObjectOutputStream.writeObject(ObjectOutputStream.java:351)
+	at org.scalatest.tools.SocketReporter.apply(SocketReporter.scala:31)
+	at org.scalatest.DispatchReporter$Propagator$$anonfun$run$1.apply(DispatchReporter.scala:240)
+	at org.scalatest.DispatchReporter$Propagator$$anonfun$run$1.apply(DispatchReporter.scala:239)
+	at scala.collection.immutable.List.foreach(List.scala:381)
+	at org.scalatest.DispatchReporter$Propagator.run(DispatchReporter.scala:239)
+	at java.lang.Thread.run(Thread.java:745)
+Reporter completed abruptly with an exception after receiving event: RunCompleted(Ordinal(0, 15),Some(2379),Some(Summary(2,1,0,0,0,1,0,0)),None,None,None,main,1475735377754).
+java.net.SocketException: Broken pipe
+	at java.net.SocketOutputStream.socketWrite0(Native Method)
+	at java.net.SocketOutputStream.socketWrite(SocketOutputStream.java:109)
+	at java.net.SocketOutputStream.write(SocketOutputStream.java:153)
+	at java.io.ObjectOutputStream$BlockDataOutputStream.drain(ObjectOutputStream.java:1877)
+	at java.io.ObjectOutputStream$BlockDataOutputStream.setBlockDataMode(ObjectOutputStream.java:1786)
+	at java.io.ObjectOutputStream.writeNonProxyDesc(ObjectOutputStream.java:1286)
+	at java.io.ObjectOutputStream.writeClassDesc(ObjectOutputStream.java:1231)
+	at java.io.ObjectOutputStream.writeOrdinaryObject(ObjectOutputStream.java:1427)
+	at java.io.ObjectOutputStream.writeObject0(ObjectOutputStream.java:1178)
+	at java.io.ObjectOutputStream.writeFatalException(ObjectOutputStream.java:1577)
+	at java.io.ObjectOutputStream.writeObject(ObjectOutputStream.java:351)
+	at org.scalatest.tools.SocketReporter.apply(SocketReporter.scala:31)
+	at org.scalatest.DispatchReporter$Propagator$$anonfun$run$1.apply(DispatchReporter.scala:240)
+	at org.scalatest.DispatchReporter$Propagator$$anonfun$run$1.apply(DispatchReporter.scala:239)
+	at scala.collection.immutable.List.foreach(List.scala:381)
+	at org.scalatest.DispatchReporter$Propagator.run(DispatchReporter.scala:239)
+	at java.lang.Thread.run(Thread.java:745)
+Reporter completed abruptly with an exception on invocation of the dispose method.
+java.net.SocketException: Broken pipe
+	at java.net.SocketOutputStream.socketWrite0(Native Method)
+	at java.net.SocketOutputStream.socketWrite(SocketOutputStream.java:109)
+	at java.net.SocketOutputStream.write(SocketOutputStream.java:153)
+	at java.io.ObjectOutputStream$BlockDataOutputStream.drain(ObjectOutputStream.java:1877)
+	at java.io.ObjectOutputStream$BlockDataOutputStream.flush(ObjectOutputStream.java:1822)
+	at java.io.ObjectOutputStream.flush(ObjectOutputStream.java:719)
+	at org.scalatest.tools.SocketReporter.dispose(SocketReporter.scala:37)
+	at org.scalatest.DispatchReporter$.propagateDispose(DispatchReporter.scala:312)
+	at org.scalatest.DispatchReporter$Propagator$$anonfun$run$2.apply(DispatchReporter.scala:251)
+	at org.scalatest.DispatchReporter$Propagator$$anonfun$run$2.apply(DispatchReporter.scala:250)
+	at scala.collection.immutable.List.foreach(List.scala:381)
+	at org.scalatest.DispatchReporter$Propagator.run(DispatchReporter.scala:250)
+	at java.lang.Thread.run(Thread.java:745)
+Runner for com.novocode.junit.JUnitFramework produced 0 initial tasks for 0 tests.
+Read from stdout: ScalaTest
+ScalaTest
+Read from stdout: Run completed in 3 seconds, 332 milliseconds.
+Read from stdout: Total number of tests run: 2
+Read from stdout: Suites: completed 0, aborted 0
+Read from stdout: Tests: succeeded 2, failed 0, canceled 0, ignored 0, pending 0
+Read from stdout: All tests passed.
+Run completed in 3 seconds, 332 milliseconds.
+Total number of tests run: 2
+Suites: completed 0, aborted 0
+Tests: succeeded 2, failed 0, canceled 0, ignored 0, pending 0
+All tests passed.
+Summary for JUnit not available.
+Read from stdout: Failed: Total 3, Failed 1, Errors 0, Passed 2
+Failed: Total 3, Failed 1, Errors 0, Passed 2
+Read from stdout: Failed tests:
+Failed tests:
+Read from stdout: 	CharlistControllerSpec
+	CharlistControllerSpec
+Read from stdout: (test:test) sbt.TestsFailedException: Tests unsuccessful
+(test:test) sbt.TestsFailedException: Tests unsuccessful
+Total time: 4 s, completed Oct 6, 2016 9:29:37 AM
+> server-post-command-error-handler
+> server-post-command-cleanup
+> server-handle-next-server-request
