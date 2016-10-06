@@ -3,6 +3,7 @@ package models.charlist
 /**
   * Created by crimson on 9/23/16.
   */
+//noinspection ScalaRedundantConversion
 case class Charlist(
                      _id: String = "",
                      timestamp: Long = 0,
@@ -19,18 +20,21 @@ case class Charlist(
                      equip: Equipment = Equipment(),
                      conditions: Conditions = Conditions()
                    ) {
-  //noinspection ScalaRedundantConversion
   val thr = stats.strikeSt.value match {
     case x if x < 1 => (0, 0)
     case x if x < 11 => (1, ((x - 1) / 2).toInt - 6)
     case x => (((x - 3) / 8).toInt, ((x - 3) / 2).toInt % 4 - 1)
   }
-  //noinspection ScalaRedundantConversion
   val sw = stats.strikeSt.value match {
     case x if x < 1 => (0, 0)
     case x if x < 9 => (1, ((x - 1) / 2).toInt - 5)
     case x => (((x - 5) / 4).toInt, (x - 5) % 4 - 1)
   }
+  equip.weapons.foreach(_.attacksMelee.foreach(a => {
+    a.damage.calcDmg(thr, sw)
+    a.followup.foreach(_.calcDmg(thr, sw))
+    a.linked.foreach(_.calcDmg(thr, sw))
+  }))
   stats.calcDmg(thr, sw)
   stats.calcEncumbrance(equip.totalCombWt, equip.totalTravWt)
   skills.foreach(s => s.calcLvl(s.attr match {

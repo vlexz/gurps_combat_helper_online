@@ -70,7 +70,7 @@ class CharlistController @Inject()(charlistService: CharlistService) extends Con
 
   def create() = Action.async(
     try {
-      Future(Ok(Json.toJson(Charlist(_id = Random.nextLong.toString, timestamp = System.currentTimeMillis))))
+      Future(Ok(Json toJson Charlist()))
     } catch {
       case a: AssertionError => Future(BadRequest(Json.obj("message" -> s"Charlist ${a.getMessage}")))
       case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage)))
