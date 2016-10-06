@@ -104,7 +104,7 @@ case class Stats(
   bl = (liftSt.value * liftSt.value / 5).toInt
   hp.calcStat(st.value, 2)
   fp.calcStat(ht.value, 3)
-  basicSpeed.calcStat((dx.value + ht.value) / 4, 20)
+  basicSpeed.calcStat((dx.value + ht.value).toFloat / 4, 20)
   basicMove.calcStat(basicSpeed.value.toInt, 5)
   basicDodge.calcStat(basicSpeed.value.toInt + 3, 15)
 
