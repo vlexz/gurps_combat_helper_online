@@ -23,6 +23,6 @@ class InitSetup @Inject()(mongo: Mongo) {
   }
 
   preMessages()
-  defineIndexes()
+  //  defineIndexes()
 
 }
