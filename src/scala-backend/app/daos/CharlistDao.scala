@@ -33,7 +33,7 @@ trait CharlistDao {
 @Singleton
 class MongoCharlistDao @Inject()(mongo: Mongo) extends CharlistDao {
 
-  private val charlists: MongoCollection[Document] = mongo.db.getCollection("charlist")
+  private val charlists: MongoCollection[Document] = mongo.db.getCollection("characters")
 
   override def save(charlist: Charlist): Future[Completed] = {
     charlists

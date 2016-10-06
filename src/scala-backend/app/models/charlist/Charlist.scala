@@ -7,6 +7,7 @@ case class Charlist(
                      _id: String = "",
                      timestamp: Long = 0,
                      player: String = "",
+                     access: Seq[String] = Seq(), // For future functionality
                      name: String = "",
                      cp: Int = 0,
                      var cpTotal: Int = 0,
