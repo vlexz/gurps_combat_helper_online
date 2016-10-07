@@ -3,7 +3,6 @@ package models.charlist
 /**
   * Created by crimson on 9/23/16.
   */
-//noinspection ScalaRedundantConversion
 case class Charlist(
                      _id: String = "",
                      timestamp: Long = 0,
@@ -18,17 +17,19 @@ case class Charlist(
                      skills: Seq[Skill] = Seq(),
                      techniques: Seq[Technique] = Seq(),
                      equip: Equipment = Equipment(),
-                     conditions: Conditions = Conditions()
+                     conditions: Conditions = Conditions(),
+                     var api: String = ""
                    ) {
+  api = "0.1"
   val thr = stats.strikeSt.value match {
     case x if x < 1 => (0, 0)
-    case x if x < 11 => (1, ((x - 1) / 2).toInt - 6)
-    case x => (((x - 3) / 8).toInt, ((x - 3) / 2).toInt % 4 - 1)
+    case x if x < 11 => (1, ((x - 1) / 2) - 6)
+    case x => ((x - 3) / 8, ((x - 3) / 2) % 4 - 1)
   }
   val sw = stats.strikeSt.value match {
     case x if x < 1 => (0, 0)
-    case x if x < 9 => (1, ((x - 1) / 2).toInt - 5)
-    case x => (((x - 5) / 4).toInt, (x - 5) % 4 - 1)
+    case x if x < 9 => (1, ((x - 1) / 2) - 5)
+    case x => ((x - 5) / 4, (x - 5) % 4 - 1)
   }
   equip.weapons.foreach(_.attacksMelee.foreach(a => {
     a.damage.calcDmg(thr, sw)
@@ -72,7 +73,6 @@ case class Description(
                       )
 
 /** Charlist subcontainer for basic and secondary attributes */
-//noinspection ScalaRedundantConversion
 case class Stats(
                   st: StatInt = StatInt(),
                   dx: StatInt = StatInt(),
@@ -105,10 +105,10 @@ case class Stats(
   per.calcStat(10, 5)
   liftSt.calcStat(st.value, 3)
   strikeSt.calcStat(st.value, 5)
-  bl = (liftSt.value * liftSt.value / 5).toInt
+  bl = (liftSt.value * liftSt.value * .2).toInt
   hp.calcStat(st.value, 2)
   fp.calcStat(ht.value, 3)
-  basicSpeed.calcStat((dx.value + ht.value).toDouble / 4, 20)
+  basicSpeed.calcStat((dx.value + ht.value) * .25, 20)
   basicMove.calcStat(basicSpeed.value.toInt, 5)
   basicDodge.calcStat(basicSpeed.value.toInt + 3, 15)
 
@@ -138,19 +138,21 @@ case class Stats(
     combMove =
       math
         .ceil(
-          basicMove.value / 5 * (5 - combatEncumbrance) / (if (hp.compromised || fp.compromised) 2 else 1)
+          math.max(1, basicMove.value * .2 * (5 - combatEncumbrance)).toInt *
+            (if (hp.compromised || fp.compromised) .5 else 1)
         )
         .toInt
     travMove =
       math
         .ceil(
-          basicMove.value / 5 * (5 - travelEncumbrance) / (if (hp.compromised || fp.compromised) 2 else 1)
+          math.max(1, basicMove.value * .2 * (5 - travelEncumbrance)).toInt *
+            (if (hp.compromised || fp.compromised) .5 else 1)
         )
         .toInt
     dodge =
       math
         .ceil(
-          (basicDodge.value - combatEncumbrance) / (if (hp.compromised || fp.compromised) 2 else 1)
+          (basicDodge.value - combatEncumbrance) * (if (hp.compromised || fp.compromised) .5 else 1)
         )
         .toInt
     this
@@ -162,54 +164,63 @@ case class Stats(
 
 /** Charlist subcontainer for character attribute storage */
 case class StatInt(
+                    var base: Int = 0,
                     delta: Int = 0,
                     bonus: Int = 0,
-                    notes: String = "",
-                    var value: Int = 0,
-                    var cp: Int = 0
+                    cpMod: Int = 100,
+                    var cp: Int = 0,
+                    notes: String = ""
                   ) {
 
   def calcStat(default: Int, cost: Int) = {
-    value = default + delta + bonus
-    cp = delta * cost
+    base = default
+    cp = math.ceil(delta * cost * cpMod * .01).toInt
     this
   }
+
+  def value = base + delta + bonus
 }
 
 /** Charlist subcontainer for character attribute storage */
 case class StatFrac(
+                     var base: Double = 0,
                      delta: Double = 0,
                      bonus: Double = 0,
-                     notes: String = "",
-                     var value: Double = 0,
-                     var cp: Int = 0
+                     cpMod: Double = 100,
+                     var cp: Int = 0,
+                     notes: String = ""
                    ) {
 
   def calcStat(default: Double, cost: Int) = {
-    value = default + delta + bonus
-    cp = (delta * cost).toInt
+    base = default
+    cp = math.ceil(delta * cost * cpMod * .01).toInt
     this
   }
+
+  def value = base + delta + bonus
 }
 
 /** Charlist subcontainer for HP and FP attributes' stats */
 case class StatPoints(
+                       var base: Int = 0,
                        delta: Int = 0,
                        bonus: Int = 0,
-                       notes: String = "",
-                       var value: Int = 0,
+                       cpMod: Int = 100,
                        var cp: Int = 0,
+                       notes: String = "",
                        lost: Int = 0,
                        var compromised: Boolean = false,
                        var collapsing: Boolean = false
                      ) {
   def calcStat(default: Int, cost: Int) = {
-    value = default + delta + bonus
-    cp = delta * cost
-    if (value * 2 / 3 < lost) compromised = true
-    if (value <= lost) collapsing = true
+    base = default
+    cp = math.ceil(delta * cost * cpMod * .01).toInt
+    if ((base + bonus + delta) * (2.0 / 3) < lost) compromised = true
+    if (base + bonus + delta <= lost) collapsing = true
     this
   }
+
+  def value = base + delta + bonus
 }
 
 /** Charlist subcontainer for features list's element stats */

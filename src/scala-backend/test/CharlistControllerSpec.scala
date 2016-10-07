@@ -6,7 +6,7 @@ import org.mongodb.scala.Completed
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc._
 import play.api.test.Helpers._
 import play.api.test.{FakeHeaders, FakeRequest}
@@ -20,9 +20,9 @@ import scala.concurrent.Future
   */
 class CharlistControllerSpec extends PlaySpec with Results with MockitoSugar {
 
-  "CharlistController#POST" should {
+  "CharlistController#POST/api/char/" should {
 
-    "send OK with charlist json on no id request with valid charlist json" in {
+    "send OK with charlist json on request with valid charlist json" in {
       val mockCharlistService = mock[CharlistService]
       /*val charlist = Charlist(
         player = "vlex",
@@ -81,7 +81,7 @@ class CharlistControllerSpec extends PlaySpec with Results with MockitoSugar {
 
   it should {
 
-    "send BAD_REQUEST on no id request with invalid charlist json" in {
+    "send BAD_REQUEST on request with invalid charlist json" in {
       val mockCharlistService = mock[CharlistService]
       when(mockCharlistService save anyObject[Charlist]) thenReturn Future(Completed())
       val charlistController = new CharlistController(mockCharlistService)
@@ -98,21 +98,45 @@ class CharlistControllerSpec extends PlaySpec with Results with MockitoSugar {
     }
   }
 
-  "CharlistController#GET" should {
+  "CharlistController#GET/api/char" should {
 
-    "send OK with charlist on request" in {
+    "send OK with default charlist" in {
       val mockCharlistService = mock[CharlistService]
       when(mockCharlistService save anyObject[Charlist]) thenReturn Future(Completed())
-      val charlistController = new CharlistController(mockCharlistService)
-      val fakeRequest: Request[AnyContentAsJson] =
-        FakeRequest[AnyContentAsJson](
+      val fakeRequest: Request[AnyContent] =
+        FakeRequest(
           GET,
-          controllers.routes.CharlistController.create().url,
-          FakeHeaders(),
-          AnyContentAsJson(Json.parse(""" """))
+          controllers.routes.CharlistController.create().url
         )
-      val result: Future[Result] = charlistController.create().apply(fakeRequest)
+      val result: Future[Result] =
+        new CharlistController(mockCharlistService)
+          .create()
+          .apply(fakeRequest)
       assertResult(OK)(status(result))
+      assertResult(
+        """{"_id":"","timestamp":0,"player":"","access":[],"name":"","cp":0,"cpTotal":0,"description":{"age":"","height":"","weight":"","portrait":"","bio":""},"stats":{"st":{"delta":0,"bonus":0,"notes":"","value":10,"cp":0},"dx":{"delta":0,"bonus":0,"notes":"","value":10,"cp":0},"iq":{"delta":0,"bonus":0,"notes":"","value":10,"cp":0},"ht":{"delta":0,"bonus":0,"notes":"","value":10,"cp":0},"will":{"delta":0,"bonus":0,"notes":"","value":10,"cp":0},"per":{"delta":0,"bonus":0,"notes":"","value":10,"cp":0},"liftSt":{"delta":0,"bonus":0,"notes":"","value":10,"cp":0},"strikeSt":{"delta":0,"bonus":0,"notes":"","value":10,"cp":0},"thrDmg":"1d-2","swDmg":"1d","bl":20,"combatEncumbrance":0,"travelEncumbrance":0,"hp":{"delta":0,"bonus":0,"notes":"","value":10,"cp":0,"lost":0,"compromised":false,"collapsing":false},"fp":{"delta":0,"bonus":0,"notes":"","value":10,"cp":0,"lost":0,"compromised":false,"collapsing":false},"basicSpeed":{"delta":0,"bonus":0,"notes":"","value":5,"cp":0},"basicMove":{"delta":0,"bonus":0,"notes":"","value":5,"cp":0},"basicDodge":{"delta":0,"bonus":0,"notes":"","value":8,"cp":0},"combMove":5,"travMove":5,"dodge":8,"sm":0},"traits":[],"skills":[],"techniques":[],"equip":{"weapons":[],"armor":[{"name":"Skull","carried":"Equipped","db":0,"dr":2,"ep":0,"epi":0,"front":true,"back":true,"drType":"tough skin","locations":["skull"],"hp":0,"hpLeft":0,"broken":false,"lc":5,"tl":0,"notes":"","wt":0,"cost":0}],"items":[],"frontDR":{"skull":{"dr":2,"ep":0,"epi":0},"eyes":{"dr":0,"ep":0,"epi":0},"face":{"dr":0,"ep":0,"epi":0},"neck":{"dr":0,"ep":0,"epi":0},"armLeft":{"dr":0,"ep":0,"epi":0},"armRight":{"dr":0,"ep":0,"epi":0},"handLeft":{"dr":0,"ep":0,"epi":0},"handRight":{"dr":0,"ep":0,"epi":0},"chest":{"dr":0,"ep":0,"epi":0},"vitals":{"dr":0,"ep":0,"epi":0},"abdomen":{"dr":0,"ep":0,"epi":0},"groin":{"dr":0,"ep":0,"epi":0},"legLeft":{"dr":0,"ep":0,"epi":0},"legRight":{"dr":0,"ep":0,"epi":0},"footLeft":{"dr":0,"ep":0,"epi":0},"footRight":{"dr":0,"ep":0,"epi":0}},"rearDR":{"skull":{"dr":2,"ep":0,"epi":0},"eyes":{"dr":0,"ep":0,"epi":0},"face":{"dr":0,"ep":0,"epi":0},"neck":{"dr":0,"ep":0,"epi":0},"armLeft":{"dr":0,"ep":0,"epi":0},"armRight":{"dr":0,"ep":0,"epi":0},"handLeft":{"dr":0,"ep":0,"epi":0},"handRight":{"dr":0,"ep":0,"epi":0},"chest":{"dr":0,"ep":0,"epi":0},"vitals":{"dr":0,"ep":0,"epi":0},"abdomen":{"dr":0,"ep":0,"epi":0},"groin":{"dr":0,"ep":0,"epi":0},"legLeft":{"dr":0,"ep":0,"epi":0},"legRight":{"dr":0,"ep":0,"epi":0},"footLeft":{"dr":0,"ep":0,"epi":0},"footRight":{"dr":0,"ep":0,"epi":0}},"totalDb":0,"totalCost":0,"totalCombWt":0,"totalTravWt":0},"conditions":{"unconscious":false,"mortallyWounded":false,"dead":false,"shock":0,"stunned":false,"afflictions":{"coughing":false,"drowsy":false,"drunk":false,"euphoria":false,"nauseated":false,"pain":false,"tipsy":false,"agony":false,"choking":false,"daze":false,"ecstasy":false,"hallucinating":false,"paralysis":false,"retching":false,"seizure":false,"coma":false,"heartAttack":false},"cripplingInjuries":[],"posture":"Standing","closeCombat":false,"grappled":false,"pinned":false,"sprinting":false,"mounted":false}}"""
+      )(contentAsString(result))
     }
   }
+
+  "CharlistController#GET/api/chars" should {
+
+    "send OK on request" in {
+      val mockCharlistService = mock[CharlistService]
+      when(mockCharlistService.find) thenReturn Future(Seq[JsObject]())
+      val fakeRequest: Request[AnyContent] =
+        FakeRequest(
+          GET,
+          controllers.routes.CharlistController.list().url
+        )
+      val result: Future[Result] =
+        new CharlistController(mockCharlistService)
+          .list
+          .apply(fakeRequest)
+      assertResult(OK)(status(result))
+      assertResult(Json toJson Seq[JsObject]())(contentAsJson(result))
+    }
+  }
+
+
 }
