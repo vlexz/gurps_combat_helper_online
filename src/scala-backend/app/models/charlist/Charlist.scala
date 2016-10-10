@@ -212,6 +212,7 @@ case class StatPoints(
                        var compromised: Boolean = false,
                        var collapsing: Boolean = false
                      ) {
+  assert(lost >= 0 && lost <= value, s"points lost value out of bounds ($lost)")
   def calcStat(default: Int, cost: Int) = {
     base = default
     cp = math.ceil(delta * cost * cpMod * .01).toInt

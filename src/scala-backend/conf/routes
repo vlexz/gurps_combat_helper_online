@@ -14,5 +14,5 @@ GET           /api/char            controllers.CharlistController.create()
 GET           /api/chars           controllers.CharlistController.list
 GET           /api/char/:id        controllers.CharlistController.get(id:String)
 PUT           /api/char/:id        controllers.CharlistController.replace(id: String)
-#PATCH         /api/char/           controllers.CharlistController.update()
+PATCH         /api/char/:id        controllers.CharlistController.update(id: String)
 DELETE        /api/char/:id        controllers.CharlistController.delete(id: String)
