@@ -92,6 +92,7 @@ class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller 
         .find(id)
         .flatMap { j =>
           (j.as[JsObject] deepMerge request.body.as[JsObject]).validate[Charlist] match {
+            // TODO: add JsResultException handling; .as to .asOpt
             case e: JsError => Future(BadRequest(Json.obj("message" -> "Invalid request body.")))
             case s: JsSuccess[Charlist] =>
               val charlist = s.get.copy(_id = id)

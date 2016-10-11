@@ -167,14 +167,15 @@ case class StatInt(
                     var base: Int = 0,
                     delta: Int = 0,
                     bonus: Int = 0,
-                    cpMod: Int = 100,
+                    cpMod: Int = 0,
                     var cp: Int = 0,
                     notes: String = ""
                   ) {
+  assert(cpMod >= -80, s"CP modifier value below -80 ($cpMod)")
 
   def calcStat(default: Int, cost: Int) = {
     base = default
-    cp = math.ceil(delta * cost * cpMod * .01).toInt
+    cp = math.ceil(delta * cost * (cpMod + 100) * .01).toInt
     this
   }
 
@@ -186,14 +187,15 @@ case class StatFrac(
                      var base: Double = 0,
                      delta: Double = 0,
                      bonus: Double = 0,
-                     cpMod: Double = 100,
+                     cpMod: Double = 0,
                      var cp: Int = 0,
                      notes: String = ""
                    ) {
+  assert(cpMod >= -80, s"CP modifier value below -80 ($cpMod)")
 
   def calcStat(default: Double, cost: Int) = {
     base = default
-    cp = math.ceil(delta * cost * cpMod * .01).toInt
+    cp = math.ceil(delta * cost * (cpMod + 100) * .01).toInt
     this
   }
 
@@ -205,17 +207,19 @@ case class StatPoints(
                        var base: Int = 0,
                        delta: Int = 0,
                        bonus: Int = 0,
-                       cpMod: Int = 100,
+                       cpMod: Int = 0,
                        var cp: Int = 0,
                        notes: String = "",
                        lost: Int = 0,
                        var compromised: Boolean = false,
                        var collapsing: Boolean = false
                      ) {
+  assert(cpMod >= -80, s"CP modifier value below -80 ($cpMod)")
   assert(lost >= 0 && lost <= value, s"points lost value out of bounds ($lost)")
+
   def calcStat(default: Int, cost: Int) = {
     base = default
-    cp = math.ceil(delta * cost * cpMod * .01).toInt
+    cp = math.ceil(delta * cost * (cpMod + 100) * .01).toInt
     if ((base + bonus + delta) * (2.0 / 3) < lost) compromised = true
     if (base + bonus + delta <= lost) collapsing = true
     this
