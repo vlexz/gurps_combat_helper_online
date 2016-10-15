@@ -75,7 +75,6 @@ class MongoCharlistDao @Inject()(mongo: Mongo) extends CharlistDao {
       ID -> doc.get(ID).get.asString.getValue,
       TIMESTAMP -> doc.get(TIMESTAMP).get.asInt64.getValue,
       PLAYER -> doc.get(PLAYER).get.asString.getValue,
-      CPTOTAL -> doc.get(CPTOTAL).get.asInt32.getValue,
       NAME -> doc.get(NAME).get.asString.getValue
     )
   }
