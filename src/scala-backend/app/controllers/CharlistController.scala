@@ -69,8 +69,7 @@ class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller 
         .validate[Charlist] match {
         case e: JsError => Future(BadRequest(Json.obj("message" -> "Invalid request body.")))
         case s: JsSuccess[Charlist] =>
-          val charlist =
-            s.get.copy(_id = id)
+          val charlist = s.get.copy(_id = id)
           charlistDao
             .update(charlist)
             .map { re => Ok(Json toJson charlist) }
