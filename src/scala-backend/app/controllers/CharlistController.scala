@@ -22,13 +22,10 @@ class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller 
         .validate[Charlist] match {
         case e: JsError => Future(BadRequest(Json.obj("message" -> "Invalid request body.")))
         case s: JsSuccess[Charlist] =>
-          val charlist =
-            s
-              .get
-              .copy(
-                _id = Random.nextLong.toString,
-                timestamp = System.currentTimeMillis
-              )
+          val charlist = s.get.copy(
+            _id = Random.nextLong.toString,
+            timestamp = System.currentTimeMillis
+          )
           charlistDao
             .save(charlist)
             .map(re => Ok(Json toJson charlist))
@@ -111,6 +108,6 @@ class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller 
     charlistDao
       .delete(id)
       .map { re => Ok(Json.obj("success" -> re.toString)) }
-      .recoverWith { case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage))) }
+      .recoverWith { case t: NoSuchElementException => Future(NotFound(Json.obj("message" -> t.getMessage))) }
   }
 }
