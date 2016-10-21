@@ -115,7 +115,25 @@ object JsonCharlist {
           BonusDamage(skill = "Brawling", relSkill = 2, perDie = true, bonus = 1)
         ),
         cp = 4
-      )
+      ),
+      Skill(name = "Piloting", spc = "Lighter-Than-Air", tl = 5, diff = SkillDifficulty.AVERAGE, cp = 8),
+      Skill(
+        name = "Navigation",
+        spc = "Air",
+        attr = SkillBaseAttribute.IQ,
+        tl = 5,
+        diff = SkillDifficulty.AVERAGE,
+        cp = 2
+      ),
+      Skill(
+        name = "Navigation",
+        spc = "Land",
+        attr = SkillBaseAttribute.IQ,
+        tl = 5,
+        diff = SkillDifficulty.AVERAGE,
+        cp = 2
+      ),
+      Skill(name = "Knife", cp = 8)
     ),
     techniques = Seq[Technique](
       Technique(
@@ -193,6 +211,31 @@ object JsonCharlist {
           tl = 5,
           wt = 4.1,
           cost = 350
+        ),
+        Weapon(
+          name = "Knife",
+          attacksMelee = Seq(
+            MeleeAttack(
+              name = "swing",
+              damage = MeleeDamage(attackType = AttackType.SWINGING, dmgType = DamageType.CUTTING),
+              skill = "Knife",
+              parry = -1,
+              st = 6,
+              reach = "C,1"),
+            MeleeAttack(
+              name = "Thrust",
+              damage = MeleeDamage(attackType = AttackType.THRUSTING, dmgType = DamageType.IMPALING),
+              skill = "Knife",
+              parry = -1,
+              st = 6,
+              reach = "C")
+          ),
+          bulk = -1,
+          dr = 7,
+          hp = 5,
+          hpLeft = 5,
+          wt = 1.0,
+          cost = 50
         )
       ),
       armor = Seq[Armor](
