@@ -4,10 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
+import { CharEditorComponent } from './components/char-editor/char-editor.component';
+import { StatBlockComponent } from './components/char-editor/components/stat-block/stat-block.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    CharEditorComponent,
+    StatBlockComponent
   ],
   imports: [
     BrowserModule,
