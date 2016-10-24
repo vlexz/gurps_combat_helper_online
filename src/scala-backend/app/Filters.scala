@@ -1,13 +1,13 @@
 import javax.inject.Inject
 
-import filters.LoggingFilter
+import filters.{LoggingFilter, NoriginFilter}
 import play.api.http.HttpFilters
-import play.filters.cors.CORSFilter
+import play.api.mvc.EssentialFilter
 
 class Filters @Inject()(
-                         corsFilter: CORSFilter,
+                         corsFilter: NoriginFilter,
                          log: LoggingFilter
                        ) extends HttpFilters {
 
-  val filters = Seq(log)
+  def filters = Seq[EssentialFilter](corsFilter, log)
 }
