@@ -11,7 +11,7 @@ import { Character } from '../../interfaces/character';
 })
 export class CharEditorComponent implements OnInit {
 
-  private current: Character;
+  private current: Character = null;
 
   constructor(
     private chars: CharacterService
@@ -23,6 +23,8 @@ export class CharEditorComponent implements OnInit {
 
   ngOnInit() {
     console.log('on init routine in char editor');
+    // this.chars.defaultCharacter()
+    // .then(char => this.current = char);
     this.current = this.chars.localCharacter();
     console.log(this.current);
   }
