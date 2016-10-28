@@ -34,49 +34,40 @@ trait CharlistDao {
 class MongoCharlistDao @Inject()(mongo: Mongo) extends CharlistDao {
 
   private val charlists: MongoCollection[Document] = mongo.db.getCollection("characters")
+  private val documentToJsonHeader: Document => JsObject =
+    doc => Json.obj(
+      ID -> doc.get(ID).get.asString.getValue,
+      TIMESTAMP -> doc.get(TIMESTAMP).get.asInt64.getValue,
+      PLAYER -> doc.get(PLAYER).get.asString.getValue,
+      NAME -> doc.get(NAME).get.asString.getValue)
 
-  override def save(charlist: Charlist): Future[Completed] = {
+  override def save(charlist: Charlist): Future[Completed] =
     charlists
       .insertOne(Document(Json.toJson(charlist).toString))
       .head
-  }
 
-  override def find: Future[Seq[JsObject]] = {
+  override def find: Future[Seq[JsObject]] =
     charlists
       .find()
       .map[JsObject](documentToJsonHeader)
       .toFuture
-  }
 
-  override def find(id: String): Future[JsValue] = {
+  override def find(id: String): Future[JsValue] =
     charlists
       .find(Filters.equal(ID, id))
       .head
       .map[JsValue](doc => Json.parse(doc.toJson))
-  }
 
-  override def update(charlist: Charlist): Future[UpdateResult] = {
+  override def update(charlist: Charlist): Future[UpdateResult] =
     charlists
       .updateOne(
         Filters.equal(ID, charlist._id),
         Document(Json.toJson(charlist).toString)
       )
       .head
-  }
 
-  override def delete(id: String): Future[DeleteResult] = {
+  override def delete(id: String): Future[DeleteResult] =
     charlists
       .deleteOne(Filters.equal(ID, id))
       .head
-  }
-
-  private def documentToJsonHeader(doc: Document): JsObject = {
-    Json.obj(
-      ID -> doc.get(ID).get.asString.getValue,
-      TIMESTAMP -> doc.get(TIMESTAMP).get.asInt64.getValue,
-      PLAYER -> doc.get(PLAYER).get.asString.getValue,
-      NAME -> doc.get(NAME).get.asString.getValue
-    )
-  }
-
 }

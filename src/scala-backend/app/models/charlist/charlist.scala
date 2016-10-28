@@ -1,9 +1,11 @@
 package models.charlist
 
+import scala.collection.breakOut
+
 /**
   * Created by crimson on 9/23/16.
   */
-case class Charlist(// TODO: make recalc function in compliance with functional programming style
+case class Charlist(// TODO: maybe make recalc function in compliance with functional programming style
                     _id: String = "",
                     timestamp: Long = 0,
                     player: String = "",
@@ -21,15 +23,14 @@ case class Charlist(// TODO: make recalc function in compliance with functional 
                     techniques: Seq[Technique] = Seq(),
                     equip: Equipment = Equipment(),
                     conditions: Conditions = Conditions(),
-                    var api: String = ""
-                   ) {
+                    var api: String = "") {
   api = "0.2"
 
   {
     import BonusToAttribute._
 
     for {
-      bonus <- traits.flatMap(_.drBonuses) ++ traits.flatMap(_.modifiers.flatMap(_.drBonuses))
+      bonus <- traits flatMap { x => x.drBonuses ++ x.modifiers.flatMap(_.drBonuses) }
       location <- bonus.locations
     } {
       if (bonus.front) equip.frontDR.add(bonus.dr, bonus.ep, bonus.epi, location)
@@ -40,13 +41,7 @@ case class Charlist(// TODO: make recalc function in compliance with functional 
       traits
         .flatMap(_.attrBonusValues)
         .groupBy(_._1)
-        .map { case (group: String, bns: Seq[(String, Int)]) => (
-          group,
-          bns
-            .map(_._2)
-            .reduceOption(_ + _)
-            .getOrElse(0))
-        }
+        .map { case (group, bns) => (group, bns map (_._2) reduceOption (_ + _) getOrElse 0) }
         .withDefaultValue(0)
     stats.st.base = 10
     stats.dx.base = 10
@@ -78,87 +73,75 @@ case class Charlist(// TODO: make recalc function in compliance with functional 
     statVars.touch = stats.per.value + bonuses(TOUCH)
     stats.hp.calcCompr()
     stats.fp.calcCompr()
+    statVars.bl = (stats.liftSt.value * stats.liftSt.value * .2).toInt
     statVars
-      .calcBL(stats.liftSt.value)
       .calcEncumbrance(equip.totalCombWt, equip.totalTravWt)
-      .calcMove(stats.basicMove.value, stats.basicSpeed.value.toInt + 3 + bonuses(DODGE),
+      .calcMove(
+        stats.basicMove.value,
+        stats.basicSpeed.value.toInt + 3 + bonuses(DODGE),
         stats.hp.collapsing || stats.fp.collapsing)
   }
   {
     import SkillBaseAttribute._
 
-    for {
-      skill <- skills
-      trt <- traits
-    } skill.bonus += trt.skillBonusValue(skill.name, skill.spc)
-    for (s <- skills)
-      s.calcLvl(s.attr match {
+    for (s <- skills) {
+      s.bonus = traits map (_ skillBonusValue(s.name, s.spc)) reduceOption (_ + _) getOrElse 0
+      val attrVal = s.attr match {
         case ST => stats.st.value
         case DX => stats.dx.value
         case IQ => stats.iq.value
         case HT => stats.ht.value
         case WILL => stats.will.value
         case PER => stats.per.value
-      }, statVars.travelEncumbrance)
+      }
+      s.calcLvl(attrVal, statVars.travelEncumbrance)
+    }
     for (t <- techniques)
       t.calcLvl(
         skills
-          .find(s => s.name == t.skill && (if (t.spc != "") s.spc == t.spc else true))
+          .find { s => s.name == t.skill && (if (t.spc != "") s.spc == t.spc else true) }
           .getOrElse(Skill())
-          .lvl
-      )
+          .lvl)
 
     reactions =
-      (traits.flatMap(_.reactBonuses) ++
-        traits.flatMap(_.modifiers.flatMap(_.reactBonuses)) ++
-        skills.flatMap(_.reactBonuses))
+      (traits.flatMap { t => t.reactBonuses ++ t.modifiers.flatMap(_.reactBonuses) } ++ skills.flatMap(_.reactBonuses))
         .groupBy(_.affected)
-        .map {
-          case (group: String, react: Seq[BonusReaction]) =>
-            Reaction(
-              group,
-              react
-                .groupBy(_.freq) // TODO: inverse frequency and reputation grouping ?
-                .map {
-                case (group: Int, react: Seq[BonusReaction]) =>
-                  val r = react
+        .map { case (group, react) =>
+          val reactions =
+            react
+              .groupBy(_.freq)
+              .map { case (group2, react2) =>
+                val bonusReaction =
+                  react2
                     .groupBy(_.reputation)
-                    .map {
-                      case (group: Boolean, react: Seq[BonusReaction]) =>
-                        react
-                          .reduce {
-                            (a, b) =>
-                              val bonus = a.bonusValue + b.bonusValue
-                              BonusReaction(
-                                a.affected,
-                                a.reputation,
-                                perLvl = false,
-                                a.freq,
-                                if (group) bonus match {
-                                  case x if x > 4 => 4
-                                  case x if x < -4 => -4
-                                  case x => x
-                                } else bonus,
-                                a.notes + (if (a.notes.nonEmpty && b.notes.nonEmpty) "; " else "") + b.notes)
-                          }
+                    .map { case (group3, react3) =>
+                      react3
+                        .reduce { (a, b) =>
+                          val bonus = a.bonusValue + b.bonusValue
+                          BonusReaction(
+                            affected = a.affected,
+                            reputation = a.reputation,
+                            freq = a.freq,
+                            bonus = if (group3) bonus match {
+                              case x if x > 4 => 4
+                              case x if x < -4 => -4
+                              case x => x
+                            } else bonus,
+                            notes = a.notes + (if (a.notes.nonEmpty && b.notes.nonEmpty) "; " else "") + b.notes)
+                        }
                     }
-                    .reduce {
-                      (a, b) =>
-                        BonusReaction(
-                          a.affected,
-                          a.reputation,
-                          perLvl = false,
-                          a.freq,
-                          a.bonusValue + b.bonusValue,
-                          a.notes + (if (a.notes.nonEmpty && b.notes.nonEmpty) "; " else "") + b.notes
-                        )
+                    .reduce { (a, b) =>
+                      BonusReaction(
+                        affected = a.affected,
+                        reputation = a.reputation,
+                        freq = a.freq,
+                        bonus = a.bonusValue + b.bonusValue,
+                        notes = a.notes + (if (a.notes.nonEmpty && b.notes.nonEmpty) "; " else "") + b.notes)
                     }
-                  ReactionMod(group, r.bonusValue, r.notes)
-              }
-                .toSeq
-            )
-        }
-        .toSeq
+                ReactionMod(group2, bonusReaction.bonusValue, bonusReaction.notes)
+              }(breakOut)
+          Reaction(group, reactions)
+        }(breakOut)
 
     val thr = stats.strikeSt.value match {
       case x if x < 1 => (0, 0)
@@ -170,11 +153,10 @@ case class Charlist(// TODO: make recalc function in compliance with functional 
       case x if x < 9 => (1, ((x - 1) / 2) - 5)
       case x => ((x - 5) / 4, (x - 5) % 4 - 1)
     }
-    statVars.calcDmg(thr, sw)
-    for {
-      weapon <- equip.weapons
-      mAttack <- weapon.attacksMelee
-    } {
+    val dStr = (d: Int, m: Int) => s"${d}d${if (m < 0) m else if (m > 0) "+" + m else ""}"
+    statVars.thrDmg = dStr(thr._1, thr._2)
+    statVars.swDmg = dStr(sw._1, sw._2)
+    for (weapon <- equip.weapons; mAttack <- weapon.attacksMelee) {
       val bonus =
         (skills ++ traits ++ traits.flatMap(_.modifiers))
           .map {
@@ -184,51 +166,42 @@ case class Charlist(// TODO: make recalc function in compliance with functional 
               skills
                 .find(s => s.name == mAttack.skill && (if (mAttack.spc.nonEmpty) s.spc == mAttack.spc else true))
                 .getOrElse(Skill())
-                .relLvl
-            )
+                .relLvl)
           }
-          .reduceOption((a, b) => (a._1 + b._1, a._2 + b._2))
+          .reduceOption { (a, b) => (a._1 + b._1, a._2 + b._2) }
           .getOrElse((0, 0))
       mAttack.damage.calcDmg(thr, sw, bonus)
-      (mAttack.followup ++ mAttack.linked).foreach(_.calcDmg(thr, sw, (0, 0)))
+      for (m <- mAttack.followup ++ mAttack.linked) m.calcDmg(thr, sw, (0, 0))
     }
 
     val costMods =
       traits
         .flatMap(_.attrCostModValues)
         .groupBy(_._1)
-        .map { case (group: String, bns: Seq[(String, Int)]) =>
-          (
-            group,
-            bns
-              .map(_._2)
-              .reduceOption(_ + _)
-              .getOrElse(0)
-            )
-        }
+        .map { case (group, bonuses) => (group, bonuses map (_._2) reduceOption (_ + _) getOrElse 0) }
         .withDefaultValue(0)
     stats.st.cpMod = 100 + costMods(ST)
     stats.dx.cpMod = 100 + costMods(DX)
     stats.iq.cpMod = 100 + costMods(IQ)
     stats.ht.cpMod = 100 + costMods(HT)
-    stats.st calcCp 10
-    stats.dx calcCp 20
-    stats.iq calcCp 20
-    stats.ht calcCp 10
-    stats.will calcCp 5
-    stats.per calcCp 5
-    stats.liftSt calcCp 3
-    stats.strikeSt calcCp 5
-    stats.hp calcCp 2
-    stats.fp calcCp 3
-    stats.basicSpeed calcCp 20
-    stats.basicMove calcCp 5
+    stats.st.calcCp(10)
+    stats.dx.calcCp(20)
+    stats.iq.calcCp(20)
+    stats.ht.calcCp(10)
+    stats.will.calcCp(5)
+    stats.per.calcCp(5)
+    stats.liftSt.calcCp(3)
+    stats.strikeSt.calcCp(5)
+    stats.hp.calcCp(2)
+    stats.fp.calcCp(3)
+    stats.basicSpeed.calcCp(20)
+    stats.basicMove.calcCp(5)
     cp.stats = stats.cp
-    traits.withFilter(_.cp > 0).foreach(cp.adv += _.cp)
-    traits.withFilter(_.cp < 0).foreach(cp.dis += _.cp)
-    skills.foreach(cp.skills += _.cp)
-    techniques.foreach(cp.skills += _.cp)
-    cp.calcUnspent()
+    cp.adv = traits withFilter (_.cp > 0) map (_.cp) reduceOption (_ + _) getOrElse 0
+    cp.dis = traits withFilter (_.cp < 0) map (_.cp) reduceOption (_ + _) getOrElse 0
+    cp.skills = skills map (_.cp) reduceOption (_ + _) getOrElse 0
+    cp.skills = techniques map (_.cp) reduceOption (_ + _) getOrElse 0
+    cp.unspent = cp.cp - cp.skills - cp.stats - cp.adv - cp.dis
   }
 
 }
@@ -248,18 +221,7 @@ case class CharacterPoints(
                             var adv: Int = 0,
                             var dis: Int = 0,
                             var skills: Int = 0,
-                            var unspent: Int = 0
-                          ) {
-  stats = 0
-  adv = 0
-  dis = 0
-  skills = 0
-
-  def calcUnspent() = {
-    unspent = cp - (skills + stats + adv + dis)
-    this
-  }
-}
+                            var unspent: Int = 0)
 
 /** Charlist subcontainer for character description */
 case class Description(
@@ -267,8 +229,7 @@ case class Description(
                         height: String = "",
                         weight: String = "",
                         portrait: String = "",
-                        bio: String = ""
-                      )
+                        bio: String = "")
 
 /** Charlist subcontainer for basic and secondary attributes */
 case class Stats(
@@ -283,9 +244,8 @@ case class Stats(
                   hp: StatPoints = StatPoints(),
                   fp: StatPoints = StatPoints(),
                   basicSpeed: StatFrac = StatFrac(),
-                  basicMove: StatInt = StatInt()
-                ) {
-  def cp = st.cp + dx.cp + iq.cp + ht.cp + will.cp + per.cp + liftSt.cp + strikeSt.cp + hp.cp + fp.cp +
+                  basicMove: StatInt = StatInt()) {
+  def cp: Int = st.cp + dx.cp + iq.cp + ht.cp + will.cp + per.cp + liftSt.cp + strikeSt.cp + hp.cp + fp.cp +
     basicSpeed.cp + basicMove.cp
 }
 
@@ -304,20 +264,9 @@ case class StatVars(
                      var combMove: Int = 0,
                      var travMove: Int = 0,
                      var dodge: Int = 0,
-                     var sm: Int = 0
-                   ) {
-  def calcDmg(thr: (Int, Int), sw: (Int, Int)) = {
-    thrDmg = s"${thr._1}d${if (thr._2 < 0) thr._2 else if (thr._2 == 0) "" else "+" + thr._2}"
-    swDmg = s"${sw._1}d${if (sw._2 < 0) sw._2 else if (sw._2 == 0) "" else "+" + sw._2}"
-    this
-  }
+                     var sm: Int = 0) {
 
-  def calcBL(liftSt: Int) = {
-    bl = (liftSt * liftSt * .2).toInt
-    this
-  }
-
-  def calcEncumbrance(combWt: Double, travWt: Double) = {
+  def calcEncumbrance(combWt: Double, travWt: Double): StatVars = {
     assert(combWt <= bl * 10, s"combat encumbrance value is over 10 times basic lift ($combWt, $bl)")
     assert(travWt <= bl * 10, s"travel encumbrance value is over 10 times basic lift ($travWt, $bl)")
     combatEncumbrance = combWt / bl match {
@@ -337,7 +286,7 @@ case class StatVars(
     this
   }
 
-  def calcMove(basicMove: Int, basicDodge: Int, compromised: Boolean) = {
+  def calcMove(basicMove: Int, basicDodge: Int, compromised: Boolean): StatVars = {
     val compr = if (compromised) .5 else 1
     def calc(enc: Int) = math.ceil((basicMove * .2 * (5 - enc)).toInt * compr - 0.01).toInt
     combMove = calc(combatEncumbrance)
@@ -348,7 +297,7 @@ case class StatVars(
 }
 
 /** Charlist subcontainer for character attribute storage */
-abstract class Stat[A](implicit x: scala.math.Numeric[A]) {
+sealed abstract class Stat[A](implicit x: scala.math.Numeric[A]) {
 
   import x._
 
@@ -364,10 +313,11 @@ abstract class Stat[A](implicit x: scala.math.Numeric[A]) {
 
   def cp: Int
 
-  def cp(cp: Int): Unit
+  def cp_=(cp: Int): Unit
 
-  def calcCp(cost: Int): Unit = {
-    cp(math.ceil(delta.toDouble * cost * math.max(.2, cpMod * .01) - 0.01).toInt)
+  def calcCp(cost: Int): Stat[A] = {
+    cp = math.ceil(delta.toDouble * cost * math.max(.2, cpMod * .01) - 0.01).toInt
+    this
   }
 }
 
@@ -376,20 +326,16 @@ case class StatInt(
                     var base: Int = 0,
                     var bonus: Int = 0,
                     var cpMod: Int = 100,
-                    var cp: Int = 0
-                  ) extends Stat[Int] {
-  override def cp(cp: Int) = cp_=(cp)
-}
+                    var cp: Int = 0)
+  extends Stat[Int]
 
 case class StatFrac(
                      delta: Double = 0,
                      var base: Double = 0,
                      var bonus: Double = 0,
                      var cpMod: Int = 100,
-                     var cp: Int = 0
-                   ) extends Stat[Double] {
-  override def cp(cp: Int) = cp_=(cp)
-}
+                     var cp: Int = 0)
+  extends Stat[Double]
 
 /** Charlist subcontainer for HP and FP attributes' stats */
 case class StatPoints(
@@ -400,36 +346,27 @@ case class StatPoints(
                        var cp: Int = 0,
                        lost: Int = 0,
                        var compromised: Boolean = false,
-                       var collapsing: Boolean = false
-                     ) extends Stat[Int] {
+                       var collapsing: Boolean = false)
+  extends Stat[Int] {
   assert(lost >= 0, s"negative points lost value ($lost)")
 
-  override def cp(cp: Int) = cp_=(cp)
-
-  def calcCompr() = {
-    if (value * (2.0 / 3.0) < lost) compromised = true
-    if (value <= lost) collapsing = true
+  def calcCompr(): StatPoints = {
+    compromised = value * (2.0 / 3.0) < lost
+    collapsing = value <= lost
     this
   }
 }
 
 /** Charlist subcontainer for NPC reactions list's element stats */
-case class Reaction(
-                     affected: String = "",
-                     modifiers: Seq[ReactionMod] = Seq()
-                   )
+case class Reaction(affected: String = "", modifiers: Seq[ReactionMod] = Seq())
 
 /** Charlist subcontainer for NPC reaction modifiers list's element stats */
-case class ReactionMod(
-                        freq: Int = 16,
-                        mod: Int = 0,
-                        notes: String = ""
-                      )
+case class ReactionMod(freq: Int = 16, mod: Int = 0, notes: String = "")
 
-abstract class DamageBonusing(
-                               dmgBonuses: Seq[BonusDamage]
-                             ) {
-  def dmgBonusValue(s: String, spc: String, lvl: Int) = {
+abstract class DamageBonusing {
+  def dmgBonuses: Seq[BonusDamage]
+
+  def dmgBonusValue(s: String, spc: String, lvl: Int): (Int, Int) =
     dmgBonuses
       .withFilter { b =>
         import NameCompare.{ANY, _}
@@ -442,10 +379,9 @@ abstract class DamageBonusing(
           case BEGINS => b.spc.regionMatches(true, 0, spc, 0, b.spc.length)
         }) && b.relSkill <= lvl
       }
-      .map(b => if (b.perDie) (b.bonus, 0) else (0, b.bonus))
-      .reduceOption((a, b) => (a._1 + b._1, a._2 + b._2))
+      .map { b => if (b.perDie) (b.bonus, 0) else (0, b.bonus) }
+      .reduceOption { (a, b) => (a._1 + b._1, a._2 + b._2) }
       .getOrElse((0, 0))
-  }
 }
 
 /** Charlist subcontainer for features list's element stats */
@@ -466,44 +402,42 @@ case class Trait(
                   cpBase: Int = 0,
                   level: Int = 0,
                   cpPerLvl: Int = 0,
-                  var cp: Int = 0
-                ) extends DamageBonusing(dmgBonuses) {
-  assert(TraitType.isValid(types), s"invalid trait type string(s) (${types.mkString(",")} in $name")
-  assert(TraitCategory.isValid(category), s"invalid trait category string ($category in $name)")
+                  var cp: Int = 0)
+  extends DamageBonusing {
+  assert(TraitType canBe types, s"invalid trait type string(s) (${types.mkString(",")} in $name")
+  assert(TraitCategory canBe category, s"invalid trait category string ($category in $name)")
   assert(level >= 0, s"trait's levels value is negative ($level in $name)")
   assert(level == 0 || cpPerLvl != 0,
     s"leveled trait's CP per level value is 0 (level $level, CP/level $cpPerLvl in $name)")
-  (reactBonuses ++ modifiers.flatMap(_.reactBonuses)) foreach (_ calcValue level)
+  for (b <- reactBonuses ++ modifiers.flatMap(_.reactBonuses)) b.calcValue(level)
 
   import TraitModifierAffects._
 
-  val cpMods =
-    modifiers
-      .groupBy(_.affects)
-      .map { case (group: String, mods: Seq[TraitModifier]) =>
-        (
+  private val rawCp = {
+    val cpMods: Map[String, (Int, Int, Double)] =
+      modifiers
+        .groupBy(_.affects)
+        .map { case (group, mods) => (
           group,
-          mods
-            .map(_.costValue)
-            .reduceOption((a, b) => (a._1 + b._1, a._2 + b._2, a._3 * b._3))
-            .getOrElse(0, 0, 1.0))
-      }
-      .withDefaultValue((0, 0, 1.0))
-  cp = math.ceil {
-    ((cpMods(BASE)._1 + cpBase) * math.max(.2, cpMods(BASE)._2 * .01 + 1) * cpMods(BASE)._3
-      + level * (cpMods(LEVELS)._1 + cpPerLvl) * math.max(.2, cpMods(LEVELS)._2 * .01 + 1) * cpMods(LEVELS)._3
-      + cpMods(TOTAL)._1) * math.max(.2, cpMods(TOTAL)._2 * .01 + 1) * cpMods(TOTAL)._3 - 0.01
-  }.toInt
+          mods map (_.costVal) reduceOption { (a, b) => (a._1 + b._1, a._2 + b._2, a._3 * b._3) } getOrElse(0, 0, 1.0))
+        }
+        .withDefaultValue((0, 0, 1.0))
+    val (bPts, bPct, bMlt) = cpMods(BASE)
+    val (lPts, lPct, lMlt) = cpMods(LEVELS)
+    val (tPts, tPct, tMlt) = cpMods(TOTAL)
+    ((bPts + cpBase) * math.max(.2, bPct * .01 + 1) * bMlt
+      + level * (lPts + cpPerLvl) * math.max(.2, lPct * .01 + 1)
+      * lMlt + tPts) * math.max(.2, tPct * .01 + 1) * tMlt
+  }
+  cp = math.ceil(rawCp - 0.01).toInt
 
-  def attrBonusValues =
-    (attrBonuses ++ modifiers.flatMap(_.attrBonuses))
-      .map(b => (b.attr, b.bonus * (if (b.perLvl) level else 1)))
+  val attrBonusValues: Seq[(String, Int)] =
+    for (b <- attrBonuses ++ modifiers.flatMap(_.attrBonuses)) yield (b.attr, b.bonus * (if (b.perLvl) level else 1))
 
-  def attrCostModValues =
-    (attrCostMods ++ modifiers.flatMap(_.attrCostMods))
-      .map(b => (b.attr, b.cost))
+  val attrCostModValues: Seq[(String, Int)] =
+    for (m <- attrCostMods ++ modifiers.flatMap(_.attrCostMods)) yield (m.attr, m.cost)
 
-  def skillBonusValue(s: String, spc: String) =
+  val skillBonusValue = (s: String, spc: String) =>
     (skillBonuses ++ modifiers.flatMap(_.skillBonuses))
       .withFilter { b =>
         import NameCompare._
@@ -535,17 +469,17 @@ case class TraitModifier(
                           affects: String = TraitModifierAffects.TOTAL,
                           costType: String = TraitModifierCostType.PERCENT,
                           level: Int = 0,
-                          cost: Double = 0
-                        ) extends DamageBonusing(dmgBonuses) {
+                          cost: Double = 0)
+  extends DamageBonusing {
 
   import TraitModifierCostType._
 
-  assert(TraitModifierAffects.isValid(affects), s"invalid trait modifier's 'affects' string ($affects in $name")
-  assert(TraitModifierCostType.isValid(costType), s"invalid trait modifier's cost type string ($costType in $name)")
+  assert(TraitModifierAffects canBe affects, s"invalid trait modifier's 'affects' string ($affects in $name")
+  assert(TraitModifierCostType canBe costType, s"invalid trait modifier's cost type string ($costType in $name)")
   assert(level >= 0, s"trait modifier's level value is negative ($level in $name)")
   assert(costType != LEVEL || level != 0, s"leveled trait modifier's level value is 0 ($name)")
 
-  def costValue: (Int, Int, Double) = costType match {
+  val costVal: (Int, Int, Double) = costType match {
     case POINTS => (cost.toInt, 0, 1)
     case PERCENT => (0, cost.toInt, 1)
     case LEVEL => (0, cost.toInt * level, 1)
@@ -571,16 +505,15 @@ case class Skill(
                   notes: String = "",
                   cp: Int = 1,
                   var relLvl: Int = 0,
-                  var lvl: Int = 0
-                ) extends DamageBonusing(dmgBonuses) {
+                  var lvl: Int = 0)
+  extends DamageBonusing {
   assert(tl >= 0 && tl < 13, s"skill's TL value out of bounds ($tl in $name)")
-  assert(SkillBaseAttribute.isValid(attr), s"invalid skill's attribute ($attr in $name)")
-  assert(SkillDifficulty.isValid(diff), s"invalid skill's difficulty ($diff in $name")
+  assert(SkillBaseAttribute canBe attr, s"invalid skill's attribute ($attr in $name)")
+  assert(SkillDifficulty canBe diff, s"invalid skill's difficulty ($diff in $name")
   assert(cp > 0, s"skill's CP value is negative or 0 ($cp in $name")
   skillString = name + (if (tl != 0) s"/TL$tl" else "") + (if (spc != "") s" ($spc)" else "")
-  bonus = 0
 
-  def calcLvl(attrVal: Int, enc: Int) = {
+  def calcLvl(attrVal: Int, enc: Int): Skill = {
     relLvl = SkillDifficulty.values(diff) + (if (cp > 1) 1 else 0) + (cp / 4) + bonus
     lvl = attrVal + relLvl - (if (encumbr) enc else 0)
     this
@@ -593,34 +526,29 @@ case class Technique(
                       skill: String = "",
                       spc: String = "",
                       var tchString: String = "",
-                      diff: String = TechniqueDifficulty.AVERAGE,
+                      diff: String = SkillDifficulty.AVERAGE,
                       style: String = "",
                       defLvl: Int = 0,
                       maxLvl: Int = 0,
                       notes: String = "",
                       cp: Int = 0,
                       var relLvl: Int = 0,
-                      var lvl: Int = 0
-                    ) {
-  assert(TechniqueDifficulty.isValid(diff), s"invalid technique's difficulty string ($diff in $name)")
-  assert(cp >= 0 && cp <= (maxLvl - defLvl + (if (diff == TechniqueDifficulty.HARD) 1 else 0)),
+                      var lvl: Int = 0) {
+  assert(SkillDifficulty techniqueCanBe diff, s"invalid technique's difficulty string ($diff in $name)")
+  assert(cp >= 0 && cp <= (maxLvl - defLvl + (if (diff == SkillDifficulty.HARD) 1 else 0)),
     s"technique's cp value out of bounds ($cp in $name")
   tchString = name + " (" + skill + (if (spc != "") " (" + spc + ")") + ")"
-  relLvl = math.max(cp + defLvl - (if (diff == TechniqueDifficulty.HARD) 1 else 0), defLvl)
+  relLvl = math.max(cp + defLvl - (if (diff == SkillDifficulty.HARD) 1 else 0), defLvl)
 
-  def calcLvl(skill: Int) = {
+  def calcLvl(skill: Int): Technique = {
     lvl = skill + relLvl
     this
   }
 }
 
 /** Charlist subcontainer for attribute bonuses list's element stats */
-case class BonusAttribute(
-                           attr: String = "",
-                           perLvl: Boolean = true,
-                           bonus: Int = 0
-                         ) {
-  assert(BonusToAttribute isValid attr, s"invalid attribute string ($attr)")
+case class BonusAttribute(attr: String = "", perLvl: Boolean = true, bonus: Int = 0) {
+  assert(BonusToAttribute canBe attr, s"invalid attribute string ($attr)")
 }
 
 /** Charlist subcontainer for skill bonuses list's element stats */
@@ -630,11 +558,10 @@ case class BonusSkill(
                        spc: String = "",
                        spcCompare: String = NameCompare.ANY,
                        perLvl: Boolean = true,
-                       bonus: Int = 0
-                     ) {
-  assert(NameCompare isValid skillCompare, s"invalid skill bonus' skill name comparation string ($skillCompare)")
+                       bonus: Int = 0) {
+  assert(NameCompare canBe skillCompare, s"invalid skill bonus' skill name comparation string ($skillCompare)")
   assert(skill != "", s"empty skill bonus' skill name string")
-  assert(NameCompare isValid spcCompare,
+  assert(NameCompare canBe spcCompare,
     s"invalid skill bonus' skill specialization comparation string ($spcCompare)")
   assert(spc != "" || spcCompare == NameCompare.ANY,
     s"invalid skill bonus' comparation with empty skill specialization string ($spcCompare)")
@@ -648,11 +575,10 @@ case class BonusDamage(
                         spcCompare: String = NameCompare.ANY,
                         relSkill: Int = 0,
                         perDie: Boolean = false,
-                        bonus: Int = 0
-                      ) {
-  assert(NameCompare isValid skillCompare, s"invalid damage bonus' skill name comparation string ($skillCompare)")
+                        bonus: Int = 0) {
+  assert(NameCompare canBe skillCompare, s"invalid damage bonus' skill name comparation string ($skillCompare)")
   assert(skill != "", s"empty damage bonus' skill name string")
-  assert(NameCompare isValid spcCompare,
+  assert(NameCompare canBe spcCompare,
     s"invalid damage bonus' skill specialization comparation string ($spcCompare)")
   assert(spc != "" || spcCompare == NameCompare.ANY,
     s"invalid damage bonus' comparation with empty skill specialization string ($spcCompare)")
@@ -666,20 +592,16 @@ case class BonusDR(
                     back: Boolean = true,
                     dr: Int = 0,
                     ep: Int = 0,
-                    epi: Int = 0
-                  ) {
-  assert(HitLocation isValid locations, s"invalid DR bonus' locations string(s) (${locations mkString ","})")
+                    epi: Int = 0) {
+  assert(HitLocation canBe locations, s"invalid DR bonus' locations string(s) (${locations mkString ","})")
   assert(dr >= 0, s"negative DR bonus' DR value ($dr)")
   assert(ep >= 0, s"negative DR bonus' EP value ($ep)")
   assert(epi >= 0, s"negative DR bonus' EPi value ($epi)")
 }
 
 /** Charlist subcontainer for attribute cost modifiers list's element stats */
-case class BonusAttributeCost(
-                               attr: String = "",
-                               cost: Int = 0
-                             ) {
-  assert(SkillBaseAttribute isValid attr, s"invalid attribute string ($attr)")
+case class BonusAttributeCost(attr: String = "", cost: Int = 0) {
+  assert(SkillBaseAttribute canBe attr, s"invalid attribute string ($attr)")
 }
 
 /** Charlist subcontainer for reaction bonuses list's element stats */
@@ -689,12 +611,11 @@ case class BonusReaction(
                           perLvl: Boolean = false,
                           freq: Int = 16,
                           bonus: Int = 0,
-                          notes: String = ""
-                        ) {
-  assert(ReactionFrequency isValid freq, s"invalid reaction bonus' frequency value ($freq)")
-  var bonusValue = bonus
+                          notes: String = "") {
+  assert(ReactionFrequency canBe freq, s"invalid reaction bonus' frequency value ($freq)")
+  var bonusValue: Int = bonus
 
-  def calcValue(lvl: Int) = {
+  def calcValue(lvl: Int): BonusReaction = {
     if (perLvl) bonusValue *= lvl
     this
   }
@@ -708,8 +629,7 @@ object TraitType {
   val MUNDANE = "Mundane"
   val EXOTIC = "Exotic"
   val SUPER = "Supernatural"
-
-  def isValid(t: Seq[String]) = t forall Set(MENTAL, PHYSICAL, SOCIAL, MUNDANE, EXOTIC, SUPER).contains
+  val canBe = (t: Seq[String]) => t forall Set(MENTAL, PHYSICAL, SOCIAL, MUNDANE, EXOTIC, SUPER)
 }
 
 /** Charlist subnamespaces for trait category strings and validation method */
@@ -720,8 +640,7 @@ object TraitCategory {
   val QUIRK = "Quirk"
   val LANGUAGE = "Language"
   val TALENT = "Talent"
-
-  def isValid(c: String) = Set(ADVANTAGE, DISADVANTAGE, PERK, QUIRK, LANGUAGE, TALENT) contains c
+  val canBe = (c: String) => Set(ADVANTAGE, DISADVANTAGE, PERK, QUIRK, LANGUAGE, TALENT)(c)
 }
 
 /** Charlist subnamespace for trait modifier cost effect strings and validation method */
@@ -729,8 +648,7 @@ object TraitModifierAffects {
   val TOTAL = "total"
   val BASE = "base"
   val LEVELS = "levels"
-
-  def isValid(a: String) = Set(TOTAL, BASE, LEVELS) contains a
+  val canBe = (a: String) => Set(TOTAL, BASE, LEVELS)(a)
 }
 
 /** Charlist subnamespace for trait modifier cost type strings and validation method */
@@ -739,8 +657,7 @@ object TraitModifierCostType {
   val LEVEL = "percent per level"
   val POINTS = "points"
   val MULTIPLIER = "multiplier"
-
-  def isValid(t: String) = Set(PERCENT, LEVEL, POINTS, MULTIPLIER) contains t
+  val canBe = (t: String) => Set(PERCENT, LEVEL, POINTS, MULTIPLIER)(t)
 }
 
 /** Charlist subnamespace for skill difficulties strings and validation method */
@@ -750,10 +667,9 @@ object SkillDifficulty {
   val HARD = "H"
   val VERY_HARD = "VH"
   val WOW = "W"
-
   val values: Map[String, Int] = Map(EASY -> 0, AVERAGE -> -1, HARD -> -2, VERY_HARD -> -3, WOW -> -4)
-
-  def isValid(d: String) = Set(EASY, AVERAGE, HARD, VERY_HARD, WOW) contains d
+  val canBe = (d: String) => Set(EASY, AVERAGE, HARD, VERY_HARD, WOW)(d)
+  val techniqueCanBe = (d: String) => Set(AVERAGE, HARD)(d)
 }
 
 /** Charlist subnamespace for base skill attributes and validation method */
@@ -764,16 +680,7 @@ object SkillBaseAttribute {
   val HT = "HT"
   val WILL = "Will"
   val PER = "Per"
-
-  def isValid(a: String) = Set(ST, IQ, DX, HT, WILL, PER) contains a
-}
-
-/** Charlist subnamespace for technique difficulty strings and validation method */
-object TechniqueDifficulty {
-  val AVERAGE = "A"
-  val HARD = "H"
-
-  def isValid(d: String) = Set(AVERAGE, HARD) contains d
+  val canBe = (a: String) => Set(ST, IQ, DX, HT, WILL, PER)(a)
 }
 
 /** Charlist subnamespace for attribute strings and validation method */
@@ -797,9 +704,8 @@ object BonusToAttribute {
   val HP = "hp"
   val FP = "fp"
   val SM = "sm"
-
-  def isValid(a: String) = Set(ST, DX, IQ, HT, WILL, FC, PER, VISION, HEARING, TASTE_SMELL, TOUCH, DODGE, PARRY, BLOCK,
-    BASIC_SPEED, BASIC_MOVE, HP, FP, SM) contains a
+  val canBe = (a: String) => Set(ST, DX, IQ, HT, WILL, FC, PER, VISION, HEARING, TASTE_SMELL, TOUCH, DODGE, PARRY,
+    BLOCK, BASIC_SPEED, BASIC_MOVE, HP, FP, SM)(a)
 }
 
 /** Charlist subnamespace for stat name comparison strings and validation method */
@@ -807,8 +713,7 @@ object NameCompare {
   val ANY = "any"
   val IS = "is"
   val BEGINS = "begins with"
-
-  def isValid(s: String) = Set(ANY, IS, BEGINS) contains s
+  val canBe = (s: String) => Set(ANY, IS, BEGINS)(s)
 }
 
 /** Charlist subnamespace for reaction bonus' recognition frequency values and validation method */
@@ -817,10 +722,8 @@ object ReactionFrequency {
   val OFTEN = 13
   val SOMETIMES = 10
   val OCCASIONALLY = 7
-
   val values: Map[Int, Double] = Map(ALLWAYS -> 1.0, OFTEN -> (2.0 / 3.0), SOMETIMES -> .5, OCCASIONALLY -> (1.0 / 3.0))
-
-  def isValid(freq: Int) = Set(ALLWAYS, OFTEN, SOMETIMES, OCCASIONALLY) contains freq
+  val canBe = (freq: Int) => Set(ALLWAYS, OFTEN, SOMETIMES, OCCASIONALLY)(freq)
 }
 
 /** Charlist subcontainer for character possessions, calculates total weights and cost and holds armor, weapons, and all
@@ -834,8 +737,7 @@ case class Equipment(
                       var totalDb: Int = 0,
                       var totalCost: Double = 0,
                       var totalCombWt: Double = 0,
-                      var totalTravWt: Double = 0
-                    ) {
+                      var totalTravWt: Double = 0) {
 
   import ItemState._
 
@@ -843,33 +745,36 @@ case class Equipment(
     (weapons.map(_.totalCost) ++ armor.map(_.cost) ++ items.map(_.totalCost))
       .reduceOption(_ + _)
       .getOrElse(0.0)
-  val comb = Set(READY, EQUIPPED, COMBAT)
-  val equip = Set(READY, EQUIPPED)
+  private val comb = (p: Possession) => Set(READY, EQUIPPED, COMBAT)(p.carried)
+  private val trav = (p: Possession) => p.carried == TRAVEL
+  private val equip = (p: Possession) => Set(READY, EQUIPPED)(p.carried) && !p.broken
   totalCombWt =
-    (weapons.withFilter(item => comb.contains(item.carried)).map(_.totalWt) ++
-      armor.withFilter(item => comb.contains(item.carried)).map(_.wt) ++
-      items.withFilter(item => comb.contains(item.carried)).map(_.totalWt))
+    (weapons.withFilter(comb).map(_.totalWt)
+      ++ armor.withFilter(comb).map(_.wt)
+      ++ items.withFilter(comb).map(_.totalWt))
       .reduceOption(_ + _)
       .getOrElse(0.0)
-  totalTravWt = totalCombWt +
-    (weapons.withFilter(_.carried == TRAVEL).map(_.totalWt) ++
-      armor.withFilter(_.carried == TRAVEL).map(_.wt) ++
-      items.withFilter(_.carried == TRAVEL).map(_.totalWt))
-      .reduceOption(_ + _)
-      .getOrElse(0.0)
+  totalTravWt =
+    totalCombWt +
+      (weapons.withFilter(trav).map(_.totalWt)
+        ++ armor.withFilter(trav).map(_.wt)
+        ++ items.withFilter(trav).map(_.totalWt))
+        .reduceOption(_ + _)
+        .getOrElse(0.0)
   totalDb =
-    (weapons.withFilter(item => equip.contains(item.carried) && !item.broken).map(_.db) ++
-      armor.withFilter(item => equip.contains(item.carried) && !item.broken).map(_.db))
+    (weapons.withFilter(equip).map(_.db) ++ armor.withFilter(equip).map(_.db))
       .reduceOption(_ + _)
       .getOrElse(0)
-
-  for {
-    a <- armor
-    l <- a.locations
-  } {
+  for (a <- armor; l <- a.locations) {
     if (a.front) frontDR.add(a.dr, a.ep, a.epi, l)
     if (a.back) rearDR.add(a.dr, a.ep, a.epi, l)
   }
+}
+
+sealed abstract class Possession {
+  def carried: String
+
+  def broken: Boolean
 }
 
 /** Charlist subcontainer for weapons list's element, calculates weapon weight and cost including ammunition if
@@ -894,9 +799,9 @@ case class Weapon(
                    wt: Double = 0,
                    cost: Double = 0,
                    var totalWt: Double = 0,
-                   var totalCost: Double = 0
-                 ) {
-  assert(ItemState.isValid(carried), s"invalid weapon's carrying state ($carried in $name)")
+                   var totalCost: Double = 0)
+  extends Possession {
+  assert(ItemState canBe carried, s"invalid weapon's carrying state ($carried in $name)")
   assert(bulk <= 0, s"positive bulk value ($bulk in $name)")
   assert(db >= 0 && db < 4, s"weapon's defense bonus value out of bounds ($db in $name)")
   assert(dr >= 0, s"negative weapon's DR value ($dr in $name)")
@@ -906,8 +811,8 @@ case class Weapon(
   assert(tl >= 0 && tl < 13, s"weapon's tech level value out of bounds ($tl in $name)")
   assert(wt >= 0, s"negative weapon's weight value ($wt in $name)")
   assert(cost >= 0, s"negative weapon's cost value ($cost in $name)")
-  totalWt = wt + attacksRanged.map(_.shots.totalWt).reduceOption(_ + _).getOrElse(0.0)
-  totalCost = cost + attacksRanged.map(_.shots.totalCost).reduceOption(_ + _).getOrElse(0.0)
+  totalWt = wt + (attacksRanged map (_.shots.totalWt) reduceOption (_ + _) getOrElse 0.0)
+  totalCost = cost + (attacksRanged map (_.shots.totalCost) reduceOption (_ + _) getOrElse 0.0)
 }
 
 /** Charlist subcontainer for melee attack type's stats, holds damage stats subcontainers and produces parry stat
@@ -926,8 +831,7 @@ case class MeleeAttack(
                         st: Int = 10,
                         hands: String = "",
                         reach: String = "",
-                        notes: String = ""
-                      ) {
+                        notes: String = "") {
   parryString = if (parryType == "No") parryType else "" + parry + parryType
   assert(st > 0, s"negative or 0 melee attack's min ST value ($st in $name)")
 }
@@ -939,22 +843,21 @@ case class MeleeDamage(
                         dmgMod: Int = 0,
                         armorDiv: Double = 1,
                         dmgType: String = DamageType.CRUSHING,
-                        var dmgString: String = ""
-                      ) {
-  assert(AttackType.isValid(attackType), s"invalid melee damage's attack type ($attackType)")
+                        var dmgString: String = "") {
+  assert(AttackType canBe attackType, s"invalid melee damage's attack type ($attackType)")
   assert(dmgDice >= 0, s"melee damage's dice value is negative ($dmgDice)")
-  assert(ArmorDivisor.isValid(armorDiv), s"invalid melee damage's armor divisor value ($armorDiv)")
-  assert(DamageType.isValid(dmgType), s"invalid melee damage type ($dmgType)")
+  assert(ArmorDivisor canBe armorDiv, s"invalid melee damage's armor divisor value ($armorDiv)")
+  assert(DamageType canBe dmgType, s"invalid melee damage type ($dmgType)")
 
-  def calcDmg(thr: (Int, Int), sw: (Int, Int), bonus: (Int, Int)) = {
+  def calcDmg(thr: (Int, Int), sw: (Int, Int), bonus: (Int, Int)): MeleeDamage = {
     import AttackType._
-    val dmg = attackType match {
+    val (mDice, mMod) = attackType match {
       case THRUSTING => thr
       case SWINGING => sw
       case WEAPON => (0, 0)
     }
-    var dice = dmgDice + dmg._1
-    var mod = dmgMod + dmg._2 + bonus._1 * dice + bonus._2
+    var dice = dmgDice + mDice
+    var mod = dmgMod + mMod + bonus._1 * dice + bonus._2
     if (mod > 0) {
       dice += (mod / 3.5).toInt
       mod = (mod % 3.5).toInt
@@ -964,15 +867,8 @@ case class MeleeDamage(
     dmgString = dmgType match {
       case SPECIAL => dmgType
       case AFFLICTION => s"HT${if (dmgMod > 0) "+" + dmgMod else if (dmgMod < 0) dmgMod else ""}"
-      case _ => "" + dice + "d" + (
-        if (mod > 0) "+" + mod
-        else if (mod < 0) "" + mod
-        else ""
-        ) + (
-        if (armorDiv < 1) "(" + armorDiv + ")"
-        else if (armorDiv > 1) "(" + armorDiv.toInt + ")"
-        else ""
-        ) + " " + dmgType
+      case _ => s"${dice}d${if (mod > 0) "+" + mod else if (mod < 0) mod else ""}" +
+        s"${if (armorDiv < 1) "(" + armorDiv + ")" else if (armorDiv > 1) "(" + armorDiv.toInt + ")" else ""} $dmgType"
     }
     this
   }
@@ -983,8 +879,7 @@ object AttackType {
   val THRUSTING = "thr"
   val SWINGING = "sw"
   val WEAPON = ""
-
-  def isValid(s: String) = Set(THRUSTING, SWINGING, WEAPON) contains s
+  val canBe = (s: String) => Set(THRUSTING, SWINGING, WEAPON)(s)
 }
 
 /** Charlist subcontainer for ranged attack's stats, holds damage, RoF, and shots subcontainers */
@@ -1005,8 +900,7 @@ case class RangedAttack(
                          st: Int = 10,
                          hands: String = "",
                          malf: Int = 18,
-                         notes: String = ""
-                       ) {
+                         notes: String = "") {
   assert(acc >= 0, s"negative ranged attack's accuracy value ($acc in $name)")
   assert(accMod >= 0, s"negative ranged attack's scope bonus value ($accMod in $name)")
   assert(rcl > 0, s"negative or 0 ranged attack's recoil ($rcl in $name)")
@@ -1022,12 +916,11 @@ case class RangedDamage(
                          armorDiv: Double = 1,
                          dmgType: String = DamageType.CRUSHING,
                          fragDice: Int = 0,
-                         var dmgString: String = ""
-                       ) {
+                         var dmgString: String = "") {
   assert(dmgDice >= 0, s"ranged damage's dice value is negative ($dmgDice)")
   assert(diceMult > 0, s"ranged damage's dice multiplier is negative or 0 ($diceMult)")
-  assert(ArmorDivisor.isValid(armorDiv), s"invalid ranged damage's armor divisor value ($armorDiv)")
-  assert(DamageType.isValid(dmgType), s"invalid ranged damage type ($dmgType)")
+  assert(ArmorDivisor canBe armorDiv, s"invalid ranged damage's armor divisor value ($armorDiv)")
+  assert(DamageType canBe dmgType, s"invalid ranged damage type ($dmgType)")
   assert(fragDice >= 0, s"negative ranged damage's fragmentation dice value ($fragDice)")
 
   import DamageType._
@@ -1035,21 +928,16 @@ case class RangedDamage(
   dmgString = dmgType match {
     case SPECIAL => dmgType
     case AFFLICTION => s"HT${if (dmgMod > 0) "+" + dmgMod else if (dmgMod < 0) dmgMod else ""}"
-    case _ => "" + dmgDice + "d" + (
-      if (diceMult != 1) "x" + diceMult else ""
-      ) + (
-      if (dmgMod > 0) "+" + dmgMod else if (dmgMod < 0) "" + dmgMod else ""
-      ) + (
-      if (armorDiv < 1) "(" + armorDiv + ")" else if (armorDiv > 1) "(" + armorDiv.toInt + ")" else ""
-      ) + " " + dmgType + (
-      if (fragDice > 0) " [" + fragDice + "d]" else ""
-      )
+    case _ => s"${dmgDice}d${if (diceMult != 1) "x" + diceMult else ""}" +
+      s"${if (dmgMod > 0) "+" + dmgMod else if (dmgMod < 0) dmgMod else ""}" +
+      s"${if (armorDiv < 1) "(" + armorDiv + ")" else if (armorDiv > 1) "(" + armorDiv.toInt + ")" else ""}" +
+      s" $dmgType${if (fragDice > 0) " [" + fragDice + "d]" else ""}"
   }
 }
 
 /** Charlist subnamespace that holds armor divisors validation method */
 object ArmorDivisor {
-  def isValid(div: Double) = Set(0.1, 0.2, 0.5, 1, 2, 3, 5, 10, 100) contains div
+  val canBe = (div: Double) => Set(0.1, 0.2, 0.5, 1, 2, 3, 5, 10, 100)(div)
 }
 
 /** Charlist subnamespace that holds damage types strings and validation method */
@@ -1069,10 +957,8 @@ object DamageType {
   val AFFLICTION = "aff"
   val FATIGUE = "fat"
   val SPECIAL = "spec."
-
-  def isValid(key: String) = Set(CRUSHING, CRUSHING_EXPLOSION, CUTTING, IMPALING, PIERCING_SMALL, PIERCING,
-    PIERCING_LARGE, PIERCING_HUGE, BURNING, BURNING_EXPLOSION, TOXIC, CORROSION, AFFLICTION, FATIGUE,
-    SPECIAL) contains key
+  val canBe = (key: String) => Set(CRUSHING, CRUSHING_EXPLOSION, CUTTING, IMPALING, PIERCING_SMALL, PIERCING,
+    PIERCING_LARGE, PIERCING_HUGE, BURNING, BURNING_EXPLOSION, TOXIC, CORROSION, AFFLICTION, FATIGUE, SPECIAL)(key)
 }
 
 /** Charlist subcontainer for ranged attack's RoF stat, producing RoF string */
@@ -1081,8 +967,7 @@ case class RangedRoF(
                       rofMult: Int = 1,
                       rofFA: Boolean = false,
                       rofJet: Boolean = false,
-                      var rofString: String = ""
-                    ) {
+                      var rofString: String = "") {
   assert(rof > 0, s"negative or 0 ranged attack's RoF ($rof)")
   assert(rofMult > 0, s"negative or 0 ranged attack's RoF multiplier ($rofMult)")
   assert(!(rofJet && rofFA), s"invalid ranged attack's RoF type: full auto with jet (true & true)")
@@ -1100,8 +985,7 @@ case class RangedShots(
                         shotCost: Double = 0,
                         var shotsString: String = "",
                         var totalWt: Double = 0,
-                        var totalCost: Double = 0
-                      ) {
+                        var totalCost: Double = 0) {
   assert(shots >= 0, s"negative ranged attack's shots number ($shots)")
   assert(shotsLoaded >= 0 && shotsLoaded <= shots, s"ranged attack's shots left value out of bounds ($shotsLoaded)")
   assert(shotsCarried >= 0, s"negative ranged attack's shots carried value ($shotsCarried)")
@@ -1132,16 +1016,16 @@ case class Armor(
                   tl: Int = 0,
                   notes: String = "",
                   wt: Double = 0,
-                  cost: Double = 0
-                ) {
-  assert(ItemState.isValid(carried), s"invalid armor's carrying state ($carried in $name)")
+                  cost: Double = 0)
+  extends Possession {
+  assert(ItemState canBe carried, s"invalid armor's carrying state ($carried in $name)")
   assert(db >= 0 && db < 4, s"armor's defense bonus value out of bounds ($db in $name)")
   assert(dr >= 0, s"negative armor's DR value ($dr in $name)")
   assert(ep >= 0, s"negative armor's EP value ($ep in $name)")
   assert(epi >= 0, s"negative armor's EPi value ($epi in $name)")
   assert(front || back, s"armor covers neither front nor back (false & false in $name)")
-  assert(DrType.isValid(drType), s"invalid armor's DR type string ($drType in $name)")
-  assert(HitLocation.isValid(locations), s"invalid armor's locations string set ($locations in $name)")
+  assert(DrType canBe drType, s"invalid armor's DR type string ($drType in $name)")
+  assert(HitLocation canBe locations, s"invalid armor's locations string set ($locations in $name)")
   assert(hp >= 0, s"negative armor's HP value ($hp in $name)")
   assert(hpLeft >= 0 && hpLeft <= hp, s"armor's current HP value out of bounds ($hpLeft in $name)")
   assert(lc < 6 && lc >= 0, s"armor's legality class value out of bounds ($lc in $name)")
@@ -1156,8 +1040,7 @@ object DrType {
   val SOFT = "soft"
   val FIELD = "force field"
   val SKIN = "tough skin"
-
-  def isValid(dr: String) = Set(HARD, SOFT, FIELD, SKIN) contains dr
+  val canBe = (dr: String) => Set(HARD, SOFT, FIELD, SKIN)(dr)
 }
 
 /** Charlist subnamespace that holds hit locations strings and validation method */
@@ -1186,10 +1069,9 @@ object HitLocation {
   val FOOT_LEFT = "left foot"
   val SKIN = "skin"
   val BODY = "body"
-
-  def isValid(loc: Seq[String]) =
-    loc forall Set(EYES, SKULL, FACE, HEAD, NECK, LEG_LEFT, LEG_RIGHT, LEGS, ARM_LEFT, ARM_RIGHT, ARMS, CHEST, VITALS,
-      ABDOMEN, GROIN, TORSO, HANDS, HAND_LEFT, HAND_RIGHT, FEET, FOOT_LEFT, FOOT_RIGHT, SKIN, BODY).contains
+  val canBe = (loc: Seq[String]) => loc forall Set(EYES, SKULL, FACE, HEAD, NECK, LEG_LEFT, LEG_RIGHT, LEGS,
+    ARM_LEFT, ARM_RIGHT, ARMS, CHEST, VITALS, ABDOMEN, GROIN, TORSO, HANDS, HAND_LEFT, HAND_RIGHT, FEET, FOOT_LEFT,
+    FOOT_RIGHT, SKIN, BODY)
 }
 
 /** Charlist subcontainer for items list's element, holds its stats and calculates element's total weight and cost */
@@ -1207,9 +1089,9 @@ case class Item(
                  cost: Double = 0,
                  n: Int = 1,
                  var totalWt: Double = 0,
-                 var totalCost: Double = 0
-               ) {
-  assert(ItemState.isValid(carried), s"invalid item's carrying state ($carried in $name)")
+                 var totalCost: Double = 0)
+  extends Possession {
+  assert(ItemState canBe carried, s"invalid item's carrying state ($carried in $name)")
   assert(dr >= 0, s"negative item's DR value ($dr in $name)")
   assert(hp >= 0, s"negative item's HP value ($hp in $name)")
   assert(hpLeft >= 0 && hpLeft <= hp, s"item's current HP value out of bounds ($hpLeft in $name)")
@@ -1229,8 +1111,7 @@ object ItemState {
   val COMBAT = "Combat"
   val TRAVEL = "Travel"
   val STASH = "Stash"
-
-  def isValid(key: String) = Set(READY, EQUIPPED, COMBAT, TRAVEL, STASH) contains key
+  val canBe = (key: String) => Set(READY, EQUIPPED, COMBAT, TRAVEL, STASH)(key)
 }
 
 /** Charlist subcontainer for total DR coverage stats, holds its calculation method */
@@ -1250,11 +1131,10 @@ case class DamageResistanceTotal(
                                   legLeft: HitLocationDR = HitLocationDR(),
                                   legRight: HitLocationDR = HitLocationDR(),
                                   footLeft: HitLocationDR = HitLocationDR(),
-                                  footRight: HitLocationDR = HitLocationDR()
-                                ) {
-  def add(dr: Int, ep: Int, epi: Int, loc: String) = {
+                                  footRight: HitLocationDR = HitLocationDR()) {
+  def add(dr: Int, ep: Int, epi: Int, loc: String): DamageResistanceTotal = {
     import HitLocation._
-    val locs = loc match {
+    for (location <- loc match {
       case EYES => Seq(eyes)
       case SKULL => Seq(skull)
       case FACE => Seq(face)
@@ -1277,26 +1157,21 @@ case class DamageResistanceTotal(
       case FEET => Seq(footLeft, footRight)
       case FOOT_LEFT => Seq(footLeft)
       case FOOT_RIGHT => Seq(footRight)
-      case SKIN => Seq(skull, face, neck, armLeft, armRight, handLeft, handRight, chest, vitals, abdomen,
-        groin, legLeft, legRight, footLeft, footRight)
-      case BODY => Seq(skull, eyes, face, neck, armLeft, armRight, handRight, handLeft, chest, vitals,
-        abdomen, groin, legRight, legLeft, footRight, footLeft)
-    }
-    for (l <- locs) {
-      l.dr += dr
-      l.ep += ep
-      l.epi += epi
+      case SKIN => Seq(skull, face, neck, armLeft, armRight, handLeft, handRight, chest, vitals, abdomen, groin,
+        legLeft, legRight, footLeft, footRight)
+      case BODY => Seq(skull, eyes, face, neck, armLeft, armRight, handRight, handLeft, chest, vitals, abdomen, groin,
+        legRight, legLeft, footRight, footLeft)
+    }) {
+      location.dr += dr
+      location.ep += ep
+      location.epi += epi
     }
     this
   }
 }
 
 /** Charlist subcontainer for hit location DR stats, holds its calculation method */
-case class HitLocationDR(
-                          var dr: Int = 0,
-                          var ep: Int = 0,
-                          var epi: Int = 0
-                        ) {
+case class HitLocationDR(var dr: Int = 0, var ep: Int = 0, var epi: Int = 0) {
   dr = 0
   ep = 0
   epi = 0
@@ -1316,10 +1191,9 @@ case class Conditions(
                        grappled: Boolean = false,
                        pinned: Boolean = false,
                        sprinting: Boolean = false,
-                       mounted: Boolean = false
-                     ) {
+                       mounted: Boolean = false) {
   assert(shock >= 0 && shock <= 8, s"shock value out of bounds ($shock)")
-  assert(Posture.isValid(posture), s"invalid posture string ($posture)")
+  assert(Posture canBe posture, s"invalid posture string ($posture)")
 }
 
 /** Charlist subcontainer for afflictions switches */
@@ -1340,8 +1214,7 @@ case class Afflictions(
                         retching: Boolean = false,
                         seizure: Boolean = false,
                         coma: Boolean = false,
-                        heartAttack: Boolean = false
-                      )
+                        heartAttack: Boolean = false)
 
 /** Charlist subnamespace for posture strings and validation method */
 object Posture {
@@ -1352,9 +1225,8 @@ object Posture {
   val CRAWLING = "Crawling"
   val LYING_PRONE = "Prone"
   val LYING_FACE_UP = "On Back"
-
-  def isValid(posture: String) =
-    Set(STANDING, CROUCHING, SITTING, KNEELING, CRAWLING, LYING_PRONE, LYING_FACE_UP) contains posture
+  val canBe = (posture: String) =>
+    Set(STANDING, CROUCHING, SITTING, KNEELING, CRAWLING, LYING_PRONE, LYING_FACE_UP)(posture)
 }
 
 object Charlist {
@@ -1395,5 +1267,4 @@ object Charlist {
   implicit val descriptionFormat = Json.format[Description]
   implicit val characterPointsFormat = Json.format[CharacterPoints]
   implicit val charlistFormat = Json.format[Charlist]
-
 }

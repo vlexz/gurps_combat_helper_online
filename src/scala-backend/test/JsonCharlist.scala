@@ -140,7 +140,7 @@ object JsonCharlist {
         name = "Off-hand weapon training",
         skill = "Guns",
         spc = "Pistol",
-        diff = TechniqueDifficulty.HARD,
+        diff = SkillDifficulty.HARD,
         style = "Trench Warfare",
         defLvl = -4,
         cp = 5

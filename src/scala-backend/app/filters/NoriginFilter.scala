@@ -13,17 +13,15 @@ import scala.concurrent.Future
 class NoriginFilter @Inject()(protected val errorHandler: HttpErrorHandler = DefaultHttpErrorHandler)
                              (override implicit val mat: Materializer) extends Filter {
 
-  override def apply(f: (RequestHeader) => Future[Result])(rh: RequestHeader): Future[Result] = {
+  override def apply(f: RequestHeader => Future[Result])(rh: RequestHeader): Future[Result] = {
     val headerBuilder = Seq.newBuilder[(String, String)]
     headerBuilder += HeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN -> "*"
     import play.api.libs.iteratee.Execution.Implicits.trampoline
     val result = try {
-      f(rh).recoverWith {
-        case e: Throwable => errorHandler.onServerError(rh, e)
-      }
+      f(rh).recoverWith { case e: Throwable => errorHandler.onServerError(rh, e) }
     } catch {
       case e: Throwable => errorHandler.onServerError(rh, e)
     }
-    result.map(_.withHeaders(headerBuilder.result(): _*))
+    result.map { _.withHeaders(headerBuilder.result(): _*) }
   }
 }
