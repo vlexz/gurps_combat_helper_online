@@ -9,10 +9,13 @@
 #GET           /assets/*file        controllers.Assets.at(path="/public", file)
 
 #Charlists storage
-POST          /api/char            controllers.CharlistController.add()
-GET           /api/char            controllers.CharlistController.create()
-GET           /api/chars           controllers.CharlistController.list
-GET           /api/char/:id        controllers.CharlistController.get(id:String)
-PUT           /api/char/:id        controllers.CharlistController.replace(id: String)
-PATCH         /api/char/:id        controllers.CharlistController.update(id: String)
-DELETE        /api/char/:id        controllers.CharlistController.delete(id: String)
+OPTIONS        /api/char            controllers.CharlistController.options(id = "")
+POST           /api/char            controllers.CharlistController.add()
+GET            /api/char            controllers.CharlistController.create()
+OPTIONS        /api/chars           controllers.CharlistController.options(id = "")
+GET            /api/chars           controllers.CharlistController.list
+OPTIONS        /api/char/:id        controllers.CharlistController.options(id: String)
+GET            /api/char/:id        controllers.CharlistController.get(id:String)
+PUT            /api/char/:id        controllers.CharlistController.replace(id: String)
+PATCH          /api/char/:id        controllers.CharlistController.update(id: String)
+DELETE         /api/char/:id        controllers.CharlistController.delete(id: String)

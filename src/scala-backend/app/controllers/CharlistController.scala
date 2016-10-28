@@ -15,6 +15,15 @@ import scala.util.Random
   */
 class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller {
 
+  def options(id: String) = Action.async { implicit request =>
+    val methods = request.path.replaceAll(id, "") match {
+      case "/api/char" => "GET, POST"
+      case "/api/chars" => "GET"
+      case "/api/char/" => "GET, PUT, PATCH, DELETE"
+    }
+    Future(Ok.withHeaders(ALLOW -> methods))
+  }
+
   def add() = Action.async(BodyParsers.parse.json) { implicit request =>
     try {
       request
