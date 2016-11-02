@@ -15,7 +15,7 @@ object JsonCharlist {
       ht = StatInt(delta = 2),
       will = StatInt(delta = 2),
       per = StatInt(delta = 2),
-      basicSpeed = StatFrac(delta = -0.25)
+      basicSpeed = StatDouble(delta = -0.25)
     ),
     traits = Seq[Trait](
       Trait(

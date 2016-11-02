@@ -278,19 +278,13 @@ sealed abstract class Stat[A <: AnyVal](implicit x: scala.math.Numeric[A]) {
   import Charlist.rndUp
   import x._
 
-  def delta: A
-
-  def base: A
-
-  def bonus: A
+  val delta: A
+  var base: A
+  var bonus: A
+  var cpMod: Int
+  var cp: Int
 
   def value: A = delta + base + bonus
-
-  def cpMod: Int
-
-  def cp: Int
-
-  def cp_=(cp: Int): Unit
 
   def calcCp(cost: Int): Stat[A] = {
     cp = rndUp(delta.toDouble * cost * math.max(.2, cpMod * .01))
@@ -307,11 +301,11 @@ case class StatInt(
   extends Stat[Int]
 
 case class StatDouble(
-                     delta: Double = 0,
-                     var base: Double = 0,
-                     var bonus: Double = 0,
-                     var cpMod: Int = 100,
-                     var cp: Int = 0)
+                       delta: Double = 0,
+                       var base: Double = 0,
+                       var bonus: Double = 0,
+                       var cpMod: Int = 100,
+                       var cp: Int = 0)
   extends Stat[Double]
 
 /** Charlist subcontainer for HP and FP attributes' stats */
@@ -714,8 +708,10 @@ case class Equipment(
   import ItemState._
 
   totalCost = (weapons ++ armor ++ items).foldLeft(0.0)(_ + _.totalCost)
+
   private def weight(f: String => Boolean) =
     (for {p <- weapons ++ armor ++ items; if f(p.carried)} yield p.totalWt).sum
+
   totalCombWt = weight(Set(READY, EQUIPPED, COMBAT))
   totalTravWt = totalCombWt + weight(_ == TRAVEL)
   private val equip = (p: Possession) => Set(READY, EQUIPPED)(p.carried) && !p.broken
@@ -727,9 +723,8 @@ case class Equipment(
 }
 
 sealed abstract class Possession {
-  def carried: String
-
-  def broken: Boolean
+  val carried: String
+  val broken: Boolean
 
   def totalCost: Double
 
