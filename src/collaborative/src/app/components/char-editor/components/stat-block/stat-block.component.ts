@@ -9,11 +9,10 @@ import { Stat } from '../../../../interfaces/character';
 export class StatBlockComponent implements OnInit {
 
   @Input() stat: Stat;
-  @Input() name: string;
-  @Output() change: EventEmitter<Object>;
+  @Input() statName: string;
+  @Output() statChanged: EventEmitter<Object> = new EventEmitter();
 
   constructor() {
-    this.change = new EventEmitter();
   }
 
   get total(): number {
@@ -25,9 +24,9 @@ export class StatBlockComponent implements OnInit {
   set total(total: number) {
     if (this.stat) {
       this.stat.delta = total - this.stat.base;
-      this.change.emit({
-        name: this.name,
-        delte: this.stat.delta
+      this.statChanged.emit({
+        name: this.statName,
+        delta: this.stat.delta
       });
     }
   }

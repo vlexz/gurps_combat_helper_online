@@ -1,24 +1,159 @@
-<table *ngIf="current">
-  <tr>
-    <td>
-      <table>
-        <tr> <td>ST:</td ><td> <app-stat-block [name]="'st'" [stat]="current.stats.st"></app-stat-block> </td></tr>
-        <tr> <td>DX:</td> <td> <app-stat-block [name]="'dx'" [stat]="current.stats.dx"></app-stat-block> </td></tr>
-        <tr> <td>IQ:</td> <td> <app-stat-block [name]="'iq'" [stat]="current.stats.iq"></app-stat-block> </td></tr>
-        <tr> <td>HT:</td> <td> <app-stat-block [name]="'ht'" [stat]="current.stats.ht"></app-stat-block> </td></tr>
-        <tr> <td>Will:</td> <td> <app-stat-block [name]="'will'" [stat]="current.stats.will"></app-stat-block> </td></tr>
-        <tr> <td>Per:</td> <td> <app-stat-block [name]="'per'" [stat]="current.stats.per"></app-stat-block> </td></tr>        
+
+<div *ngIf="current">
+  <div>
+    <table>
+      <tr></tr>
+      <td>Name 
+        <input type="text" name="name" [(ngModel)]="current.name" (change)="mainInfoChanged($event)"/>
+      </td>
+      <td>Player
+        <input type="text" name="player" [(ngModel)]="current.player" (change)="mainInfoChanged($event)"/>
+      </td>
+    </table>
+  </div>
+  <div>
+    <table>
+      <tr>
+        <td>
+          <table>    
+            <tr>
+              <td>ST:</td>
+              <td>
+                <app-stat-block [statName]="'st'" [stat]="current.stats.st" (statChanged)="statChanged($event)"></app-stat-block>
+              </td>
+            </tr>
+            <tr>
+              <td>DX:</td>
+              <td>
+                <app-stat-block [statName]="'dx'" [stat]="current.stats.dx" (statChanged)="statChanged($event)"></app-stat-block>
+              </td>
+            </tr>
+            <tr>
+              <td>IQ:</td>
+              <td>
+                <app-stat-block [statName]="'iq'" [stat]="current.stats.iq" (statChanged)="statChanged($event)"></app-stat-block>
+              </td>
+            </tr>
+            <tr>
+              <td>HT:</td>
+              <td>
+                <app-stat-block [statName]="'ht'" [stat]="current.stats.ht" (statChanged)="statChanged($event)"></app-stat-block>
+              </td>
+            </tr>
+            <tr>
+              <td>Will:</td>
+              <td>
+                <app-stat-block [statName]="'will'" [stat]="current.stats.will" (statChanged)="statChanged($event)"></app-stat-block>
+              </td>
+            </tr>
+            <tr>
+              <td>Per:</td>
+              <td>
+                <app-stat-block [statName]="'per'" [stat]="current.stats.per" (statChanged)="statChanged($event)"></app-stat-block>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td>
+          <table>    
+            <tr>
+              <td>Lift ST:</td>
+              <td>
+                <app-stat-block [statName]="'liftSt'" [stat]="current.stats.liftSt" (statChanged)="statChanged($event)"></app-stat-block>
+              </td>
+            </tr>
+            <tr>
+              <td>Strike ST:</td>
+              <td>
+                <app-stat-block [statName]="'strikeSt'" [stat]="current.stats.strikeSt" (statChanged)="statChanged($event)"></app-stat-block>
+              </td>
+            </tr>
+            <tr>
+              <td>BM:</td>
+              <td>
+                <app-stat-block [statName]="'basicMove'" [stat]="current.stats.basicMove" (statChanged)="statChanged($event)"></app-stat-block>
+              </td>
+            </tr>
+            <tr>
+              <td>BS:</td>
+              <td>
+                <app-stat-block [statName]="'basicSpeed'" [stat]="current.stats.basicSpeed" (statChanged)="statChanged($event)"></app-stat-block>
+              </td>
+            </tr>
+            <tr>
+              <td>FP:</td>
+              <td>
+                <app-stat-block [statName]="'fp'" [stat]="current.stats.fp" (statChanged)="statChanged($event)"></app-stat-block>
+              </td>
+            </tr>
+            <tr>
+              <td>HP:</td>
+              <td>
+                <app-stat-block [statName]="'hp'" [stat]="current.stats.hp" (statChanged)="statChanged($event)"></app-stat-block>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="container">
+    <div class="traits">
+      <div><b>Advantages</b>
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>Cost</th>
+          </tr>
+          <tr *ngFor="let trait of current.advatages; let i = index">
+            <td>
+              <input type="text" [(ngModel)]="trait.name" (change)="traitChanged($event)"/>
+            </td>
+            <td>
+              <input type="number" [(ngModel)]="trait.cp" (change)="traitChanged($event)"/>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2"><a href="#" (click)="addAdvantage()">Add Advantage</a></td>
+          </tr>
+        </table>
+      </div>
+      <div><b>Disadvatanges</b>
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>Cost</th>
+          </tr>
+          <tr *ngFor="let trait of current.disadvantages; let i = index">
+            <td>
+              <input type="text" [(ngModel)]="trait.name" (change)="traitChanged($event)"/>
+            </td>
+            <td>
+              <input type="number" [(ngModel)]="trait.cp" (change)="traitChanged($event)"/>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2"><a href="#" (click)="addDisadvatange()">Add Disadvatange</a></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="skills"><b>Skills </b>
+      <table> 
+        <tr>
+          <th>Name</th>
+          <th>Attr</th>
+          <th>Diff</th>
+          <th>Rel</th>
+          <th>Bonus</th>
+          <th>Total</th>
+          <th>Cost</th>
+        </tr>
+        <tr *ngFor="let skill of undefined; let i = index"> </tr>
+        <tr>
+          <td><a href="#" click="addSkill()">Add Skill</a></td>
+        </tr>
       </table>
-    </td>
-    <td>
-      <table>
-        <tr> <td>Lift ST:</td ><td> <app-stat-block [name]="'liftSt'" [stat]="current.stats.liftSt"></app-stat-block> </td></tr>
-        <tr> <td>Strike ST:</td> <td> <app-stat-block [name]="'strikeSt'" [stat]="current.stats.strikeSt"></app-stat-block> </td></tr>
-        <tr> <td>BM:</td> <td> <app-stat-block [name]="'basicMove'" [stat]="current.stats.basicMove"></app-stat-block> </td></tr>
-        <tr> <td>BS:</td> <td> <app-stat-block [name]="'basicSpeed'" [stat]="current.stats.basicSpeed"></app-stat-block> </td></tr>
-        <tr> <td>FP:</td> <td> <app-stat-block [name]="'fp'" [stat]="current.stats.fp"></app-stat-block> </td></tr>
-        <tr> <td>HP:</td> <td> <app-stat-block [name]="'hp'" [stat]="current.stats.hp"></app-stat-block> </td></tr>
-      </table>
-    </td>    
-  </tr>
-</table>
+    </div>
+  </div>
+</div>

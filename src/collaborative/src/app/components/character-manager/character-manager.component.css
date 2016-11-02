@@ -1,9 +1,9 @@
-.traits {
+app-char-list {
   display: inline-block;
+  overflow: auto;
   vertical-align: top;
 }
 
-.skills {
+app-char-editor {
   display: inline-block;
-  vertical-align: top;
 }
