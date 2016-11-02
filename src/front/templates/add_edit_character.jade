@@ -1,0 +1,40 @@
+mixin stat(name)
+    .col-md-1
+        label= name
+            input.form-control(type="number" ng-model = 'character.' + name.toLowerCase())
+
+.modal-header
+    h3.modal-title {{title}}
+.modal-body
+    .container
+        .row
+            .col-md-5
+                label Name
+                    input.form-control(ng-model="character.name" type="text")
+        .row
+            .col-md-4
+                h4 Main Stats
+        .row
+            +stat('ST')
+            +stat('DX')
+            +stat('IQ')
+            +stat('HT')
+            +stat('Will')
+            +stat('Per')
+        .row
+            .col-md-4
+                h4 Secondary stats
+        .row
+            +stat('HP')
+            +stat('FP')
+            +stat('BS')
+            +stat('Move')
+            +stat('Dodge')
+            +stat('Parry')
+        .row
+            .col-md-5
+                label Notes
+                    textarea(ng-model="character.notes" rows="10" cols="70")
+.modal-footer
+    button.btn.btn-default(ng-click="ok()") Save
+    button.btn.btn-default(ng-click="cancel()") Cancel

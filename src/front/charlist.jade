@@ -1,0 +1,65 @@
+mixin statblock(caption, model, points)
+    td.table_caption= caption
+    td.table_value: input.table_value_input(type='number' size=2 ng-model=model)
+    if points
+        td.table_points= '{{' + points + '}}'
+mixin readonlyblock(caption, value)
+    td.table_caption= caption
+    td.table_value: input.table_value_input(type='text' size=2 readonly value='{{' + value + '}}')
+
+include includes/head.jade
+    -var current = 'charlist'
+    include includes/navigation.jade
+    .container(ng-controller="CharlistCtrl")
+        .row
+            //-menu, actions, etc
+            .col-md-2
+            //-actual charlist
+            .col-md-10
+                table                    
+                    tr
+                        td.table_block
+                            //- main stats section
+                            table
+                                tr
+                                    +statblock('ST', 'character.primaryStats.ST.value', 'character.primaryStats.ST.points')
+                                    +statblock('Basic Lift', 'character.secondaryStats.BL.value')
+                                tr
+                                    +statblock('DX', 'character.primaryStats.DX.value', 'character.primaryStats.DX.points')
+                                    +statblock('BS', 'character.secondaryStats.BS.value')  
+                                tr
+                                    +statblock('IQ', 'character.primaryStats.IQ.value', 'character.primaryStats.IQ.points')
+                                    +statblock('Move', 'character.secondaryStats.Move.value')  
+                                tr
+                                    +statblock('HT', 'character.primaryStats.HT.value', 'character.primaryStats.HT.points')
+                                    +statblock('Dodge', 'character.secondaryStats.Dodge.value')  
+                                tr
+                                    +statblock('HP', 'character.secondaryStats.HP.value', 'character.primaryStats.HP.points')
+                                    +statblock('Parry', 'character.secondaryStats.Parry.value')  
+                                tr
+                                    +statblock('Will', 'character.secondaryStats.Will.value', 'character.primaryStats.Will.points')
+                                    +statblock('Block', 'character.secondaryStats.Block.value')  
+                                tr
+                                    +statblock('Per', 'character.secondaryStats.Per.value', 'character.primaryStats.Per.points')
+                                    +statblock('RR', 'character.secondaryStats.RR.value')  
+                                tr
+                                    +statblock('FP', 'character.secondaryStats.DX.value', 'character.primaryStats.DX.points')
+                                    +statblock('SM', 'character.secondaryStats.SM.value')
+                            td.table_block
+                                //- appearance
+                                table
+                                    tr: +statblock('Age', 'character.appearance.age')
+                                    tr: +statblock('Height', 'character.appearance.height')
+                                    tr: +statblock('Weight', 'character.appearance.weight')
+                            td.table_block
+                                //- points
+                                table
+                                    tr: +statblock('Point Total', 'character.points.total')
+                                    tr: +statblock('Earned Points', 'character.points.earned')
+                                    tr: +readonlyblock('Stats', 'stat_points()')
+                                    tr: +readonlyblock('Advantages', 'advatage_points()')
+                                    tr: +readonlyblock('Disadvatages', 'disadvatage_points()')
+                                    tr: +readonlyblock('Skills', 'skill_points()')
+                                    tr: +readonlyblock('Free Points', 'free_points()')
+
+

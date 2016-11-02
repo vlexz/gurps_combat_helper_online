@@ -1,0 +1,9 @@
+app-char-list {
+  display: inline-block;
+  overflow: auto;
+  vertical-align: top;
+}
+
+app-char-editor {
+  display: inline-block;
+}

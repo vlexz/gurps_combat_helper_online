@@ -43,7 +43,7 @@ class MongoCharlistDao @Inject()(mongo: Mongo) extends CharlistDao {
 
   override def save(charlist: Charlist): Future[Completed] =
     charlists
-      .insertOne(Document(Json.toJson(charlist).toString))
+      .insertOne(Document(Json.toJson(charlist).toString).filterKeys(_ != ID))
       .head
 
   override def find: Future[Seq[JsObject]] =

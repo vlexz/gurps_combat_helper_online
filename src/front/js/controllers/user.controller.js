@@ -78,7 +78,7 @@ function($scope, UsersService, $uibModalInstance) {
             UsersService.register($scope.user.username, $scope.user.password)
             .then(function(response) {
                 console.log(response);
-                if(response.data.status == 'ok') {
+                if(response.status == 'ok') {
                     $uibModalInstance.close();
                 } else {
                     alert(response.data.message);
