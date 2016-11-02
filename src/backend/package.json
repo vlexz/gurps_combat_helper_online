@@ -9,7 +9,9 @@
   "author": "VlexZ",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.0.0-rc.3",
     "body-parser": "^1.15.0",
+    "csv-parse": "^1.0.4",
     "express": "^4.13.4",
     "express-session": "^1.13.0",
     "getconfig": "^2.2.0",

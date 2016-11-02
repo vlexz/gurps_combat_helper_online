@@ -1,0 +1,13 @@
+span Existing characters:
+table
+  tr
+    th Player
+    th Character Name 
+  tr(*ngFor="let char of characters; let i = index")
+    td {{char.player}}
+    td {{char.name}}
+    td: a(href='#', (click)='selectCharacter(i)') Edit
+    td: a(href='#', (click)='deleteCharacter(i)') Delete
+  tr
+    td 
+      a(href='#', (click)='createCharacter()') Create New

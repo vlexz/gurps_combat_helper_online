@@ -1,0 +1,10 @@
+.modal-header
+    h3.modal-title {{title}}
+.modal-body
+    .row
+        .col-md-12
+            label Name
+                input.form-control(type="text" ng-model="name")
+.modal-footer    
+    button.btn.btn-default(ng-click="ok()") Save
+    button.btn.btn-default(ng-click="cancel()") Cancel

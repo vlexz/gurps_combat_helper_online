@@ -2,3 +2,117 @@
 .cursor-hand {
     cursor: pointer;
 }
+
+.shift-down {
+    margin-top: 15px;
+}
+
+.nav {
+    z-index: 10;
+    position: relative;
+    top: 7px;
+}
+
+.nav > li > a {
+    padding: 2px 6px;
+    margin-right: 5px;    
+}
+
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
+.nav-pills > li.active > a:focus{
+    background: none;
+    color: black;
+    border: white solid 2px;
+    border-radius: 8px;
+}
+
+li a{
+    font-family: 'Arial';
+    font-size: 18;
+    font-weight: bold;
+    color: #212227;
+}
+
+.travel-column-wrapper {
+    padding: 5px;
+}
+
+.travel-column {
+    background: #5e5953;
+    border-radius: 10px;
+    padding-bottom: 20px;
+    color: white;    
+}
+
+div.travel-column th, div.travel-column td, div.travel-column input, div.travel-column select {
+    color: white;
+    background: #5e5953;
+}
+
+.travel-colum-left {
+    min-height: 393;
+}
+
+.well-travel-result {
+    background: #cac6ad;
+    border: none;
+    border-radius: 10px;    
+}
+
+.go-btn, .go-btn:focus {    
+    margin-left: 25px;
+    background: linear-gradient(#fcffa2, #fdbe6f);
+    color: #5e5953;
+}
+
+.go-btn:hover {
+    background: linear-gradient(#fdbe6f, #fcffa2);
+    color: #5e5953;  
+}
+
+.work-btn, .work-btn:focus {
+    background: linear-gradient(#6c685f, #5d5950);
+    color: white;
+}
+.work-btn:hover {
+    background: linear-gradient(#5d5950, #6c685f);
+    color: white;   
+}
+
+
+.header-image {
+    position: relative;    
+    top: -35px;
+    z-index:-1;
+}
+
+
+
+body {
+    background: #b3b1a2
+}
+
+
+.table_caption {
+    padding-left:4px;
+    padding-right: 4px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.table_value {
+    /*max-width: 30px;*/
+}
+
+.table_block {
+    vertical-align: top;
+}
+
+td input {
+    width: 40px;
+}
+
+.table_points {
+    min-width: 20px;
+}

@@ -1,2 +1,2 @@
 # gurps_combat_helper_online
-Program similar to my gurps combat helper, but online
+Online tool set to help tracking combat in GURPS games

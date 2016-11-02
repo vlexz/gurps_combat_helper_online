@@ -1,0 +1,35 @@
+include includes/head.jade
+    -var current = 'sorcery'
+    include includes/navigation.jade
+    .container(ng-controller="SorceryCtrl")
+        .row
+            .col-md-12
+                h3 Sorcery Grimoire
+        .row
+            .col-md-12
+                table.table.table-condensed
+                    tr
+                        th
+                        th Name
+                            span.glyphicon.glyphicon-sort-by-alphabet(ng-click="sort('name')")
+                        th School(s)
+                        th Keywords
+                        th Casting Roll
+                        th Range
+                        th Duration
+                    tr
+                        td
+                        td
+                            input.form-control(type="text" ng-model="name_filter")
+                        td
+                            input.form-control(type="text" ng-model="schools_filter")
+                        td
+                            input.form-control(type="text" ng-model="keyword_filter")
+                    tr(ng-repeat="spell in filter(spells)")
+                        td
+                        td {{spell.name}}
+                        td {{spell.schools.join(',')}}
+                        td {{spell.keywords.join(',')}}
+                        td {{spell.casting_roll}}
+                        td {{spell.range}}
+                        td {{spell.duration}}                        

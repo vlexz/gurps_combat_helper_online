@@ -11,8 +11,11 @@
   "devDependencies": {
     "gulp-concat": "^2.6.0",
     "gulp-debug": "^2.1.2",
+    "gulp-imagemin": "^2.4.0",
     "gulp-rigger": "^0.5.8",
     "gulp-rsync": "0.0.5",
+    "gulp-sequence": "^0.4.5",
+    "gulp-series": "^1.0.2",
     "gulp-watch": "^4.3.5"
   }
 }

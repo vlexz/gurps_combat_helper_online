@@ -1,21 +1,31 @@
 include includes/head.jade
     -var current = 'edge_protection'
     include includes/navigation.jade
+    img.center-block.header-image(src="/images/ep-header.png")
     .container(ng-controller="EdgeProtectionCtrl")
         .row
             .col-md-12
-                h3 Edge Protection Tracking
+                h3 Edge Protection Tracking {{combat.name}}
+        .row
+            .col-md-12 Options
+        .row
+            .col-md-4
+                input(type="checkbox" ng-model="options.catastrophic_penetration") 
+                label &nbsp; Catastrophic Penetration
         .row
             .col-md-12
                 h4 Combatants
         .row
-            .col-md-2 Name
+            .col-md-1.col-md-offset-1 Name
             .col-md-2 Current Hp
             .col-md-2 Damage
             .col-md-2 Type
             .col-md-2 Location
         .row(ng-repeat="combatant in combatants")
-            .col-md-2
+            .col-md-1
+                span.glyphicon.glyphicon-remove.cursor-hand(ng-click="remove_combatant($index)")&nbsp;
+                span.glyphicon.glyphicon-pencil.cursot-hand(ng-click="edit_combatant($index)")
+            .col-md-1
                 h5 {{combatant.name}}
             .col-md-2
                 input.form-control(type="number" ng-model="combatant.curr_hp")
@@ -29,12 +39,15 @@ include includes/head.jade
                     option(ng-repeat="loc in locations" value="{{loc}}") {{loc}}
             .col-md-2
                 button.btn.btn-default(ng-click="strike($index)") Strike!
-        .row
+        .row.shift-down
             .col-md-12
                 .btn-group
+                    button.btn.btn-default(ng-click="create_combatant()") Create Combatant
                     button.btn.btn-default(ng-click="add_combatant()") Add Combatant
-                    button.btn.btn-default(ng-click="save_party()") Save Party
-                    button.btn.btn-default(ng-click="load_party()") Load Party                    
-        .row
+                    button.btn.btn-default(ng-click="save_combat()") Save Combat
+                    button.btn.btn-default(ng-click="load_combat()") Load Combat
+                    button.btn.btn-default(ng-click="save_current()" ng-if="combat") Save Current Combat
+                    button.btn.btn-default(ng-click="clear()") Clear Combat
+        .row.shift-down
             .col-md-12
-                p(ng-repeat="part in combat_log track by $index") {{part}}
+                p.well.well-sm(ng-repeat="part in combat_log track by $index") {{part}}

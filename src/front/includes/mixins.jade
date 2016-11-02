@@ -1,0 +1,4 @@
+mixin delbtn(handler)
+    span.glyphicon.glyphicon-remove.cursor-hand(ng-click=handler ng-if="user.loggedIn")
+mixin editbtn(handler)
+    span.glyphicon.glyphicon-pencil.cursor-hand(ng-click=handler ng-if="user.loggedIn")

@@ -3,12 +3,21 @@
 var load_levels = ['None', 'Light', 'Medium', 'Heavy', 'Extra Heavy'];
 
 angular.module('GurpsCombatHelper')
-.controller('TravelCalculatorCtrl', ['$scope', '$uibModal', '$sce', 'dices', 'UsersService',
-function($scope, $uibModal, $sce, dices, UsersService) {
+.controller('TravelCalculatorCtrl', ['$scope', '$uibModal', '$sce', 'dices', 'UsersService', '$http',
+function($scope, $uibModal, $sce, dices, UsersService, $http) {
 
     $scope.$on('user_changed', function(event, user) {
         $scope.user = user;
+        if(user.currents.travel) {
+            $http.post('/api/travel/get_party', {id: user.currents.travel})
+            .then(function(response){
+                $scope.party_name = response.data.name;
+                $scope.travelers = response.data.travelers;
+            })
+        }
     });
+
+    $scope.party_name = null;
 
 
     $scope.travelers = []
@@ -63,7 +72,8 @@ function($scope, $uibModal, $sce, dices, UsersService) {
                     fp: 10,
                     load: 'None',
                     hiking: 5,
-                    carrier: false
+                    carrier: false,
+                    fit: 'Average',
                 } }
             }
         }).result.then(function(traveler){
@@ -98,6 +108,9 @@ function($scope, $uibModal, $sce, dices, UsersService) {
                     }
                 }
             }
+        }).result.then(function(saved_party){
+            $scope.party_name = saved_party.name;
+            UsersService.setCurrent('travel', saved_party._id);
         })
     }
 
@@ -114,12 +127,22 @@ function($scope, $uibModal, $sce, dices, UsersService) {
                 }
             }
         }).result.then(function(party) {
-            $scope.travelers = party;
+            $scope.party_name = party.name;
+            $scope.travelers = party.travelers;
+            UsersService.setCurrent('travel', party._id);
         })
     }
 
+    $scope.clear_party = function() {
+        $scope.party_name = null;
+        $scope.travelers = [];
+        UsersService.setCurrent('travel', null);
+        $scope.travel_results_text = '';
+        $scope.travel_results = null;
+    }
+
     $scope.travel_results_text = '';
-    $scope.travel_results = null;
+    $scope.travel_results = [];
 
     $scope.travel = function() {
 
@@ -225,9 +248,10 @@ function($scope, $uibModal, $sce, dices, UsersService) {
 
         function appendLog(piece) {
             console.log('result:', piece);
-            $scope.travel_results_text = '<p>Travel ' + ++travel_count + ' total passed ' + total_passed + 'km' + '</p>'
-                                        + piece + '<p><hr/></p>' + $scope.travel_results_text;            
-            $scope.travel_results = $sce.trustAsHtml($scope.travel_results_text);
+            $scope.travel_results_text = '<div class="well well-travel-result"><p">Travel ' + ++travel_count + ' total passed ' + total_passed + 'km' + '</p>'
+                                        + piece  + '</div>';// + $scope.travel_results_text;
+            $scope.travel_results.unshift($sce.trustAsHtml($scope.travel_results_text));
+            // $scope.travel_results = $sce.trustAsHtml($scope.travel_results_text);
         }
 
         var result = {
@@ -258,6 +282,14 @@ function($scope, $uibModalInstance, traveler) {
 
     $scope.load_levels = load_levels;
     $scope.traveler = traveler;
+
+    $scope.fits = [
+        'Very Unfit',
+        'Unfit',
+        'Average',
+        'Fit',
+        'Very Fit'
+    ]
     
     $scope.ok = function () {
         $uibModalInstance.close($scope.traveler);
@@ -281,11 +313,11 @@ function($scope, $uibModalInstance, params, $http) {
             travelers: params.party
 
         }).then(function(response){
-            if(response.data.status == 'ok') {
-                console.log('party saved');
-                $uibModalInstance.close();
+            if(response.data.status == 'fail') {
+                console.log(response.data.err);
             } else {
-                console.log(response.error);
+                console.log('party saved');
+                $uibModalInstance.close(response.data);
             }
         })
     };
@@ -309,7 +341,7 @@ function($scope, $uibModalInstance, params, $http) {
     }
 
     $scope.load = function(index) {
-        $uibModalInstance.close($scope.parties[index].travelers);
+        $uibModalInstance.close($scope.parties[index]);
     }
 
     $scope.delete = function(index) {

@@ -1,76 +1,83 @@
 include includes/head.jade
     -var current = 'travel'
     include includes/navigation.jade
-    .container(ng-controller="TravelCalculatorCtrl")
+    img.center-block.header-image(src="/images/travel-header.png")
+    .container(ng-controller="TravelCalculatorCtrl")        
         .row
-            .col-md-8
-                .container
-                    .row
-                        .col-md-12
-                        h3 Travelers
-                    .row
-                        .col-md-1.col-md-offset-1 Name
-                        .col-md-1 Move
-                        .col-md-1 FP
-                        .col-md-1 Load
-                        .col-md-1 Hiking (HT-5)
-                        .col-md-1 Carrier
-                    .row(ng-repeat="c in travelers")
-                        .col-md-1
-                            span.glyphicon.glyphicon-remove.cursor-hand(ng-click='remove_traveler($index)') &nbsp;
-                            span.glyphicon.glyphicon-pencil.cursor-hand(ng-click='edit_traveler($index)')
-                        .col-md-1 {{c.name}}
-                        .col-md-1 {{c.move}}
-                        .col-md-1 {{c.fp}}
-                        .col-md-1 {{c.load}}
-                        .col-md-1 {{c.hiking}}
-                        .col-md-1 {{c.carrier ? 'yes' : 'no'}}
-                    .row
-                        .col-md-12
-                            .btn-group
-                                button.btn.btn-default(ng-click="add_traveler()") Add Traveler                        
-                                button.btn.btn-default(ng-click="save_party()" ng-if="user.loggedIn") Save Party                        
-                                button.btn.btn-default(ng-click="load_party()" ng-if="user.loggedIn") Load Party
-            .col-md-4
-                .container
-                    .row
-                        .col-md-12
-                            h3 Travel
-                    .row.inline-form
-                        .col-md-4 
-                            label Travel Time (hours)
-                                input.form-control(type="number" ng-model="travel_time")
-                    .row.inline-form
-                        .col-md-4 
-                            label Encounter Probability (each hour) percents
-                                input.form-control(type="number" ng-model="encounter")
-                    .row
-                        .col-md-2
-                            input(type="checkbox" ng-model="hot_day") 
-                            label &nbsp;A hot day                                
-                    .row
-                        .col-md-3
-                            input(type="checkbox" ng-model="have_leader") 
-                            label &nbsp;Party has a leader                                
-                    .row.inline-form
-                        .col-md-4 
-                            label Terrain
-                                select.form-control(ng-model="terrain")
-                                    <option ng-repeat="value in terrains" value="{{value}}"> {{value}}
-                    .row.inline-form
-                        .col-md-4 
-                            label Weather
-                                select.form-control(ng-model="weather")
-                                    <option ng-repeat="value in weathers" value="{{value}}"> {{value}}
-                    .row
-                        .col-md-3
-                            input(type="checkbox" ng-model="popup_result") 
-                            label &nbsp;Show travel result in popup window
-
-
-        .row
-            .col-md-12
-                button.btn.btn-primary(ng-click="travel()") Let's Go!
-        .row
-            .col-md-12(ng-bind-html="travel_results")
-
+            .col-md-8.travel-column-wrapper
+                div.travel-column.travel-colum-left
+                    .container
+                        .row
+                            .col-md-8
+                                h3 Travelers 
+                                    span(ng-if="party_name") ({{party_name}})
+                        .row
+                            .col-md-8
+                                table.table.table-condensed
+                                    tr
+                                        th
+                                        th Name
+                                        th Move
+                                        th FP
+                                        th Load
+                                        th Hiking(HT-5)
+                                        th Carrier
+                                        th Fit
+                                    tr(ng-repeat="c in travelers")
+                                        td
+                                            span.glyphicon.glyphicon-remove.cursor-hand(ng-click='remove_traveler($index)') &nbsp;
+                                            span.glyphicon.glyphicon-pencil.cursor-hand(ng-click='edit_traveler($index)')            
+                                        td {{c.name}}
+                                        td {{c.move}}
+                                        td {{c.fp}}
+                                        td {{c.load}}
+                                        td {{c.hiking}}
+                                        td {{c.carrier ? 'yes' : 'no'}}
+                                        td {{c.fit}}
+                        .row
+                            .col-md-12
+                                .btn-group
+                                    button.btn.btn-default.work-btn(ng-click="add_traveler()") Add Traveler                        
+                                    button.btn.btn-default.work-btn(ng-click="save_party()" ng-if="user.loggedIn") Save Party                        
+                                    button.btn.btn-default.work-btn(ng-click="load_party()" ng-if="user.loggedIn") Load Party
+                                    button.btn.btn-default.work-btn(ng-click="clear_party()") Clear Party
+                                button.btn.btn-primary.go-btn(ng-click="travel()") Let's Go!
+            .col-md-4.travel-column-wrapper
+                div.travel-column
+                    .container
+                        .row
+                            .col-md-4
+                                h3 Travel
+                        .row.inline-form
+                            .col-md-4 
+                                label Travel Time (hours)
+                                    input.form-control(type="number" ng-model="travel_time")
+                        .row.inline-form
+                            .col-md-4 
+                                label Encounter Probability (each hour) percents
+                                    input.form-control(type="number" ng-model="encounter")
+                        .row
+                            .col-md-2
+                                input(type="checkbox" ng-model="hot_day") 
+                                label &nbsp;A hot day                                
+                        .row
+                            .col-md-3
+                                input(type="checkbox" ng-model="have_leader") 
+                                label &nbsp;Party has a leader                                
+                        .row.inline-form
+                            .col-md-4 
+                                label Terrain
+                                    select.form-control(ng-model="terrain")
+                                        <option ng-repeat="value in terrains" value="{{value}}"> {{value}}
+                        .row.inline-form
+                            .col-md-4 
+                                label Weather
+                                    select.form-control(ng-model="weather")
+                                        <option ng-repeat="value in weathers" value="{{value}}"> {{value}}
+                        .row
+                            .col-md-3
+                                input(type="checkbox" ng-model="popup_result") 
+                                label &nbsp;Show travel result in popup window
+        .row.shift-down
+        .row(ng-repeat="res in travel_results")
+            .col-md-12(ng-bind-html="res")

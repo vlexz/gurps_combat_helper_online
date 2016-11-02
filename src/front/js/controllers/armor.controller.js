@@ -12,9 +12,14 @@ function($scope, $uibModal, UsersService, $http) {
     $scope.current_category_index = -1;
 
     function update_categories() {
+        console.log('update categories');
         $http.get('/api/armor/categories')
         .then(function(response){
             $scope.categories = response.data;
+            if($scope.categories && !$scope.current_category) {
+                console.log('Select default category');
+                $scope.select_category(0);
+            }
             console.log($scope.categories);
         })
     }
@@ -41,6 +46,11 @@ function($scope, $uibModal, UsersService, $http) {
     }
 
     $scope.del_category = function(index) {
+        if(index == $scope.current_category_index) {
+            console.log('removing current category');
+            $scope.current_category = null;
+            $scope.current_category_index = -1;
+        }
         $http.post('/api/armor/del_category', {id: $scope.categories[index]._id})
         .then(update_categories);
     }
@@ -61,6 +71,34 @@ function($scope, $uibModal, UsersService, $http) {
             $http.post('/api/armor/add_armor', armor)
             .then(function(response){
                 console.log(response.data);        
+                update_categories();
+                $scope.select_category($scope.current_category_index);
+            })
+        })
+    }
+
+    $scope.remove_armor = function(index) {
+        $http.post('/api/armor/del_armor', {_id: $scope.armors[index]._id})
+        .then(function(response){
+            console.log(response.data);
+            update_categories();
+            $scope.select_category($scope.current_category_index);
+        })
+    }
+
+    $scope.edit_armor = function(index) {
+        $uibModal.open({
+            templateUrl: '/templates/add_armor.html',
+            controller: 'ArmorAddCtrl',
+            resolve: {
+                params: function() {
+                    return $scope.armors[index];
+                }
+            }
+        }).result.then(function(armor){
+            $http.post('/api/armor/update_armor', armor)
+            .then(function(response){
+                console.log(response);
                 $scope.select_category($scope.current_category_index);
             })
         })
@@ -84,6 +122,10 @@ function($scope, $uibModalInstance, params, LookupTables) {
         if($scope.armor.locations.indexOf(loc) == -1){
             $scope.armor.locations.push(loc);
         }
+    }
+
+    $scope.remove_location = function(index) {
+        $scope.armor.locations.splice(index, 1);
     }
 
     $scope.ok = function () {

@@ -22,7 +22,9 @@ app.use(morgan('dev'));
 var modules = [
     './services/users.service.js',
     './services/travelers.service.js',
-    './services/armor.service.js'
+    './services/armor.service.js',
+    './services/edge_protection.service.js',
+    './services/sorcery.service.js'
 ];
 
 app.auth = null;
