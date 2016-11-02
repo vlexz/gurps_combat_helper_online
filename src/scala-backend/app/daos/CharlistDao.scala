@@ -4,7 +4,7 @@ import com.google.inject.{ImplementedBy, Inject, Singleton}
 import models.charlist.Charlist
 import models.charlist.CharlistFields._
 import org.mongodb.scala.model.Filters
-import org.mongodb.scala.result.{DeleteResult, UpdateResult}
+import org.mongodb.scala.result.UpdateResult
 import org.mongodb.scala.{Completed, Document, MongoCollection}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.{JsObject, JsValue, Json}
@@ -26,7 +26,7 @@ trait CharlistDao {
 
   def update(charlist: Charlist): Future[UpdateResult]
 
-  def delete(id: String): Future[DeleteResult]
+  def delete(id: String): Future[Seq[JsObject]]
 
 }
 
@@ -37,7 +37,7 @@ class MongoCharlistDao @Inject()(mongo: Mongo) extends CharlistDao {
   private val documentToJsonHeader: Document => JsObject =
     doc => Json.obj(
       ID -> doc.get(ID).get.asString.getValue,
-      TIMESTAMP -> doc.get(TIMESTAMP).get.asInt64.getValue,
+      TIMESTAMP -> doc.get(TIMESTAMP).get.asString.getValue,
       PLAYER -> doc.get(PLAYER).get.asString.getValue,
       NAME -> doc.get(NAME).get.asString.getValue)
 
@@ -60,14 +60,19 @@ class MongoCharlistDao @Inject()(mongo: Mongo) extends CharlistDao {
 
   override def update(charlist: Charlist): Future[UpdateResult] =
     charlists
-      .updateOne(
+      .replaceOne(
         Filters.equal(ID, charlist._id),
-        Document(Json.toJson(charlist).toString)
+        Document(Json.toJson(charlist).toString).filterKeys(_ != ID)
       )
       .head
 
-  override def delete(id: String): Future[DeleteResult] =
+  override def delete(id: String): Future[Seq[JsObject]] = {
     charlists
       .deleteOne(Filters.equal(ID, id))
       .head
+    charlists
+      .find()
+      .map[JsObject](documentToJsonHeader)
+      .toFuture
+  }
 }

@@ -8,7 +8,7 @@ import scalaz._, Scalaz._
   */
 case class Charlist(// TODO: maybe make recalc function in compliance with functional programming style
                     _id: String = "",
-                    timestamp: Long = 0,
+                    timestamp: String = "",
                     player: String = "",
                     access: Seq[String] = Seq(), // For future functionality
                     name: String = "",
@@ -25,7 +25,7 @@ case class Charlist(// TODO: maybe make recalc function in compliance with funct
                     equip: Equipment = Equipment(),
                     conditions: Conditions = Conditions(),
                     var api: String = "") {
-  api = "0.2"
+  api = "0.2.1"
 
   private val foldSum = { x: (String, Seq[(String, Int)]) => (x._1, x._2.foldLeft(0)(_ + _._2)) }
   {
