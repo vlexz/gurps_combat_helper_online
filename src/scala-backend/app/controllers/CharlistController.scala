@@ -21,7 +21,7 @@ class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller 
       case "/api/chars" => "GET"
       case "/api/char/" => "GET, PUT, PATCH, DELETE"
     }
-    Future(Ok.withHeaders(ALLOW -> methods))
+    Future(Ok.withHeaders(ALLOW -> methods, ACCESS_CONTROL_ALLOW_METHODS -> methods))
   }
 
   def add() = Action.async(BodyParsers.parse.json) { implicit request =>

@@ -223,7 +223,7 @@ case class Stats(
                   strikeSt: StatInt = StatInt(),
                   hp: StatPoints = StatPoints(),
                   fp: StatPoints = StatPoints(),
-                  basicSpeed: StatFrac = StatFrac(),
+                  basicSpeed: StatDouble = StatDouble(),
                   basicMove: StatInt = StatInt()) {
   def cp: Int = Seq(st, dx, iq, ht, will, per, liftSt, strikeSt, hp, fp, basicSpeed, basicMove).foldLeft(0)(_ + _.cp)
 }
@@ -273,7 +273,7 @@ case class StatVars(
 }
 
 /** Charlist subcontainer for character attribute storage */
-sealed abstract class Stat[A](implicit x: scala.math.Numeric[A]) {
+sealed abstract class Stat[A <: AnyVal](implicit x: scala.math.Numeric[A]) {
 
   import Charlist.rndUp
   import x._
@@ -306,7 +306,7 @@ case class StatInt(
                     var cp: Int = 0)
   extends Stat[Int]
 
-case class StatFrac(
+case class StatDouble(
                      delta: Double = 0,
                      var base: Double = 0,
                      var bonus: Double = 0,
@@ -714,7 +714,7 @@ case class Equipment(
   import ItemState._
 
   totalCost = (weapons ++ armor ++ items).foldLeft(0.0)(_ + _.totalCost)
-  private val weight = (f: String => Boolean) =>
+  private def weight(f: String => Boolean) =
     (for {p <- weapons ++ armor ++ items; if f(p.carried)} yield p.totalWt).sum
   totalCombWt = weight(Set(READY, EQUIPPED, COMBAT))
   totalTravWt = totalCombWt + weight(_ == TRAVEL)
@@ -1224,7 +1224,7 @@ object Charlist {
   implicit val reactionModFormat = Json.format[ReactionMod]
   implicit val reactionFormat = Json.format[Reaction]
   implicit val statIntFormat = Json.format[StatInt]
-  implicit val statFracFormat = Json.format[StatFrac]
+  implicit val statDoubleFormat = Json.format[StatDouble]
   implicit val statPointsFormat = Json.format[StatPoints]
   implicit val statVarsFormat = Json.format[StatVars]
   implicit val statsFormat = Json.format[Stats]
