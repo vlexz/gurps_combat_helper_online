@@ -1,6 +1,7 @@
 package models.charlist
 
 import scala.collection.breakOut
+import scalaz._, Scalaz._
 
 /**
   * Created by crimson on 9/23/16.
@@ -26,6 +27,7 @@ case class Charlist(// TODO: maybe make recalc function in compliance with funct
                     var api: String = "") {
   api = "0.2"
 
+  private val foldSum = { x: (String, Seq[(String, Int)]) => (x._1, x._2.foldLeft(0)(_ + _._2)) }
   {
     import BonusToAttribute._
 
@@ -37,12 +39,7 @@ case class Charlist(// TODO: maybe make recalc function in compliance with funct
       if (bonus.back) equip.rearDR.add(bonus.dr, bonus.ep, bonus.epi, location)
     }
 
-    val bonuses =
-      traits
-        .flatMap(_.attrBonusValues)
-        .groupBy(_._1)
-        .map { case (group, bns) => (group, bns map (_._2) reduceOption (_ + _) getOrElse 0) }
-        .withDefaultValue(0)
+    val bonuses = traits flatMap (_.attrBonusValues) groupBy (_._1) map foldSum withDefaultValue 0
     stats.st.base = 10
     stats.dx.base = 10
     stats.iq.base = 10
@@ -85,7 +82,7 @@ case class Charlist(// TODO: maybe make recalc function in compliance with funct
     import SkillBaseAttribute._
 
     for (s <- skills) {
-      s.bonus = traits map (_ skillBonusValue(s.name, s.spc)) reduceOption (_ + _) getOrElse 0
+      s.bonus = traits.foldLeft(0)(_ + _.skillBonusValue(s.name, s.spc))
       val attrVal = s.attr match {
         case ST => stats.st.value
         case DX => stats.dx.value
@@ -96,12 +93,11 @@ case class Charlist(// TODO: maybe make recalc function in compliance with funct
       }
       s.calcLvl(attrVal, statVars.travelEncumbrance)
     }
-    for (t <- techniques)
-      t.calcLvl(
-        skills
-          .find { s => s.name == t.skill && (if (t.spc != "") s.spc == t.spc else true) }
-          .getOrElse(Skill())
-          .lvl)
+    for (t <- techniques) {
+      def sFltr(s: Skill) = s.name == t.skill && (if (t.spc != "") s.spc == t.spc else true)
+      val l = skills collectFirst { case s if sFltr(s) => s.lvl } getOrElse 0
+      t.calcLvl(l)
+    }
 
     reactions =
       (traits.flatMap { t => t.reactBonuses ++ t.modifiers.flatMap(_.reactBonuses) } ++ skills.flatMap(_.reactBonuses))
@@ -118,10 +114,7 @@ case class Charlist(// TODO: maybe make recalc function in compliance with funct
                       react3
                         .reduce { (a, b) =>
                           val bonus = a.bonusValue + b.bonusValue
-                          BonusReaction(
-                            affected = a.affected,
-                            reputation = a.reputation,
-                            freq = a.freq,
+                          a.copy(
                             bonus = if (group3) bonus match {
                               case x if x > 4 => 4
                               case x if x < -4 => -4
@@ -131,10 +124,7 @@ case class Charlist(// TODO: maybe make recalc function in compliance with funct
                         }
                     }
                     .reduce { (a, b) =>
-                      BonusReaction(
-                        affected = a.affected,
-                        reputation = a.reputation,
-                        freq = a.freq,
+                      a.copy(
                         bonus = a.bonusValue + b.bonusValue,
                         notes = a.notes + (if (a.notes.nonEmpty && b.notes.nonEmpty) "; " else "") + b.notes)
                     }
@@ -157,29 +147,18 @@ case class Charlist(// TODO: maybe make recalc function in compliance with funct
     statVars.thrDmg = dStr(thr._1, thr._2)
     statVars.swDmg = dStr(sw._1, sw._2)
     for (weapon <- equip.weapons; mAttack <- weapon.attacksMelee) {
+      def sFltr(s: Skill) = s.name == mAttack.skill && (if (mAttack.spc != "") s.spc == mAttack.spc else true)
       val bonus =
         (skills ++ traits ++ traits.flatMap(_.modifiers))
-          .map {
-            _.dmgBonusValue(
-              mAttack.skill,
-              mAttack.spc,
-              skills
-                .find(s => s.name == mAttack.skill && (if (mAttack.spc.nonEmpty) s.spc == mAttack.spc else true))
-                .getOrElse(Skill())
-                .relLvl)
+          .foldLeft(0, 0) { (a, bns) =>
+            val lvl = skills collectFirst { case s if sFltr(s) => s.relLvl } getOrElse -4
+            a |+| bns.dmgBonusValue(mAttack.skill, mAttack.spc, lvl)
           }
-          .reduceOption { (a, b) => (a._1 + b._1, a._2 + b._2) }
-          .getOrElse((0, 0))
       mAttack.damage.calcDmg(thr, sw, bonus)
       for (m <- mAttack.followup ++ mAttack.linked) m.calcDmg(thr, sw, (0, 0))
     }
 
-    val costMods =
-      traits
-        .flatMap(_.attrCostModValues)
-        .groupBy(_._1)
-        .map { case (group, bonuses) => (group, bonuses map (_._2) reduceOption (_ + _) getOrElse 0) }
-        .withDefaultValue(0)
+    val costMods = traits flatMap (_.attrCostModValues) groupBy (_._1) map foldSum withDefaultValue 0
     stats.st.cpMod = 100 + costMods(ST)
     stats.dx.cpMod = 100 + costMods(DX)
     stats.iq.cpMod = 100 + costMods(IQ)
@@ -197,10 +176,11 @@ case class Charlist(// TODO: maybe make recalc function in compliance with funct
     stats.basicSpeed.calcCp(20)
     stats.basicMove.calcCp(5)
     cp.stats = stats.cp
-    cp.adv = traits withFilter (_.cp > 0) map (_.cp) reduceOption (_ + _) getOrElse 0
-    cp.dis = traits withFilter (_.cp < 0) map (_.cp) reduceOption (_ + _) getOrElse 0
-    cp.skills = skills map (_.cp) reduceOption (_ + _) getOrElse 0
-    cp.skills = techniques map (_.cp) reduceOption (_ + _) getOrElse 0
+    val tCp = traits map (_.cp) partition (_ > 0)
+    cp.adv = tCp._1.sum
+    cp.dis = tCp._2.sum
+    cp.skills = skills.map(_.cp).sum
+    cp.skills = techniques.map(_.cp).sum
     cp.unspent = cp.cp - cp.skills - cp.stats - cp.adv - cp.dis
   }
 
@@ -243,10 +223,9 @@ case class Stats(
                   strikeSt: StatInt = StatInt(),
                   hp: StatPoints = StatPoints(),
                   fp: StatPoints = StatPoints(),
-                  basicSpeed: StatFrac = StatFrac(),
+                  basicSpeed: StatDouble = StatDouble(),
                   basicMove: StatInt = StatInt()) {
-  def cp: Int = st.cp + dx.cp + iq.cp + ht.cp + will.cp + per.cp + liftSt.cp + strikeSt.cp + hp.cp + fp.cp +
-    basicSpeed.cp + basicMove.cp
+  def cp: Int = Seq(st, dx, iq, ht, will, per, liftSt, strikeSt, hp, fp, basicSpeed, basicMove).foldLeft(0)(_ + _.cp)
 }
 
 /** Charlist subcontainer for calculated stats */
@@ -266,39 +245,37 @@ case class StatVars(
                      var dodge: Int = 0,
                      var sm: Int = 0) {
 
+  import Charlist.rndUp
+
   def calcEncumbrance(combWt: Double, travWt: Double): StatVars = {
     assert(combWt <= bl * 10, s"combat encumbrance value is over 10 times basic lift ($combWt, $bl)")
     assert(travWt <= bl * 10, s"travel encumbrance value is over 10 times basic lift ($travWt, $bl)")
-    combatEncumbrance = combWt / bl match {
-      case x if x <= 1 => 0
-      case x if x <= 2 => 1
-      case x if x <= 3 => 2
-      case x if x <= 6 => 3
-      case x if x <= 10 => 4
+    val encLvl = (x: Double) => x match {
+      case _ if x <= 1 => 0
+      case _ if x <= 2 => 1
+      case _ if x <= 3 => 2
+      case _ if x <= 6 => 3
+      case _ if x <= 10 => 4
     }
-    travelEncumbrance = travWt / bl match {
-      case x if x <= 1 => 0
-      case x if x <= 2 => 1
-      case x if x <= 3 => 2
-      case x if x <= 6 => 3
-      case x if x <= 10 => 4
-    }
+    combatEncumbrance = encLvl(combWt / bl)
+    travelEncumbrance = encLvl(travWt / bl)
     this
   }
 
   def calcMove(basicMove: Int, basicDodge: Int, compromised: Boolean): StatVars = {
     val compr = if (compromised) .5 else 1
-    def calc(enc: Int) = math.ceil((basicMove * .2 * (5 - enc)).toInt * compr - 0.01).toInt
+    def calc(enc: Int) = rndUp((basicMove * .2 * (5 - enc)).toInt * compr)
     combMove = calc(combatEncumbrance)
     travMove = calc(travelEncumbrance)
-    dodge = math.ceil((basicDodge - combatEncumbrance) * compr - 0.01).toInt
+    dodge = rndUp((basicDodge - combatEncumbrance) * compr)
     this
   }
 }
 
 /** Charlist subcontainer for character attribute storage */
-sealed abstract class Stat[A](implicit x: scala.math.Numeric[A]) {
+sealed abstract class Stat[A <: AnyVal](implicit x: scala.math.Numeric[A]) {
 
+  import Charlist.rndUp
   import x._
 
   def delta: A
@@ -316,7 +293,7 @@ sealed abstract class Stat[A](implicit x: scala.math.Numeric[A]) {
   def cp_=(cp: Int): Unit
 
   def calcCp(cost: Int): Stat[A] = {
-    cp = math.ceil(delta.toDouble * cost * math.max(.2, cpMod * .01) - 0.01).toInt
+    cp = rndUp(delta.toDouble * cost * math.max(.2, cpMod * .01))
     this
   }
 }
@@ -329,7 +306,7 @@ case class StatInt(
                     var cp: Int = 0)
   extends Stat[Int]
 
-case class StatFrac(
+case class StatDouble(
                      delta: Double = 0,
                      var base: Double = 0,
                      var bonus: Double = 0,
@@ -364,24 +341,23 @@ case class Reaction(affected: String = "", modifiers: Seq[ReactionMod] = Seq())
 case class ReactionMod(freq: Int = 16, mod: Int = 0, notes: String = "")
 
 abstract class DamageBonusing {
+
   def dmgBonuses: Seq[BonusDamage]
 
-  def dmgBonusValue(s: String, spc: String, lvl: Int): (Int, Int) =
-    dmgBonuses
-      .withFilter { b =>
-        import NameCompare.{ANY, _}
-        (b.skillCompare match {
-          case IS => b.skill == s
-          case BEGINS => b.skill.regionMatches(true, 0, s, 0, b.skill.length)
-        }) && (b.spcCompare match {
-          case ANY => true
-          case IS => b.spc == spc
-          case BEGINS => b.spc.regionMatches(true, 0, spc, 0, b.spc.length)
-        }) && b.relSkill <= lvl
-      }
-      .map { b => if (b.perDie) (b.bonus, 0) else (0, b.bonus) }
-      .reduceOption { (a, b) => (a._1 + b._1, a._2 + b._2) }
-      .getOrElse((0, 0))
+  def dmgBonusValue(s: String, spc: String, lvl: Int): (Int, Int) = {
+    import NameCompare.{ANY, _}
+    val skillFit = (b: BonusDamage) => b.skillCompare match {
+      case IS => b.skill == s
+      case BEGINS => b.skill.regionMatches(true, 0, s, 0, b.skill.length)
+    }
+    val spcFit = (b: BonusDamage) => b.spcCompare match {
+      case ANY => true
+      case IS => b.spc == spc
+      case BEGINS => b.spc.regionMatches(true, 0, spc, 0, b.spc.length)
+    }
+    val fit = (b: BonusDamage) => skillFit(b) && spcFit(b) && b.relSkill <= lvl
+    dmgBonuses.collect { case b if fit(b) => if (b.perDie) (b.bonus, 0) else (0, b.bonus) }.fold(0, 0)(_ |+| _)
+  }
 }
 
 /** Charlist subcontainer for features list's element stats */
@@ -411,25 +387,22 @@ case class Trait(
     s"leveled trait's CP per level value is 0 (level $level, CP/level $cpPerLvl in $name)")
   for (b <- reactBonuses ++ modifiers.flatMap(_.reactBonuses)) b.calcValue(level)
 
+  import Charlist.rndUp
   import TraitModifierAffects._
 
-  private val rawCp = {
-    val cpMods: Map[String, (Int, Int, Double)] =
-      modifiers
-        .groupBy(_.affects)
-        .map { case (group, mods) => (
-          group,
-          mods map (_.costVal) reduceOption { (a, b) => (a._1 + b._1, a._2 + b._2, a._3 * b._3) } getOrElse(0, 0, 1.0))
-        }
-        .withDefaultValue((0, 0, 1.0))
-    val (bPts, bPct, bMlt) = cpMods(BASE)
-    val (lPts, lPct, lMlt) = cpMods(LEVELS)
-    val (tPts, tPct, tMlt) = cpMods(TOTAL)
-    ((bPts + cpBase) * math.max(.2, bPct * .01 + 1) * bMlt
-      + level * (lPts + cpPerLvl) * math.max(.2, lPct * .01 + 1)
-      * lMlt + tPts) * math.max(.2, tPct * .01 + 1) * tMlt
-  }
-  cp = math.ceil(rawCp - 0.01).toInt
+  private val cpMods: Map[String, (Int, Int, Double)] =
+    modifiers
+      .groupBy(_.affects)
+      .map { case (group, mods) =>
+        (group, mods.map(_.costVal).fold(0, 0, 1.0) { (a, b) => (a._1 + b._1, a._2 + b._2, a._3 * b._3) })
+      }
+      .withDefaultValue((0, 0, 1.0))
+  private val (bPts, bPct, bMlt) = cpMods(BASE)
+  private val (lPts, lPct, lMlt) = cpMods(LEVELS)
+  private val (tPts, tPct, tMlt) = cpMods(TOTAL)
+  cp = rndUp(((bPts + cpBase) * math.max(.2, bPct * .01 + 1) * bMlt
+    + level * (lPts + cpPerLvl) * math.max(.2, lPct * .01 + 1)
+    * lMlt + tPts) * math.max(.2, tPct * .01 + 1) * tMlt)
 
   val attrBonusValues: Seq[(String, Int)] =
     for (b <- attrBonuses ++ modifiers.flatMap(_.attrBonuses)) yield (b.attr, b.bonus * (if (b.perLvl) level else 1))
@@ -437,22 +410,21 @@ case class Trait(
   val attrCostModValues: Seq[(String, Int)] =
     for (m <- attrCostMods ++ modifiers.flatMap(_.attrCostMods)) yield (m.attr, m.cost)
 
-  val skillBonusValue = (s: String, spc: String) =>
+  val skillBonusValue = (s: String, spc: String) => {
+    import NameCompare.{ANY, _}
+    val skillFit = (b: BonusSkill) => b.skillCompare match {
+      case IS => b.skill == s
+      case BEGINS => b.skill.regionMatches(true, 0, s, 0, b.skill.length)
+    }
+    val spcFit = (b: BonusSkill) => b.spcCompare match {
+      case ANY => true
+      case IS => b.spc == spc
+      case BEGINS => b.spc.regionMatches(true, 0, spc, 0, b.spc.length)
+    }
     (skillBonuses ++ modifiers.flatMap(_.skillBonuses))
-      .withFilter { b =>
-        import NameCompare._
-        (b.skillCompare match {
-          case IS => b.skill == s
-          case BEGINS => b.skill.regionMatches(true, 0, s, 0, b.skill.length)
-        }) && (b.spcCompare match {
-          case ANY => true
-          case IS => b.spc == spc
-          case BEGINS => b.spc.regionMatches(true, 0, spc, 0, b.spc.length)
-        })
-      }
-      .map(b => b.bonus * (if (b.perLvl) level else 1))
-      .reduceOption(_ + _)
-      .getOrElse(0)
+      .collect { case b if skillFit(b) && spcFit(b) => b.bonus * (if (b.perLvl) level else 1) }
+      .sum
+  }
 }
 
 /** Charlist subcontainer for trait modifiers list's element stats */
@@ -741,30 +713,13 @@ case class Equipment(
 
   import ItemState._
 
-  totalCost =
-    (weapons.map(_.totalCost) ++ armor.map(_.cost) ++ items.map(_.totalCost))
-      .reduceOption(_ + _)
-      .getOrElse(0.0)
-  private val comb = (p: Possession) => Set(READY, EQUIPPED, COMBAT)(p.carried)
-  private val trav = (p: Possession) => p.carried == TRAVEL
+  totalCost = (weapons ++ armor ++ items).foldLeft(0.0)(_ + _.totalCost)
+  private def weight(f: String => Boolean) =
+    (for {p <- weapons ++ armor ++ items; if f(p.carried)} yield p.totalWt).sum
+  totalCombWt = weight(Set(READY, EQUIPPED, COMBAT))
+  totalTravWt = totalCombWt + weight(_ == TRAVEL)
   private val equip = (p: Possession) => Set(READY, EQUIPPED)(p.carried) && !p.broken
-  totalCombWt =
-    (weapons.withFilter(comb).map(_.totalWt)
-      ++ armor.withFilter(comb).map(_.wt)
-      ++ items.withFilter(comb).map(_.totalWt))
-      .reduceOption(_ + _)
-      .getOrElse(0.0)
-  totalTravWt =
-    totalCombWt +
-      (weapons.withFilter(trav).map(_.totalWt)
-        ++ armor.withFilter(trav).map(_.wt)
-        ++ items.withFilter(trav).map(_.totalWt))
-        .reduceOption(_ + _)
-        .getOrElse(0.0)
-  totalDb =
-    (weapons.withFilter(equip).map(_.db) ++ armor.withFilter(equip).map(_.db))
-      .reduceOption(_ + _)
-      .getOrElse(0)
+  totalDb = (weapons.withFilter(equip).map(_.db) ++ armor.withFilter(equip).map(_.db)).sum
   for (a <- armor; l <- a.locations) {
     if (a.front) frontDR.add(a.dr, a.ep, a.epi, l)
     if (a.back) rearDR.add(a.dr, a.ep, a.epi, l)
@@ -775,6 +730,10 @@ sealed abstract class Possession {
   def carried: String
 
   def broken: Boolean
+
+  def totalCost: Double
+
+  def totalWt: Double
 }
 
 /** Charlist subcontainer for weapons list's element, calculates weapon weight and cost including ammunition if
@@ -811,8 +770,8 @@ case class Weapon(
   assert(tl >= 0 && tl < 13, s"weapon's tech level value out of bounds ($tl in $name)")
   assert(wt >= 0, s"negative weapon's weight value ($wt in $name)")
   assert(cost >= 0, s"negative weapon's cost value ($cost in $name)")
-  totalWt = wt + (attacksRanged map (_.shots.totalWt) reduceOption (_ + _) getOrElse 0.0)
-  totalCost = cost + (attacksRanged map (_.shots.totalCost) reduceOption (_ + _) getOrElse 0.0)
+  totalWt = wt + attacksRanged.map(_.shots.totalWt).sum
+  totalCost = cost + attacksRanged.map(_.shots.totalCost).sum
 }
 
 /** Charlist subcontainer for melee attack type's stats, holds damage stats subcontainers and produces parry stat
@@ -1032,6 +991,10 @@ case class Armor(
   assert(tl >= 0 && tl < 13, s"armor's tech level value out of bounds ($tl in $name)")
   assert(wt >= 0, s"negative armor's weight ($wt in $name)")
   assert(cost >= 0, s"negative armors's cost ($cost in $name)")
+
+  override def totalCost: Double = cost
+
+  override def totalWt: Double = wt
 }
 
 /** Charlist subnamespace that holds DR types strings and validation method */
@@ -1233,6 +1196,7 @@ object Charlist {
 
   import play.api.libs.json.Json
 
+  val rndUp = (x: Double) => math.ceil(x - 0.01).toInt
   implicit val afflictionsFormat = Json.format[Afflictions]
   implicit val conditionsFormat = Json.format[Conditions]
   implicit val itemFormat = Json.format[Item]
@@ -1260,7 +1224,7 @@ object Charlist {
   implicit val reactionModFormat = Json.format[ReactionMod]
   implicit val reactionFormat = Json.format[Reaction]
   implicit val statIntFormat = Json.format[StatInt]
-  implicit val statFracFormat = Json.format[StatFrac]
+  implicit val statDoubleFormat = Json.format[StatDouble]
   implicit val statPointsFormat = Json.format[StatPoints]
   implicit val statVarsFormat = Json.format[StatVars]
   implicit val statsFormat = Json.format[Stats]
