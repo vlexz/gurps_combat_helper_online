@@ -21,13 +21,13 @@ export class CharacterService {
     data.stats[name] = {delta: val};
     console.log(data);
     return this.http.patch(this.apiEndPoint + `char/${id}`, data)
-    .map(res => res.json());
+    .map(res => Character.fromJson(res.json() || {}));
   }
 
   updateMainInfo(id: string, data): Observable<Character> {
     console.log('Update main info of the character');
     return this.http.patch(this.apiEndPoint + `char/${id}`, data)
-    .map(res => res.json() || {});
+    .map(res => Character.fromJson(res.json() || {}));
   }
 
   charList(): Observable<CharacterDescriptor[]> {
@@ -39,13 +39,13 @@ export class CharacterService {
   load(id: string): Observable<Character> {
     console.log('Loading character', id);
     return this.http.get(this.apiEndPoint + 'char/' + id)
-    .map(res => res.json() || {});
+    .map(res => Character.fromJson(res.json() || {}));
   }
 
   add(char: Character): Observable<Character> {
     console.log('adding character');
     return this.http.post(this.apiEndPoint + 'char', char)
-    .map(res => res.json() || {});
+    .map(res => Character.fromJson(res.json() || {}));
   }
 
   del(id: string): Observable<CharacterDescriptor[]> {
@@ -56,14 +56,14 @@ export class CharacterService {
   save(char: Character): Observable<Character> {
     console.log('Saving character');
     return this.http.put(this.apiEndPoint + 'char/' + char._id, char)
-    .map(res => res.json() || {});
+    .map(res => Character.fromJson(res.json() || {}));
   }
 
   defaultCharacter(): Observable<Character> {
     console.log('Get default character from scala api');
     return this.http.get(this.apiEndPoint + 'char')
     .map((res: Response) => {
-      return res.json() || {};
+      return Character.fromJson(res.json() || {});
     });
   }
 }

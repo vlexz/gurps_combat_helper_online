@@ -104,36 +104,40 @@
           <tr>
             <th>Name</th>
             <th>Cost</th>
+            <th> </th>
           </tr>
-          <tr *ngFor="let trait of current.advatages; let i = index">
+          <tr *ngFor="let trait of current.advantages; let i = index">
             <td>
               <input type="text" [(ngModel)]="trait.name" (change)="traitChanged($event)"/>
             </td>
             <td>
-              <input type="number" [(ngModel)]="trait.cp" (change)="traitChanged($event)"/>
+              <input class="cost" type="number" [(ngModel)]="trait.cp" (change)="traitChanged($event)"/>
             </td>
+            <td><a href="#" (click)="removeAdvantage(i)">Remove</a></td>
           </tr>
           <tr>
-            <td colspan="2"><a href="#" (click)="addAdvantage()">Add Advantage</a></td>
+            <td colspan="3"><a href="#" (click)="addAdvantage()">Add Advantage</a></td>
           </tr>
         </table>
       </div>
-      <div><b>Disadvatanges</b>
+      <div><b>Disadvantages</b>
         <table>
           <tr>
             <th>Name</th>
             <th>Cost</th>
+            <th> </th>
           </tr>
           <tr *ngFor="let trait of current.disadvantages; let i = index">
             <td>
               <input type="text" [(ngModel)]="trait.name" (change)="traitChanged($event)"/>
             </td>
             <td>
-              <input type="number" [(ngModel)]="trait.cp" (change)="traitChanged($event)"/>
+              <input class="cost" type="number" [(ngModel)]="trait.cp" (change)="traitChanged($event)"/>
             </td>
+            <td><a href="#" (click)="removeDisadvantage(i)">Remove</a></td>
           </tr>
           <tr>
-            <td colspan="2"><a href="#" (click)="addDisadvatange()">Add Disadvatange</a></td>
+            <td colspan="3"><a href="#" (click)="addDisadvantage()">Add Disadvantage</a></td>
           </tr>
         </table>
       </div>

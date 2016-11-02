@@ -39,10 +39,12 @@ mixin traitList(list, type)
       tr
         th Name
         th Cost
+        th 
       tr(*ngFor='let trait of '+ list + '; let i = index')
         td: input(type='text', [(ngModel)]='trait.name', (change)='traitChanged($event)')
-        td: input(type='number', [(ngModel)]='trait.cp', (change)='traitChanged($event)')
-      tr: td(colspan=2): a(href='#', (click)='add' + type + '()')= 'Add ' + type
+        td: input.cost(type='number', [(ngModel)]='trait.cp', (change)='traitChanged($event)')  
+        td: a(href='#', (click)='remove' + type + '(i)') Remove
+      tr: td(colspan=3): a(href='#', (click)='add' + type + '()')= 'Add ' + type
 
 mixin skillList(list)
   .skills
@@ -66,8 +68,8 @@ div(*ngIf='current')
   div: +mainVariables
   .container
     .traits
-      +traitList('current.advatages', 'Advantage')
-      +traitList('current.disadvantages', 'Disadvatange')
+      +traitList('current.advantages', 'Advantage')
+      +traitList('current.disadvantages', 'Disadvantage')
     +skillList
       
   

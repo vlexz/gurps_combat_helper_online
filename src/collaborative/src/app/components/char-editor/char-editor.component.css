@@ -7,3 +7,7 @@
   display: inline-block;
   vertical-align: top;
 }
+
+input.cost {
+  width: 45px;
+}

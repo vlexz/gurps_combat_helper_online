@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CharacterService } from '../../services/character.service';
 import { Character } from '../../interfaces/character';
+import { Trait } from '../../interfaces/trait';
 
 @Component({
   selector: 'app-char-editor',
@@ -19,16 +20,16 @@ export class CharEditorComponent implements OnInit {
   ) {}
 
 
-  ensureCharacterExists(): Promise<void> {
+  ensureCharacterExists(): Promise<boolean> {
     return new Promise((function(resolve, reject){
       if (this.current._id) { // character loaded or saved already
-        return resolve();
+        return resolve(false);
       } else {
         return this.chars.add(this.current)
         .subscribe(char => {
           this.current = char;
           this.characterAdded.emit();
-          resolve();
+          resolve(true);
         });
       }
     }).bind(this));
@@ -37,24 +38,55 @@ export class CharEditorComponent implements OnInit {
   statChanged(ev: any): void {
     console.log(ev);
     this.ensureCharacterExists()
-    .then(() => {
-      this.chars.updateStat(this.current._id, ev.name, ev.delta)
-      .subscribe(char => this.current = char);
+    .then(saved => {
+      if (!saved) {
+        this.chars.updateStat(this.current._id, ev.name, ev.delta)
+        .subscribe(char => this.current = char);
+      } else {
+        console.log('Character already saved');
+      }
     });
   }
 
   mainInfoChanged(ev: any) {
     console.log(ev);
     this.ensureCharacterExists()
-    .then(() => {
-      let data = {};
-      data[ev.srcElement.name] = ev.srcElement.value;
-      console.log(data);
-      this.chars.updateMainInfo(this.current._id, data)
-      .subscribe(() => {
-        this.characterAdded.emit();
-      });
+    .then(saved => {
+      if (!saved) {
+        let data = {};
+        data[ev.srcElement.name] = ev.srcElement.value;
+        console.log(data);
+        this.chars.updateMainInfo(this.current._id, data)
+        .subscribe(() => {
+          this.characterAdded.emit();
+        });
+      } else {
+        console.log('Character already saved');
+      }
     });
+  }
+
+  addAdvantage() {
+    console.log('add advantage');
+    this.current.traits.push(new Trait('Advantage', '', 0));
+  }
+
+  removeAdvantage(i: number) {
+    console.log('Remove adv', i);
+    this.current.removeTrait('Advantage', i);
+  }
+
+  addDisadvantage() {
+    console.log('add disadvantage');
+    this.current.traits.push(new Trait('Disadvantage', '', 0));
+  }
+
+  removeDisadvantage(i: number) {
+    console.log('Remove disadv', i);
+    this.current.removeTrait('Disadvantage', i);
+  }
+
+  traitChanged() {
   }
 
   setCharacter(char: Character) {
