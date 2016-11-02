@@ -8,7 +8,7 @@ import scalaz._, Scalaz._
   */
 case class Charlist(// TODO: maybe make recalc function in compliance with functional programming style
                     _id: String = "",
-                    timestamp: Long = 0,
+                    timestamp: String = "",
                     player: String = "",
                     access: Seq[String] = Seq(), // For future functionality
                     name: String = "",
