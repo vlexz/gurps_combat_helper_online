@@ -5,7 +5,7 @@ import daos.CharlistDao
 import models.charlist.Charlist
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
-import play.api.mvc.{Action, BodyParsers, Controller}
+import play.api.mvc.{Action, AnyContent, BodyParsers, Controller}
 
 import scala.concurrent.Future
 import scala.util.Random
@@ -15,7 +15,7 @@ import scala.util.Random
   */
 class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller {
 
-  def options(id: String) = Action.async { implicit request =>
+  def options(id: String): Action[AnyContent] = Action.async { implicit request =>
     val methods = request.path.replaceAll(id, "") match {
       case "/api/char" => "GET, POST"
       case "/api/chars" => "GET"
@@ -30,14 +30,14 @@ class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller 
     }
   }
 
-  def add() = Action.async(BodyParsers.parse.json) { implicit request =>
+  def add(): Action[JsValue] = Action.async(BodyParsers.parse.json) { implicit request =>
     try {
       request
         .body
         .validate[Charlist] match {
         case e: JsError => Future(BadRequest(Json.obj("message" -> "Invalid request body.")))
         case s: JsSuccess[Charlist] =>
-          val charlist = s.get.copy(_id = Random.nextLong.toString, timestamp = System.currentTimeMillis)
+          val charlist = s.get.copy(_id = Random.nextLong.toString, timestamp = System.currentTimeMillis.toString)
           charlistDao
             .save(charlist)
             .map { re => Ok(Json toJson charlist) }
@@ -48,14 +48,14 @@ class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller 
     }
   }
 
-  def list = Action.async {
+  def list: Action[AnyContent] = Action.async {
     charlistDao
       .find
       .map { cl => Ok(Json toJson cl) }
       .recoverWith { case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage))) }
   }
 
-  def get(id: String) = Action.async {
+  def get(id: String): Action[AnyContent] = Action.async {
     try {
       charlistDao
         .find(id)
@@ -67,11 +67,11 @@ class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller 
     }
   }
 
-  def create() = Action.async {
+  def create(): Action[AnyContent] = Action.async {
     Future(Ok(Json toJson Charlist()))
   }
 
-  def replace(id: String) = Action.async(BodyParsers.parse.json) { implicit request =>
+  def replace(id: String): Action[JsValue] = Action.async(BodyParsers.parse.json) { implicit request =>
     try {
       request
         .body
@@ -94,7 +94,7 @@ class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller 
     }
   }
 
-  def update(id: String) = Action.async(BodyParsers.parse.json) { implicit request =>
+  def update(id: String): Action[JsValue] = Action.async(BodyParsers.parse.json) { implicit request =>
     try {
       charlistDao
         .find(id)
@@ -116,10 +116,10 @@ class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller 
     }
   }
 
-  def delete(id: String) = Action.async {
+  def delete(id: String): Action[AnyContent] = Action.async {
     charlistDao
       .delete(id)
-      .map { re => Ok(Json.obj("success" -> re.toString)) }
+      .map { cl => Ok(Json toJson cl) }
       .recoverWith { case t: NoSuchElementException => Future(NotFound(Json.obj("message" -> t.getMessage))) }
   }
 }
