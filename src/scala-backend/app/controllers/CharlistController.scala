@@ -21,12 +21,12 @@ class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller 
       case "/api/chars" => "GET"
       case "/api/char/" => "GET, PUT, PATCH, DELETE"
     }
+    val requestHeaders = request.headers get ACCESS_CONTROL_REQUEST_HEADERS getOrElse ""
     Future {
       Ok.withHeaders(
         ALLOW -> methods,
         ACCESS_CONTROL_ALLOW_METHODS -> methods,
-        ACCESS_CONTROL_ALLOW_HEADERS -> "*"
-      )
+        ACCESS_CONTROL_ALLOW_HEADERS -> requestHeaders)
     }
   }
 
