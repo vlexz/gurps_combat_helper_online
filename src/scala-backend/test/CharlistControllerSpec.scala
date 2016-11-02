@@ -21,6 +21,12 @@ import scala.concurrent.Future
   */
 class CharlistControllerSpec extends PlaySpec with Results with MockitoSugar {
 
+  "CharlistController#OPTIONS" should {
+    "send OK with list of methods on request" in {
+//      val fakeRequestChar: Request[AnyContent] = FakeRequest(OPTIONS, controllers.routes.CharlistController.options)
+    }
+  }
+
   "CharlistController#POST/api/char" should {
     "send OK with recalculated charlist on request with valid charlist json" in {
       val mockCharlistDao = mock[CharlistDao]
