@@ -15,6 +15,15 @@ import scala.util.Random
   */
 class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller {
 
+  def options(id: String) = Action.async { implicit request =>
+    val methods = request.path.replaceAll(id, "") match {
+      case "/api/char" => "GET, POST"
+      case "/api/chars" => "GET"
+      case "/api/char/" => "GET, PUT, PATCH, DELETE"
+    }
+    Future(Ok.withHeaders(ALLOW -> methods))
+  }
+
   def add() = Action.async(BodyParsers.parse.json) { implicit request =>
     try {
       request
@@ -22,13 +31,10 @@ class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller 
         .validate[Charlist] match {
         case e: JsError => Future(BadRequest(Json.obj("message" -> "Invalid request body.")))
         case s: JsSuccess[Charlist] =>
-          val charlist = s.get.copy(
-            _id = Random.nextLong.toString,
-            timestamp = System.currentTimeMillis
-          )
+          val charlist = s.get.copy(_id = Random.nextLong.toString, timestamp = System.currentTimeMillis)
           charlistDao
             .save(charlist)
-            .map(re => Ok(Json toJson charlist))
+            .map { re => Ok(Json toJson charlist) }
             .recoverWith { case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage))) }
       }
     } catch {
@@ -39,7 +45,7 @@ class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller 
   def list = Action.async {
     charlistDao
       .find
-      .map(cl => Ok(Json toJson cl))
+      .map { cl => Ok(Json toJson cl) }
       .recoverWith { case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage))) }
   }
 
@@ -47,7 +53,7 @@ class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller 
     try {
       charlistDao
         .find(id)
-        .map(cl => Ok(cl))
+        .map { cl => Ok(cl) }
         .recoverWith { case e: NoSuchElementException => Future(NotFound(Json.obj("message" -> e.getMessage))) }
     } catch {
       case e: NoSuchElementException => Future(NotFound(Json.obj("message" -> e.getMessage)))
@@ -94,7 +100,7 @@ class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller 
               val charlist = s.get.copy(_id = id)
               charlistDao
                 .update(charlist)
-                .map(re => Ok(Json toJson charlist))
+                .map { re => Ok(Json toJson charlist) }
                 .recoverWith { case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage))) }
           }
         }
