@@ -37,7 +37,7 @@ class MongoCharlistDao @Inject()(mongo: Mongo) extends CharlistDao {
   private val documentToJsonHeader: Document => JsObject =
     doc => Json.obj(
       ID -> doc.get(ID).get.asString.getValue,
-      TIMESTAMP -> doc.get(TIMESTAMP).get.asInt64.getValue,
+      TIMESTAMP -> doc.get(TIMESTAMP).get.asString.getValue,
       PLAYER -> doc.get(PLAYER).get.asString.getValue,
       NAME -> doc.get(NAME).get.asString.getValue)
 
