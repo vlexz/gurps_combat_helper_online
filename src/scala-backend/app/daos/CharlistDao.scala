@@ -1,8 +1,8 @@
 package daos
 
 import com.google.inject.{ImplementedBy, Inject, Singleton}
-import models.charlist.Charlist
-import models.charlist.CharlistFields._
+import models.simplecharlist.Charlist
+import models.simplecharlist.CharlistFields._
 import org.mongodb.scala.model.Filters
 import org.mongodb.scala.result.UpdateResult
 import org.mongodb.scala.{Completed, Document, MongoCollection}
