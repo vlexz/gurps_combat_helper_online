@@ -62,7 +62,7 @@ class MongoCharlistDao @Inject()(mongo: Mongo) extends CharlistDao {
     charlists
       .replaceOne(
         Filters.equal(ID, charlist._id),
-        Document(Json.toJson(charlist).toString).filterKeys(_ != ID)
+        Document(Json.toJson(charlist).toString)
       )
       .head
 
