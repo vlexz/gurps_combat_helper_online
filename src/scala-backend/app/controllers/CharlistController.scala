@@ -2,7 +2,7 @@ package controllers
 
 import com.google.inject.Inject
 import daos.CharlistDao
-import models.charlist.Charlist
+import models.simplecharlist.Charlist
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
 import play.api.mvc.{Action, AnyContent, BodyParsers, Controller}
@@ -37,7 +37,9 @@ class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller 
         .validate[Charlist] match {
         case e: JsError => Future(BadRequest(Json.obj("message" -> "Invalid request body.")))
         case s: JsSuccess[Charlist] =>
-          val charlist = s.get.copy(_id = Random.nextInt.toString, timestamp = System.currentTimeMillis.toString)
+          val charlist = s.get.copy(
+            _id = math.abs(Random.nextLong).toString,
+            timestamp = System.currentTimeMillis.toString)
           charlistDao
             .save(charlist)
             .map { re => Ok(Json toJson charlist) }
