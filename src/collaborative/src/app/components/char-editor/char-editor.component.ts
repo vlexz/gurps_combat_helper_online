@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CharacterService } from '../../services/character.service';
-import { Character } from '../../interfaces/character';
+import { Character, Skill } from '../../interfaces/character';
 import { Trait } from '../../interfaces/trait';
 
 @Component({
@@ -87,6 +87,14 @@ export class CharEditorComponent implements OnInit {
   }
 
   traitChanged() {
+  }
+
+  addSkill() {
+    this.current.skills.push(new Skill);
+  }
+
+  removeSkill(i: number) {
+    this.current.skills.splice(i, 1);
   }
 
   setCharacter(char: Character) {

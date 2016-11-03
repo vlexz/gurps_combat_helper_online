@@ -30,14 +30,14 @@ class Stats {
   basicMove: Stat;
 }
 
-class Skill {
-  skillString: string;
-  attr: string;
-  diff: string;
-  relLvl: number;
-  bonus: number;
-  lvl: number; // calculated
-  cp: number; // calculated
+export class Skill {
+  skillString: string = '';
+  attr: string = 'DX';
+  diff: string = 'E';
+  relLvl: number = 0;
+  bonus: number = 0;
+  lvl: number = 0; // calculated
+  cp: number = 0; // calculated
 }
 
 export class Character {

@@ -58,7 +58,8 @@ mixin skillList(list)
         th Bonus
         th Total
         th Cost
-      tr(*ngFor='let skill of ' + list + '; let i = index') 
+      tr(*ngFor='let skill of ' + list + '; let i = index')     
+        td: input(type='text', [(ngModel)]='skill.skillString', (change)='skillChanged()')           
       tr
         td: a(href='#', click='addSkill()') Add Skill
 

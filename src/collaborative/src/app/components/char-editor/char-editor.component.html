@@ -153,7 +153,11 @@
           <th>Total</th>
           <th>Cost</th>
         </tr>
-        <tr *ngFor="let skill of undefined; let i = index"> </tr>
+        <tr *ngFor="let skill of undefined; let i = index">    
+          <td>
+            <input type="text" [(ngModel)]="skill.skillString" (change)="skillChanged()"/>
+          </td>
+        </tr>
         <tr>
           <td><a href="#" click="addSkill()">Add Skill</a></td>
         </tr>
