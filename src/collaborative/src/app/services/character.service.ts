@@ -8,10 +8,12 @@ import { Observable }     from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
+import { environment } from '../../environments/environment';
+
 @Injectable()
 export class CharacterService {
 
-  private apiEndPoint: string = 'http://localhost:9000/api/';
+  private apiEndPoint: string = environment.apiEndpoint;
 
   constructor(private http: Http) {
   }
