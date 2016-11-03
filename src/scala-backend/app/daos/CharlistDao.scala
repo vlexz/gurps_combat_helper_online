@@ -9,7 +9,6 @@ import org.mongodb.scala.{Completed, Document, MongoCollection}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.{JsObject, JsValue, Json}
 import services.Mongo
-
 import scala.concurrent.Future
 
 /**
@@ -17,23 +16,21 @@ import scala.concurrent.Future
   */
 @ImplementedBy(classOf[MongoCharlistDao])
 trait CharlistDao {
-
   def save(charlist: Charlist): Future[Completed]
 
-  def find: Future[Seq[JsObject]]
+  def find(): Future[Seq[JsObject]]
 
   def find(id: String): Future[JsValue]
 
   def update(charlist: Charlist): Future[UpdateResult]
 
   def delete(id: String): Future[Seq[JsObject]]
-
 }
 
 @Singleton
 class MongoCharlistDao @Inject()(mongo: Mongo) extends CharlistDao {
-
   private val charlists: MongoCollection[Document] = mongo.db.getCollection("characters")
+  private val toDoc: Charlist => Document = x => Document(Json.toJson(x).toString)
   private val documentToJsonHeader: Document => JsObject =
     doc => Json.obj(
       ID -> doc.get(ID).get.asString.getValue,
@@ -41,38 +38,17 @@ class MongoCharlistDao @Inject()(mongo: Mongo) extends CharlistDao {
       PLAYER -> doc.get(PLAYER).get.asString.getValue,
       NAME -> doc.get(NAME).get.asString.getValue)
 
-  override def save(charlist: Charlist): Future[Completed] =
-    charlists
-      .insertOne(Document(Json.toJson(charlist).toString))
-      .head
+  override def save(charlist: Charlist): Future[Completed] = charlists insertOne toDoc(charlist) head()
 
-  override def find: Future[Seq[JsObject]] =
-    charlists
-      .find()
-      .map[JsObject](documentToJsonHeader)
-      .toFuture
+  override def find(): Future[Seq[JsObject]] = charlists find() map documentToJsonHeader toFuture()
 
-  override def find(id: String): Future[JsValue] =
-    charlists
-      .find(Filters.equal(ID, id))
-      .head
-      .map[JsValue](doc => Json.parse(doc.toJson))
+  override def find(id: String): Future[JsValue] = charlists find Filters.equal(ID, id) head() map (Json parse _.toJson)
 
   override def update(charlist: Charlist): Future[UpdateResult] =
-    charlists
-      .replaceOne(
-        Filters.equal(ID, charlist._id),
-        Document(Json.toJson(charlist).toString)
-      )
-      .head
+    charlists replaceOne(Filters.equal(ID, charlist._id), toDoc(charlist)) head()
 
   override def delete(id: String): Future[Seq[JsObject]] = {
-    charlists
-      .deleteOne(Filters.equal(ID, id))
-      .head
-    charlists
-      .find()
-      .map[JsObject](documentToJsonHeader)
-      .toFuture
+    charlists deleteOne Filters.equal(ID, id) head()
+    charlists find() map documentToJsonHeader toFuture()
   }
 }
