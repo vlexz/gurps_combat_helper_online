@@ -2,7 +2,8 @@ package controllers
 
 import com.google.inject.Inject
 import daos.CharlistDao
-import models.simplecharlist.Charlist
+import models.simplecharlist._
+import models.simplecharlist.Charlist._
 import org.mongodb.scala.Completed
 import org.mongodb.scala.result.UpdateResult
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -23,11 +24,11 @@ class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller 
     case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage)))
   }
 
-  def options(id: String): Action[AnyContent] = Action.async { implicit request =>
-    val methods = request.path.replaceAll(id, "") match {
-      case "/api/char" => "GET, POST"
-      case "/api/chars" => "GET"
-      case "/api/char/" => "GET, PUT, PATCH, DELETE"
+  def options(p: String, id: String = ""): Action[AnyContent] = Action.async { implicit request =>
+    val methods = p match {
+      case "base" => "GET, POST"
+      case "list" => "GET"
+      case "elem" => "GET, PUT, PATCH, DELETE"
     }
     val requestHeaders = request.headers get ACCESS_CONTROL_REQUEST_HEADERS getOrElse ""
     Future {
@@ -61,8 +62,17 @@ class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller 
     charlistDao find id map { charlist: JsValue => Ok(charlist) } recoverWith throwMsg
   }
 
-  def create(): Action[AnyContent] = Action.async {
-    Future(Ok(Json toJson Charlist()))
+  def create(p: String): Action[AnyContent] = Action.async {
+    val payload = p match {
+      case "char" => Json toJson Charlist()
+      case "trait" => Json toJson Trait()
+      case "skill" => Json toJson Skill()
+      case "teq" => Json toJson Technique()
+      case "weap" => Json toJson Weapon()
+      case "armor" => Json toJson Armor()
+      case "item" => Json toJson Item()
+    }
+    Future(Ok(payload))
   }
 
   def replace(id: String): Action[JsValue] = Action.async(BodyParsers.parse.json) { implicit request =>

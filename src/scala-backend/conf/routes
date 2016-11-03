@@ -8,14 +8,26 @@
 # Map static resources from the /public folder to the /assets URL path
 #GET           /assets/*file        controllers.Assets.at(path="/public", file)
 
-#Charlists storage
-OPTIONS        /api/char            controllers.CharlistController.options(id = "")
-POST           /api/char            controllers.CharlistController.add()
-GET            /api/char            controllers.CharlistController.create()
-OPTIONS        /api/chars           controllers.CharlistController.options(id = "")
-GET            /api/chars           controllers.CharlistController.list
-OPTIONS        /api/char/:id        controllers.CharlistController.options(id: String)
-GET            /api/char/:id        controllers.CharlistController.get(id:String)
-PUT            /api/char/:id        controllers.CharlistController.replace(id: String)
-PATCH          /api/char/:id        controllers.CharlistController.update(id: String)
-DELETE         /api/char/:id        controllers.CharlistController.delete(id: String)
+# Charlists storage
+OPTIONS        /api/char               controllers.CharlistController.options(p = "base", id = "")
+POST           /api/char               controllers.CharlistController.add()
+GET            /api/char               controllers.CharlistController.create(p = "char")
+OPTIONS        /api/chars              controllers.CharlistController.options(p = "list", id = "")
+GET            /api/chars              controllers.CharlistController.list
+OPTIONS        /api/char/:id           controllers.CharlistController.options(p = "elem", id: String)
+GET            /api/char/:id           controllers.CharlistController.get(id: String)
+PUT            /api/char/:id           controllers.CharlistController.replace(id: String)
+PATCH          /api/char/:id           controllers.CharlistController.update(id: String)
+DELETE         /api/char/:id           controllers.CharlistController.delete(id: String)
+OPTIONS        /api/chars/trait        controllers.CharlistController.options(p = "base", id = "")
+GET            /api/chars/trait        controllers.CharlistController.create(p = "trait")
+OPTIONS        /api/chars/skill        controllers.CharlistController.options(p = "base", id = "")
+GET            /api/chars/skill        controllers.CharlistController.create(p = "skill")
+OPTIONS        /api/chars/teq          controllers.CharlistController.options(p = "base", id = "")
+GET            /api/chars/teq          controllers.CharlistController.create(p = "teq")
+OPTIONS        /api/chars/weap         controllers.CharlistController.options(p = "base", id = "")
+GET            /api/chars/weap         controllers.CharlistController.create(p = "weap")
+OPTIONS        /api/chars/armor        controllers.CharlistController.options(p = "base", id = "")
+GET            /api/chars/armor        controllers.CharlistController.create(p = "armor")
+OPTIONS        /api/chars/item         controllers.CharlistController.options(p = "base", id = "")
+GET            /api/chars/item         controllers.CharlistController.create(p = "item")
