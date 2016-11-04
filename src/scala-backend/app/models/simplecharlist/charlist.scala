@@ -95,8 +95,7 @@ case class Charlist(
     val tCp = traits map (_.cp) partition (_ > 0)
     cp.adv = tCp._1.sum
     cp.dis = tCp._2.sum
-    cp.skills = skills.map(_.cp).sum
-    cp.skills = techniques.map(_.cp).sum
+    cp.skills = skills.map(_.cp).sum + techniques.map(_.cp).sum
     cp.unspent = cp.cp - cp.skills - cp.stats - cp.adv - cp.dis
   }
 
