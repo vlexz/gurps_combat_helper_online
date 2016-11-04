@@ -29,6 +29,9 @@ mixin mainVariables
   table
     tr
       td
+        img(src='/assets/default_portrait.png', (click)='uploadPortrait()')
+        input.file(type='file', (change)='processUpload($event)', id='portrait_file')
+      td
         table     
           +statblock('ST:', 'st', true, false)
           +statblock('DX:', 'dx', true, false)

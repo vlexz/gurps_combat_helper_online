@@ -33,6 +33,10 @@ export class CharacterService {
     .map(res => Character.fromJson(res.json() || {}));
   }
 
+  uploadPortrait(id: string, element: any) {
+    console.log(element.files);
+  }
+
   updateMainInfo(id: string, data): Observable<Character> {
     console.log('Update main info of the character');
     return this.http.patch(this.apiEndPoint + `char/${id}`, data)

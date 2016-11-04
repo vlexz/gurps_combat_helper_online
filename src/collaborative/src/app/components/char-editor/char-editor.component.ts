@@ -56,6 +56,18 @@ export class CharEditorComponent implements OnInit {
     });
   }
 
+  uploadPortrait() {
+    document.getElementById('portrait_file').click();
+  }
+
+  processUpload() {
+    console.log('Upload portrait');
+    this.ensureCharacterExists()
+    .then(saved => {
+      this.chars.uploadPortrait(this.current._id, document.getElementById('portrait_file'));
+    });
+  }
+
   mainInfoChanged(ev: any) {
     console.log(ev);
     this.ensureCharacterExists()
