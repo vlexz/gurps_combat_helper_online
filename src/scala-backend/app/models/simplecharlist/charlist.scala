@@ -8,7 +8,7 @@ case class Charlist(
                      timestamp: String = "",
                      player: String = "",
                      access: Seq[String] = Seq(), // For future functionality
-                     name: String = "",
+                     name: String = "New Character",
                      cp: CharacterPoints = CharacterPoints(),
                      description: Description = Description(),
                      stats: Stats = Stats(),

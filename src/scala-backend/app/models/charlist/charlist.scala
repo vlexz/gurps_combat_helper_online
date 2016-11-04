@@ -11,7 +11,7 @@ case class Charlist(// TODO: maybe make recalc function in compliance with funct
                     timestamp: String = "",
                     player: String = "",
                     access: Seq[String] = Seq(), // For future functionality
-                    name: String = "",
+                    name: String = "New Character",
                     cp: CharacterPoints = CharacterPoints(),
                     description: Description = Description(),
                     stats: Stats = Stats(),
