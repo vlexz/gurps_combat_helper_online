@@ -13,6 +13,9 @@ export class CharEditorComponent implements OnInit {
 
   private current: Character = null;
 
+  private defTrait: Trait = null;
+  private defSkill: Skill = null;
+
   @Output() characterAdded = new EventEmitter();
 
   constructor(
@@ -68,7 +71,7 @@ export class CharEditorComponent implements OnInit {
 
   addAdvantage() {
     console.log('add advantage');
-    this.current.traits.push(new Trait('Advantage', '', 0));
+    this.current.traits.push(this.defTrait.cloneWith({category: 'Advantage'}));
   }
 
   removeAdvantage(i: number) {
@@ -78,7 +81,7 @@ export class CharEditorComponent implements OnInit {
 
   addDisadvantage() {
     console.log('add disadvantage');
-    this.current.traits.push(new Trait('Disadvantage', '', 0));
+    this.current.traits.push(this.defTrait.cloneWith({category: 'Disadvantage'}));
   }
 
   removeDisadvantage(i: number) {
@@ -87,6 +90,13 @@ export class CharEditorComponent implements OnInit {
   }
 
   traitChanged() {
+    this.ensureCharacterExists()
+    .then(saved => {
+      if (!saved) {
+        this.chars.updateTraits(this.current._id, this.current.traits)
+        .subscribe(char => this.current = char);
+      }
+    });
   }
 
   addSkill() {
@@ -115,6 +125,8 @@ export class CharEditorComponent implements OnInit {
   ngOnInit() {
     console.log('on init routine in char editor');
     this.loadDefaultChracter();
+    this.chars.defaultTrait().subscribe(trait => this.defTrait = trait);
+    this.chars.defaultSkill().subscribe(skill => this.defSkill = skill);
   }
 
 }

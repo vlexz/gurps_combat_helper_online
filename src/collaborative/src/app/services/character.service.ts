@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { Http, Response } from '@angular/http';
-import { Character } from '../interfaces/character';
+import { Character, Skill } from '../interfaces/character';
+import { Trait } from '../interfaces/trait';
 import { CharacterDescriptor } from '../interfaces/char_descriptor';
 
 import { Observable }     from 'rxjs/Observable';
@@ -28,6 +29,13 @@ export class CharacterService {
 
   updateMainInfo(id: string, data): Observable<Character> {
     console.log('Update main info of the character');
+    return this.http.patch(this.apiEndPoint + `char/${id}`, data)
+    .map(res => Character.fromJson(res.json() || {}));
+  }
+
+  updateTraits(id: string, traits: Trait[]): Observable<Character> {
+    console.log('Update traits for character', id);
+    let data = {traits};
     return this.http.patch(this.apiEndPoint + `char/${id}`, data)
     .map(res => Character.fromJson(res.json() || {}));
   }
@@ -67,5 +75,17 @@ export class CharacterService {
     .map((res: Response) => {
       return Character.fromJson(res.json() || {});
     });
+  }
+
+  defaultTrait(): Observable<Trait> {
+    console.log('get default trait from scala api');
+    return this.http.get(this.apiEndPoint + 'chars/trait')
+    .map(res => Trait.fromJson(res.json()));
+  }
+
+  defaultSkill(): Observable<Skill> {
+    console.log('get default skill from scala api');
+    return this.http.get(this.apiEndPoint + 'chars/skill')
+    .map(res => res.json());
   }
 }
