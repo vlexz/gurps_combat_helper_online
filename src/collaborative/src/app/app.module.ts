@@ -8,8 +8,8 @@ import { CharEditorComponent } from './components/char-editor/char-editor.compon
 import { StatBlockComponent } from './components/char-editor/components/stat-block/stat-block.component';
 import { CharListComponent } from './components/char-list/char-list.component';
 import { CharacterManagerComponent } from './components/character-manager/character-manager.component';
-import { TraitBlockComponent } from './components/char-editor/components/trait-block/trait-block.component';
-import { SkillBlockComponent } from './components/char-editor/components/skill-block/skill-block.component';
+import { SkillListComponent } from './components/char-editor/components/skill-list/skill-list.component';
+import { TraitListComponent } from './components/char-editor/components/trait-list/trait-list.component';
 
 @NgModule({
   declarations: [
@@ -18,8 +18,8 @@ import { SkillBlockComponent } from './components/char-editor/components/skill-b
     StatBlockComponent,
     CharListComponent,
     CharacterManagerComponent,
-    TraitBlockComponent,
-    SkillBlockComponent
+    SkillListComponent,
+    TraitListComponent
   ],
   imports: [
     BrowserModule,

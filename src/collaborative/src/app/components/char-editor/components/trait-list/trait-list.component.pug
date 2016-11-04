@@ -1,0 +1,11 @@
+b {{category}}s
+table
+  tr
+    th Name
+    th Cost
+    th 
+  tr(*ngFor='let trait of filtered; let i = index')
+    td: input(type='text', [(ngModel)]='trait.name', (change)='traitChanged($event)')
+    td: input.cost(type='number', [(ngModel)]='trait.cp', (change)='traitChanged($event)')  
+    td: a(href='#', (click)='removeTrait(i)') Remove
+  tr: td(colspan=3): a(href='#', (click)='addTrait()') Add {{category}}

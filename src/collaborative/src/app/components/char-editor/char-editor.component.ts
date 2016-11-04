@@ -102,11 +102,6 @@ export class CharEditorComponent implements OnInit {
     });
   }
 
-  addSkill() {
-    console.log('Adding skill');
-    this.current.skills.push(this.defSkill.clone());
-  }
-
   skillChanged() {
     this.ensureCharacterExists()
     .then(saved => {
@@ -115,10 +110,6 @@ export class CharEditorComponent implements OnInit {
         .subscribe(char => this.current = char);
       }
     });
-  }
-
-  removeSkill(i: number) {
-    this.current.skills.splice(i, 1);
   }
 
   setCharacter(char: Character) {
@@ -140,7 +131,6 @@ export class CharEditorComponent implements OnInit {
     console.log('on init routine in char editor');
     this.loadDefaultChracter();
     this.chars.defaultTrait().subscribe(trait => this.defTrait = trait);
-    this.chars.defaultSkill().subscribe(skill => this.defSkill = skill);
   }
 
 }

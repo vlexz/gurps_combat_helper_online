@@ -32,56 +32,15 @@ mixin mainVariables
           +statblock('FP:', 'fp')
           +statblock('HP:', 'hp')
 
-mixin traitList(list, type)
-  div
-    b= type + 's'
-    table
-      tr
-        th Name
-        th Cost
-        th 
-      tr(*ngFor='let trait of '+ list + '; let i = index')
-        td: input(type='text', [(ngModel)]='trait.name', (change)='traitChanged($event)')
-        td: input.cost(type='number', [(ngModel)]='trait.cp', (change)='traitChanged($event)')  
-        td: a(href='#', (click)='remove' + type + '(i)') Remove
-      tr: td(colspan=3): a(href='#', (click)='add' + type + '()')= 'Add ' + type
-
-mixin skillList(list)
-  .skills
-    b Skills 
-    table 
-      tr
-        th Name
-        th Attr
-        th Diff
-        th Rel
-        th Bonus
-        th Total
-        th Cost
-      tr(*ngFor='let skill of ' + list + '; let i = index')     
-        td: input(type='text', [(ngModel)]='skill.skillString', (change)='skillChanged()')      
-        td
-          select([(ngModel)]='skill.attr', (change)='skillChanged()')
-            option(*ngFor='let attr of tables.attributes; let i = index', value='{{attr}}')  {{attr}}
-        td
-          select([(ngModel)]='skill.diff', (change)='skillChanged()')
-            option(*ngFor='let attr of tables.skillDifficulties; let i = index', value='{{attr}}')  {{attr}}
-        td: input.cost(type='number', [(ngModel)] = 'skill.relLvl', (change)='skillChanged()')
-        td: input.cost(type='number', [(ngModel)] = 'skill.bonus', (change)='skillChanged()')
-        td {{skill.lvl}}
-        td {{skill.cp}}
-      tr
-        td: a(href='#', (click)='addSkill()') Add Skill
-
-
 div(*ngIf='current')
   div: +mainInfo
   div: +mainVariables
   .container
     .traits
-      +traitList('current.advantages', 'Advantage')
-      +traitList('current.disadvantages', 'Disadvantage')
-    +skillList('current.skills')
+      app-trait-list([traits]='current.traits', [category]="'Advantage'", (change)='traitChanged()')
+      app-trait-list([traits]='current.traits', [category]="'Disadvantage'", (change)='traitChanged()')
+    app-skill-list([skills]='current.skills', (change)='skillChanged()')
+
       
   
 
