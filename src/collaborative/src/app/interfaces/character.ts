@@ -1,5 +1,6 @@
 
 import { Trait } from './trait';
+import { Skill } from './skill';
 
 export class Stat {
   base: number;
@@ -30,15 +31,7 @@ class Stats {
   basicMove: Stat;
 }
 
-export class Skill {
-  skillString: string = '';
-  attr: string = 'DX';
-  diff: string = 'E';
-  relLvl: number = 0;
-  bonus: number = 0;
-  lvl: number = 0; // calculated
-  cp: number = 0; // calculated
-}
+
 
 export class Character {
   _id: string;

@@ -1,7 +1,9 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CharacterService } from '../../services/character.service';
-import { Character, Skill } from '../../interfaces/character';
+import { Character } from '../../interfaces/character';
+import { Skill } from '../../interfaces/skill';
 import { Trait } from '../../interfaces/trait';
+import { ConstantTables } from '../../interfaces/tables';
 
 @Component({
   selector: 'app-char-editor',
@@ -15,6 +17,7 @@ export class CharEditorComponent implements OnInit {
 
   private defTrait: Trait = null;
   private defSkill: Skill = null;
+  private tables: ConstantTables = new ConstantTables;
 
   @Output() characterAdded = new EventEmitter();
 
@@ -71,7 +74,7 @@ export class CharEditorComponent implements OnInit {
 
   addAdvantage() {
     console.log('add advantage');
-    this.current.traits.push(this.defTrait.cloneWith({category: 'Advantage'}));
+    this.current.traits.push(this.defTrait.clone({category: 'Advantage'}));
   }
 
   removeAdvantage(i: number) {
@@ -81,7 +84,7 @@ export class CharEditorComponent implements OnInit {
 
   addDisadvantage() {
     console.log('add disadvantage');
-    this.current.traits.push(this.defTrait.cloneWith({category: 'Disadvantage'}));
+    this.current.traits.push(this.defTrait.clone({category: 'Disadvantage'}));
   }
 
   removeDisadvantage(i: number) {
@@ -100,7 +103,18 @@ export class CharEditorComponent implements OnInit {
   }
 
   addSkill() {
-    this.current.skills.push(new Skill);
+    console.log('Adding skill');
+    this.current.skills.push(this.defSkill.clone());
+  }
+
+  skillChanged() {
+    this.ensureCharacterExists()
+    .then(saved => {
+      if (!saved) {
+        this.chars.updateSkills(this.current._id, this.current.skills)
+        .subscribe(char => this.current = char);
+      }
+    });
   }
 
   removeSkill(i: number) {

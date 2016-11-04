@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { Http, Response } from '@angular/http';
-import { Character, Skill } from '../interfaces/character';
+import { Character } from '../interfaces/character';
+import { Skill } from '../interfaces/skill';
 import { Trait } from '../interfaces/trait';
 import { CharacterDescriptor } from '../interfaces/char_descriptor';
 
@@ -36,6 +37,12 @@ export class CharacterService {
   updateTraits(id: string, traits: Trait[]): Observable<Character> {
     console.log('Update traits for character', id);
     let data = {traits};
+    return this.http.patch(this.apiEndPoint + `char/${id}`, data)
+    .map(res => Character.fromJson(res.json() || {}));
+  }
+
+  updateSkills(id: string, skills: Skill[]): Observable<Character> {
+    let data = {skills};
     return this.http.patch(this.apiEndPoint + `char/${id}`, data)
     .map(res => Character.fromJson(res.json() || {}));
   }
@@ -86,6 +93,6 @@ export class CharacterService {
   defaultSkill(): Observable<Skill> {
     console.log('get default skill from scala api');
     return this.http.get(this.apiEndPoint + 'chars/skill')
-    .map(res => res.json());
+    .map(res => Skill.fromJson(res.json()));
   }
 }

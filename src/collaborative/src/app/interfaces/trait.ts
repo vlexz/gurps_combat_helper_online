@@ -14,9 +14,11 @@ export class Trait {
   ) {
   }
 
-  cloneWith(modifier) {
-    let trait = Trait.fromJson(this);
-    Object.assign(trait, modifier);
+  clone(modifier: Object = null) {
+    let trait = Trait.fromJson(JSON.parse(JSON.stringify(this)));
+    if (modifier) {
+      Object.assign(trait, modifier);
+    }
     return trait;
   }
 

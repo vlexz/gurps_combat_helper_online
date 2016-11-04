@@ -1,5 +1,5 @@
 export class ConstantTables {
-  public artibutes: string[] = [
+  public attributes: string[] = [
     'ST',
     'DX',
     'IQ',
@@ -7,4 +7,6 @@ export class ConstantTables {
     'Will',
     'Per'
   ];
+
+  public skillDifficulties: string[] = ['E', 'A', 'H', 'VH', 'W'];
 }

@@ -59,9 +59,19 @@ mixin skillList(list)
         th Total
         th Cost
       tr(*ngFor='let skill of ' + list + '; let i = index')     
-        td: input(type='text', [(ngModel)]='skill.skillString', (change)='skillChanged()')           
+        td: input(type='text', [(ngModel)]='skill.skillString', (change)='skillChanged()')      
+        td
+          select([(ngModel)]='skill.attr', (change)='skillChanged()')
+            option(*ngFor='let attr of tables.attributes; let i = index', value='{{attr}}')  {{attr}}
+        td
+          select([(ngModel)]='skill.diff', (change)='skillChanged()')
+            option(*ngFor='let attr of tables.skillDifficulties; let i = index', value='{{attr}}')  {{attr}}
+        td: input.cost(type='number', [(ngModel)] = 'skill.relLvl', (change)='skillChanged()')
+        td: input.cost(type='number', [(ngModel)] = 'skill.bonus', (change)='skillChanged()')
+        td {{skill.lvl}}
+        td {{skill.cp}}
       tr
-        td: a(href='#', click='addSkill()') Add Skill
+        td: a(href='#', (click)='addSkill()') Add Skill
 
 
 div(*ngIf='current')
@@ -71,7 +81,7 @@ div(*ngIf='current')
     .traits
       +traitList('current.advantages', 'Advantage')
       +traitList('current.disadvantages', 'Disadvantage')
-    +skillList
+    +skillList('current.skills')
       
   
 
