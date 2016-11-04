@@ -2,10 +2,13 @@ package controllers
 
 import com.google.inject.Inject
 import daos.CharlistDao
-import models.simplecharlist.Charlist
+import models.simplecharlist._
+import models.simplecharlist.Charlist._
+import org.mongodb.scala.Completed
+import org.mongodb.scala.result.UpdateResult
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
-import play.api.mvc.{Action, AnyContent, BodyParsers, Controller}
+import play.api.mvc._
 
 import scala.concurrent.Future
 import scala.util.Random
@@ -14,12 +17,18 @@ import scala.util.Random
   * Created by crimson on 9/23/16.
   */
 class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller {
+  val invReq = { e: JsError =>
+    Future(BadRequest(Json toJson (e.errors map { x => Json.obj(x._1.toString -> x._2.mkString("; ")) }))) }
+  val throwMsg: PartialFunction[Throwable, Future[Result]] = {
+    case e: IllegalStateException => Future(NotFound(Json.obj("message" -> e.getMessage)))
+    case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage)))
+  }
 
-  def options(id: String): Action[AnyContent] = Action.async { implicit request =>
-    val methods = request.path.replaceAll(id, "") match {
-      case "/api/char" => "GET, POST"
-      case "/api/chars" => "GET"
-      case "/api/char/" => "GET, PUT, PATCH, DELETE"
+  def options(p: String, id: String = ""): Action[AnyContent] = Action.async { implicit request =>
+    val methods = p match {
+      case "base" => "GET, POST"
+      case "list" => "GET"
+      case "elem" => "GET, PUT, PATCH, DELETE"
     }
     val requestHeaders = request.headers get ACCESS_CONTROL_REQUEST_HEADERS getOrElse ""
     Future {
@@ -32,18 +41,13 @@ class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller 
 
   def add(): Action[JsValue] = Action.async(BodyParsers.parse.json) { implicit request =>
     try {
-      request
-        .body
-        .validate[Charlist] match {
-        case e: JsError => Future(BadRequest(Json.obj("message" -> "Invalid request body.")))
+      request.body.validate[Charlist] match {
+        case e: JsError => invReq(e)
         case s: JsSuccess[Charlist] =>
           val charlist = s.get.copy(
             _id = math.abs(Random.nextLong).toString,
             timestamp = System.currentTimeMillis.toString)
-          charlistDao
-            .save(charlist)
-            .map { re => Ok(Json toJson charlist) }
-            .recoverWith { case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage))) }
+          charlistDao save charlist map { _: Completed => Ok(Json toJson charlist) } recoverWith throwMsg
       }
     } catch {
       case a: AssertionError => Future(BadRequest(Json.obj("message" -> s"Charlist ${a.getMessage}")))
@@ -51,48 +55,36 @@ class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller 
   }
 
   def list: Action[AnyContent] = Action.async {
-    charlistDao
-      .find
-      .map { cl => Ok(Json toJson cl) }
-      .recoverWith { case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage))) }
+    charlistDao find() map { list: Seq[JsObject] => Ok(Json toJson list) } recoverWith throwMsg
   }
 
   def get(id: String): Action[AnyContent] = Action.async {
-    try {
-      charlistDao
-        .find(id)
-        .map { cl => Ok(cl) }
-        .recoverWith { case e: NoSuchElementException => Future(NotFound(Json.obj("message" -> e.getMessage))) }
-    } catch {
-      case e: NoSuchElementException => Future(NotFound(Json.obj("message" -> e.getMessage)))
-      // TODO: make it recover properly
-    }
+    charlistDao find id map { charlist: JsValue => Ok(charlist) } recoverWith throwMsg
   }
 
-  def create(): Action[AnyContent] = Action.async {
-    Future(Ok(Json toJson Charlist()))
+  def create(p: String): Action[AnyContent] = Action.async {
+    val payload = p match {
+      case "char" => Json toJson Charlist()
+      case "trait" => Json toJson Trait()
+      case "skill" => Json toJson Skill()
+      case "teq" => Json toJson Technique()
+      case "weap" => Json toJson Weapon()
+      case "armor" => Json toJson Armor()
+      case "item" => Json toJson Item()
+    }
+    Future(Ok(payload))
   }
 
   def replace(id: String): Action[JsValue] = Action.async(BodyParsers.parse.json) { implicit request =>
     try {
-      request
-        .body
-        .validate[Charlist] match {
-        case e: JsError => Future(BadRequest(Json.obj("message" -> "Invalid request body.")))
+      request.body.validate[Charlist] match {
+        case e: JsError => invReq(e)
         case s: JsSuccess[Charlist] =>
           val charlist = s.get.copy(_id = id)
-          charlistDao
-            .update(charlist)
-            .map { re => Ok(Json toJson charlist) }
-            .recoverWith {
-              case e: NoSuchElementException => Future(NotFound(Json.obj("message" -> e.getMessage)))
-              case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage)))
-            }
+          charlistDao update charlist map { _: UpdateResult => Ok(Json toJson charlist) } recoverWith throwMsg
       }
     } catch {
-      case e: NoSuchElementException => Future(NotFound(Json.obj("message" -> e.getMessage)))
       case a: AssertionError => Future(BadRequest(Json.obj("message" -> s"Charlist ${a.getMessage}")))
-      // TODO: make it recover properly
     }
   }
 
@@ -102,26 +94,19 @@ class CharlistController @Inject()(charlistDao: CharlistDao) extends Controller 
         .find(id)
         .flatMap { j =>
           (j.as[JsObject] deepMerge request.body.as[JsObject]).validate[Charlist] match {
-            // TODO: add JsResultException handling; .as to .asOpt
-            case e: JsError => Future(BadRequest(Json.obj("message" -> "Invalid request body.")))
+            case e: JsError => invReq(e)
             case s: JsSuccess[Charlist] =>
               val charlist = s.get.copy(_id = id)
-              charlistDao
-                .update(charlist)
-                .map { re => Ok(Json toJson charlist) }
-                .recoverWith { case t: Throwable => Future(InternalServerError(Json.obj("message" -> t.getMessage))) }
+              charlistDao update charlist map { _: UpdateResult => Ok(Json toJson charlist) } recoverWith throwMsg
           }
         }
-        .recoverWith { case t: NoSuchElementException => Future(NotFound(Json.obj("message" -> t.getMessage))) }
+        .recoverWith(throwMsg)
     } catch {
       case a: AssertionError => Future(BadRequest(Json.obj("message" -> s"Charlist ${a.getMessage}")))
     }
   }
 
   def delete(id: String): Action[AnyContent] = Action.async {
-    charlistDao
-      .delete(id)
-      .map { cl => Ok(Json toJson cl) }
-      .recoverWith { case t: NoSuchElementException => Future(NotFound(Json.obj("message" -> t.getMessage))) }
+    charlistDao delete id map { list: Seq[JsObject] => Ok(Json toJson list) } recoverWith throwMsg
   }
 }
