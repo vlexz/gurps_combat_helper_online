@@ -1,9 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CharacterService } from '../../services/character.service';
 import { Character } from '../../interfaces/character';
-import { Skill } from '../../interfaces/skill';
-import { Trait } from '../../interfaces/trait';
-import { ConstantTables } from '../../interfaces/tables';
 
 @Component({
   selector: 'app-char-editor',
@@ -14,10 +11,6 @@ import { ConstantTables } from '../../interfaces/tables';
 export class CharEditorComponent implements OnInit {
 
   private current: Character = null;
-
-  private defTrait: Trait = null;
-  private defSkill: Skill = null;
-  private tables: ConstantTables = new ConstantTables;
 
   @Output() characterAdded = new EventEmitter();
 
@@ -54,6 +47,15 @@ export class CharEditorComponent implements OnInit {
     });
   }
 
+  cpChanged(ev: any) {
+    console.log(ev);
+    this.ensureCharacterExists()
+    .then(saved => {
+      this.chars.updateCp(this.current._id, parseInt(ev.srcElement.value, 10))
+      .subscribe(char => this.current = char);
+    });
+  }
+
   mainInfoChanged(ev: any) {
     console.log(ev);
     this.ensureCharacterExists()
@@ -70,26 +72,6 @@ export class CharEditorComponent implements OnInit {
         console.log('Character already saved');
       }
     });
-  }
-
-  addAdvantage() {
-    console.log('add advantage');
-    this.current.traits.push(this.defTrait.clone({category: 'Advantage'}));
-  }
-
-  removeAdvantage(i: number) {
-    console.log('Remove adv', i);
-    this.current.removeTrait('Advantage', i);
-  }
-
-  addDisadvantage() {
-    console.log('add disadvantage');
-    this.current.traits.push(this.defTrait.clone({category: 'Disadvantage'}));
-  }
-
-  removeDisadvantage(i: number) {
-    console.log('Remove disadv', i);
-    this.current.removeTrait('Disadvantage', i);
   }
 
   traitChanged() {
@@ -130,7 +112,6 @@ export class CharEditorComponent implements OnInit {
   ngOnInit() {
     console.log('on init routine in char editor');
     this.loadDefaultChracter();
-    this.chars.defaultTrait().subscribe(trait => this.defTrait = trait);
   }
 
 }

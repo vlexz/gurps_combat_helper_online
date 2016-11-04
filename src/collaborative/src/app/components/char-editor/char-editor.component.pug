@@ -1,9 +1,21 @@
-mixin statblock(caption, name)
+mixin statblock(caption, name, stat, readonly)
   tr
-    td=caption
+    td: b=caption
     td
-      app-stat-block([statName]="\'" + name + "\'", [stat]= 'current.stats.' + name, (statChanged)='statChanged($event)')
-    td= '{{current.stats.' + name + '.cp}}'
+      if (!readonly)
+        if(stat)
+          app-stat-block([statName]="\'" + name + "\'", [stat]= 'current.stats.' + name, (statChanged)='statChanged($event)')
+        else
+          input.cost(type='number', [(ngModel)]='current.' + name, (change)='cpChanged($event)')
+      else
+        if stat 
+          span= '{{current.stats.' + name + '}}'
+        else
+          span= '{{current.' + name + '}}'
+    if(stat)    
+      td= '{{current.stats.' + name + '.cp}}' 
+
+
 
 mixin mainInfo 
   table
@@ -18,20 +30,29 @@ mixin mainVariables
     tr
       td
         table     
-          +statblock('ST:', 'st')
-          +statblock('DX:', 'dx')
-          +statblock('IQ:', 'iq')
-          +statblock('HT:', 'ht')
-          +statblock('Will:', 'will')
-          +statblock('Per:', 'per')
+          +statblock('ST:', 'st', true, false)
+          +statblock('DX:', 'dx', true, false)
+          +statblock('IQ:', 'iq', true, false)
+          +statblock('HT:', 'ht', true, false)
+          +statblock('Will:', 'will', true, false)
+          +statblock('Per:', 'per', true, false)
       td
         table     
-          +statblock('Lift ST:', 'liftSt')
-          +statblock('Strike ST:', 'strikeSt')
-          +statblock('BM:', 'basicMove')
-          +statblock('BS:', 'basicSpeed')
-          +statblock('FP:', 'fp')
-          +statblock('HP:', 'hp')
+          +statblock('Lift ST:', 'liftSt', true, false)
+          +statblock('Strike ST:', 'strikeSt', true, false)
+          +statblock('BM:', 'basicMove', true, false)
+          +statblock('BS:', 'basicSpeed', true, false)
+          +statblock('FP:', 'fp', true, false)
+          +statblock('HP:', 'hp', true, false)
+      td
+        table
+          +statblock('Point Total:', 'cp.cp', false, false)
+          +statblock('Stats:', 'cp.stats', false, true)
+          +statblock('Advatages:', 'cp.adv', false, true)
+          +statblock('Disadvantages:', 'cp.dis', false, true)
+          +statblock('Skills:', 'cp.skills', false, true)
+          +statblock('Unspent:', 'cp.unspent', false, true)
+
 
 div(*ngIf='current')
   div: +mainInfo

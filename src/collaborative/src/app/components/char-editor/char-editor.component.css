@@ -8,6 +8,11 @@ app-skill-list {
   vertical-align: top;
 }
 
+table table{
+  vertical-align: top;
+  padding-top: 0px; 
+}
+
 input.cost {
   width: 45px;
 }

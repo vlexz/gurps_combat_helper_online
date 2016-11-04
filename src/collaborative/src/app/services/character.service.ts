@@ -28,6 +28,11 @@ export class CharacterService {
     .map(res => Character.fromJson(res.json() || {}));
   }
 
+  updateCp(id: string, cp: number) {
+    return this.http.patch(this.apiEndPoint + `char/${id}`, {cp: {cp}})
+    .map(res => Character.fromJson(res.json() || {}));
+  }
+
   updateMainInfo(id: string, data): Observable<Character> {
     console.log('Update main info of the character');
     return this.http.patch(this.apiEndPoint + `char/${id}`, data)

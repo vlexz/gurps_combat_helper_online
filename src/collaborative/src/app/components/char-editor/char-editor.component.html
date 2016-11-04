@@ -17,42 +17,42 @@
         <td>
           <table>    
             <tr>
-              <td>ST:</td>
+              <td><b>ST:</b></td>
               <td>
                 <app-stat-block [statName]="'st'" [stat]="current.stats.st" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
               <td>{{current.stats.st.cp}}</td>
             </tr>
             <tr>
-              <td>DX:</td>
+              <td><b>DX:</b></td>
               <td>
                 <app-stat-block [statName]="'dx'" [stat]="current.stats.dx" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
               <td>{{current.stats.dx.cp}}</td>
             </tr>
             <tr>
-              <td>IQ:</td>
+              <td><b>IQ:</b></td>
               <td>
                 <app-stat-block [statName]="'iq'" [stat]="current.stats.iq" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
               <td>{{current.stats.iq.cp}}</td>
             </tr>
             <tr>
-              <td>HT:</td>
+              <td><b>HT:</b></td>
               <td>
                 <app-stat-block [statName]="'ht'" [stat]="current.stats.ht" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
               <td>{{current.stats.ht.cp}}</td>
             </tr>
             <tr>
-              <td>Will:</td>
+              <td><b>Will:</b></td>
               <td>
                 <app-stat-block [statName]="'will'" [stat]="current.stats.will" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
               <td>{{current.stats.will.cp}}</td>
             </tr>
             <tr>
-              <td>Per:</td>
+              <td><b>Per:</b></td>
               <td>
                 <app-stat-block [statName]="'per'" [stat]="current.stats.per" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
@@ -63,46 +63,81 @@
         <td>
           <table>    
             <tr>
-              <td>Lift ST:</td>
+              <td><b>Lift ST:</b></td>
               <td>
                 <app-stat-block [statName]="'liftSt'" [stat]="current.stats.liftSt" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
               <td>{{current.stats.liftSt.cp}}</td>
             </tr>
             <tr>
-              <td>Strike ST:</td>
+              <td><b>Strike ST:</b></td>
               <td>
                 <app-stat-block [statName]="'strikeSt'" [stat]="current.stats.strikeSt" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
               <td>{{current.stats.strikeSt.cp}}</td>
             </tr>
             <tr>
-              <td>BM:</td>
+              <td><b>BM:</b></td>
               <td>
                 <app-stat-block [statName]="'basicMove'" [stat]="current.stats.basicMove" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
               <td>{{current.stats.basicMove.cp}}</td>
             </tr>
             <tr>
-              <td>BS:</td>
+              <td><b>BS:</b></td>
               <td>
                 <app-stat-block [statName]="'basicSpeed'" [stat]="current.stats.basicSpeed" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
               <td>{{current.stats.basicSpeed.cp}}</td>
             </tr>
             <tr>
-              <td>FP:</td>
+              <td><b>FP:</b></td>
               <td>
                 <app-stat-block [statName]="'fp'" [stat]="current.stats.fp" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
               <td>{{current.stats.fp.cp}}</td>
             </tr>
             <tr>
-              <td>HP:</td>
+              <td><b>HP:</b></td>
               <td>
                 <app-stat-block [statName]="'hp'" [stat]="current.stats.hp" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
               <td>{{current.stats.hp.cp}}</td>
+            </tr>
+          </table>
+        </td>
+        <td>
+          <table>
+            <tr>
+              <td><b>Point Total:</b></td>
+              <td>
+                <input class="cost" type="number" [(ngModel)]="current.cp.cp" (change)="cpChanged($event)"/>
+              </td>
+            </tr>
+            <tr>
+              <td><b>Stats:</b></td>
+              <td><span>{{current.cp.stats}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td><b>Advatages:</b></td>
+              <td><span>{{current.cp.adv}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td><b>Disadvantages:</b></td>
+              <td><span>{{current.cp.dis}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td><b>Skills:</b></td>
+              <td><span>{{current.cp.skills}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td><b>Unspent:</b></td>
+              <td><span>{{current.cp.unspent}}</span>
+              </td>
             </tr>
           </table>
         </td>
