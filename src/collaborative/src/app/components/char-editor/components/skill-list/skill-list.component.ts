@@ -28,6 +28,12 @@ export class SkillListComponent implements OnInit {
 
   addSkill() {
     this.skills.push(this.defaultSkill.clone());
+    this.change.emit({});
+  }
+
+  removeSkill(i: number) {
+    this.skills.splice(i, 1);
+    this.change.emit({});
   }
 
   ngOnInit() {

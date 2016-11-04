@@ -9,6 +9,7 @@
       th Bonus
       th Total
       th Cost
+      th 
     tr(*ngFor='let skill of skills; let i = index')     
       td: input(type='text', [(ngModel)]='skill.skillString', (change)='skillChanged()')      
       td
@@ -16,10 +17,11 @@
           option(*ngFor='let attr of tables.attributes; let i = index', value='{{attr}}')  {{attr}}
       td
         select([(ngModel)]='skill.diff', (change)='skillChanged()')
-          option(*ngFor='let attr of tables.skillDifficulties; let i = index', value='{{attr}}')  {{attr}}
+          option(*ngFor='let attr of tables.skillDifficulties; let i = index', value='{{attr.val}}')  {{attr.name}}
       td: input.cost(type='number', [(ngModel)] = 'skill.relLvl', (change)='skillChanged()')
       td: input.cost(type='number', [(ngModel)] = 'skill.bonus', (change)='skillChanged()')
       td {{skill.lvl}}
       td {{skill.cp}}
+      td: a(href='#', (click)='removeSkill(i)') Remove
     tr
       td: a(href='#', (click)='addSkill()') Add Skill

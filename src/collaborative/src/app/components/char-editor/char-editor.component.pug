@@ -3,6 +3,7 @@ mixin statblock(caption, name)
     td=caption
     td
       app-stat-block([statName]="\'" + name + "\'", [stat]= 'current.stats.' + name, (statChanged)='statChanged($event)')
+    td= '{{current.stats.' + name + '.cp}}'
 
 mixin mainInfo 
   table

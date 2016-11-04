@@ -21,36 +21,42 @@
               <td>
                 <app-stat-block [statName]="'st'" [stat]="current.stats.st" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
+              <td>{{current.stats.st.cp}}</td>
             </tr>
             <tr>
               <td>DX:</td>
               <td>
                 <app-stat-block [statName]="'dx'" [stat]="current.stats.dx" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
+              <td>{{current.stats.dx.cp}}</td>
             </tr>
             <tr>
               <td>IQ:</td>
               <td>
                 <app-stat-block [statName]="'iq'" [stat]="current.stats.iq" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
+              <td>{{current.stats.iq.cp}}</td>
             </tr>
             <tr>
               <td>HT:</td>
               <td>
                 <app-stat-block [statName]="'ht'" [stat]="current.stats.ht" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
+              <td>{{current.stats.ht.cp}}</td>
             </tr>
             <tr>
               <td>Will:</td>
               <td>
                 <app-stat-block [statName]="'will'" [stat]="current.stats.will" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
+              <td>{{current.stats.will.cp}}</td>
             </tr>
             <tr>
               <td>Per:</td>
               <td>
                 <app-stat-block [statName]="'per'" [stat]="current.stats.per" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
+              <td>{{current.stats.per.cp}}</td>
             </tr>
           </table>
         </td>
@@ -61,36 +67,42 @@
               <td>
                 <app-stat-block [statName]="'liftSt'" [stat]="current.stats.liftSt" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
+              <td>{{current.stats.liftSt.cp}}</td>
             </tr>
             <tr>
               <td>Strike ST:</td>
               <td>
                 <app-stat-block [statName]="'strikeSt'" [stat]="current.stats.strikeSt" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
+              <td>{{current.stats.strikeSt.cp}}</td>
             </tr>
             <tr>
               <td>BM:</td>
               <td>
                 <app-stat-block [statName]="'basicMove'" [stat]="current.stats.basicMove" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
+              <td>{{current.stats.basicMove.cp}}</td>
             </tr>
             <tr>
               <td>BS:</td>
               <td>
                 <app-stat-block [statName]="'basicSpeed'" [stat]="current.stats.basicSpeed" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
+              <td>{{current.stats.basicSpeed.cp}}</td>
             </tr>
             <tr>
               <td>FP:</td>
               <td>
                 <app-stat-block [statName]="'fp'" [stat]="current.stats.fp" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
+              <td>{{current.stats.fp.cp}}</td>
             </tr>
             <tr>
               <td>HP:</td>
               <td>
                 <app-stat-block [statName]="'hp'" [stat]="current.stats.hp" (statChanged)="statChanged($event)"></app-stat-block>
               </td>
+              <td>{{current.stats.hp.cp}}</td>
             </tr>
           </table>
         </td>

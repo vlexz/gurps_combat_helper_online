@@ -9,6 +9,7 @@
       <th>Bonus</th>
       <th>Total</th>
       <th>Cost</th>
+      <th> </th>
     </tr>
     <tr *ngFor="let skill of skills; let i = index">    
       <td>
@@ -21,7 +22,7 @@
       </td>
       <td>
         <select [(ngModel)]="skill.diff" (change)="skillChanged()">
-          <option *ngFor="let attr of tables.skillDifficulties; let i = index" value="{{attr}}"> {{attr}}</option>
+          <option *ngFor="let attr of tables.skillDifficulties; let i = index" value="{{attr.val}}"> {{attr.name}}</option>
         </select>
       </td>
       <td>
@@ -32,6 +33,7 @@
       </td>
       <td>{{skill.lvl}}</td>
       <td>{{skill.cp}}</td>
+      <td><a href="#" (click)="removeSkill(i)">Remove</a></td>
     </tr>
     <tr>
       <td><a href="#" (click)="addSkill()">Add Skill</a></td>

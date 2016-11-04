@@ -8,5 +8,11 @@ export class ConstantTables {
     'Per'
   ];
 
-  public skillDifficulties: string[] = ['E', 'A', 'H', 'VH', 'W'];
+  public skillDifficulties: Object[] = [
+    {val: 'E', name: 'Easy'},
+    {val: 'A', name: 'Average'},
+    {val: 'H', name: 'Hard'},
+    {val: 'VH', name: 'Very Hard'},
+    {val: 'W', name: 'Wildcard'},
+  ];
 }
