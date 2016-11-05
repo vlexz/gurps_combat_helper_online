@@ -13,3 +13,10 @@
 <br>PUT — validates the charlist in request and updates the charlist stored under this id with recieved one, then returns recalculated charlist
 <br>PATCH — validates the update JSON in request and updates the charlist stored under this id, then returns recalculated charlist
 <br>DELETE — removes the charlist stored under this id from the database</p>
+<p>/api/char/:id/pic
+<br>OPTIONS — returns Allow header with implemented methods
+<br>GET — returns charlist portrait if it exists
+<br>PUT — stores uploaded image as charlist portrair, overwriting any existing one</p>
+<p>/api/chars/[trait|skill|teq|weap|armor|item]
+<br>OPTIONS — returns Allow header with implemented methods
+<br>GET — returns a charlist component template</p>
