@@ -22,6 +22,8 @@ libraryDependencies += "com.github.t3hnar" % "scala-bcrypt_2.11" % "2.5"
 
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.0" % "test"
 
+libraryDependencies += "com.sksamuel.scrimage" %% "scrimage-core" % "2.1.7"
+
 libraryDependencies += "org.mockito" % "mockito-core" % "1.10.19"
 
 fork in run := true

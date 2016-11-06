@@ -1,8 +1,8 @@
 package controllers
 
 import java.io.File
-
 import com.google.inject.Inject
+import com.sksamuel.scrimage.Image
 import daos.CharlistDao
 import models.simplecharlist.Charlist._
 import models.simplecharlist._
@@ -13,7 +13,6 @@ import play.api.libs.Files.TemporaryFile
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
 import play.api.mvc._
-
 import scala.concurrent.Future
 import scala.util.Random
 
@@ -96,28 +95,24 @@ class CharlistController @Inject()(charlistDao: CharlistDao, configuration: Conf
     }
   }
 
-  def delete(id: String): Action[AnyContent] = Action.async {
-    def pack(list: Seq[JsObject]): Result = {
-      new File(s"$picPath$id.png").delete()
-      Ok(Json toJson list)
-    }
-    charlistDao delete id map pack recoverWith throwMsg
-  }
+   def delete(id: String): Action[AnyContent] = Action.async {
+     new File(s"$picPath$id.png").delete()
+     charlistDao delete id map { list => Ok(Json toJson list) } recoverWith throwMsg
+   }
 
-  def storePic(id: String): Action[MultipartFormData[TemporaryFile]] =
-    Action.async(parse.multipartFormData) { implicit request =>
-      def tryMove = request.body file "pic" map { p =>
-        
-        p.ref moveTo(new File(s"$picPath$id.png"), replace = true)
-      } match {
-        case s: Some[File] => Accepted("Pic uploaded.")
-        case None => BadRequest("Missing file.")
-      }
-      charlistDao exists id map { e => if (e) tryMove else NotFound("Charlist doesn't exist.") } recoverWith throwMsg
-    }
+   def storePic(id: String): Action[MultipartFormData[TemporaryFile]] =
+     Action.async(parse.multipartFormData) { implicit request =>
+       def tryMove = request.body file "pic" map { p =>
+         Image fromFile p.ref.file cover(120, 160) output new File(s"$picPath$id.png")
+       } match {
+         case s: Some[File] => Accepted("Pic uploaded.")
+         case None => BadRequest("Missing file.")
+       }
+       charlistDao exists id map { e => if (e) tryMove else NotFound("Charlist doesn't exist.") } recoverWith throwMsg
+     }
 
-  def getPic(id: String): Action[AnyContent] = Action.async {
-    val pic = new File(s"$picPath$id.png")
-    if (pic.exists) Future(Ok sendFile pic) else Future(NotFound)
-  }
+   def getPic(id: String): Action[AnyContent] = Action.async {
+     val pic = new File(s"$picPath$id.png")
+     if (pic.exists) Future(Ok sendFile pic) else Future(NotFound)
+   }
 }
