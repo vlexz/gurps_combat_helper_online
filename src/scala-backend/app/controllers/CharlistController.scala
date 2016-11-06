@@ -95,24 +95,24 @@ class CharlistController @Inject()(charlistDao: CharlistDao, configuration: Conf
     }
   }
 
-   def delete(id: String): Action[AnyContent] = Action.async {
-     new File(s"$picPath$id.png").delete()
-     charlistDao delete id map { list => Ok(Json toJson list) } recoverWith throwMsg
-   }
+  def delete(id: String): Action[AnyContent] = Action.async {
+    new File(s"$picPath$id.png").delete()
+    charlistDao delete id map { list => Ok(Json toJson list) } recoverWith throwMsg
+  }
 
-   def storePic(id: String): Action[MultipartFormData[TemporaryFile]] =
-     Action.async(parse.multipartFormData) { implicit request =>
-       def tryMove = request.body file "pic" map { p =>
-         Image fromFile p.ref.file cover(120, 160) output new File(s"$picPath$id.png")
-       } match {
-         case s: Some[File] => Accepted("Pic uploaded.")
-         case None => BadRequest("Missing file.")
-       }
-       charlistDao exists id map { e => if (e) tryMove else NotFound("Charlist doesn't exist.") } recoverWith throwMsg
-     }
+  def storePic(id: String): Action[MultipartFormData[TemporaryFile]] =
+    Action.async(parse.multipartFormData) { implicit request =>
+      def tryMove = request.body file "pic" map { p =>
+        Image fromFile p.ref.file cover(110, 150) output new File(s"$picPath$id.png")
+      } match {
+        case s: Some[File] => Accepted("Pic uploaded.")
+        case None => BadRequest("Missing file.")
+      }
+      charlistDao exists id map { e => if (e) tryMove else NotFound("Charlist doesn't exist.") } recoverWith throwMsg
+    }
 
-   def getPic(id: String): Action[AnyContent] = Action.async {
-     val pic = new File(s"$picPath$id.png")
-     if (pic.exists) Future(Ok sendFile pic) else Future(NotFound)
-   }
+  def getPic(id: String): Action[AnyContent] = Action.async {
+    val pic = new File(s"$picPath$id.png")
+    if (pic.exists) Future(Ok sendFile(pic, inline = true)) else Future(NotFound)
+  }
 }
