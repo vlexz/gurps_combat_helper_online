@@ -27,7 +27,7 @@ class CharlistController @Inject()(charlistDao: CharlistDao, configuration: Conf
     case e: IllegalStateException => Future(NotFound(Json.obj("Empty database return." -> e.toString)))
     case t: Throwable => Future(InternalServerError(t.toString))
   }
-  val picPath = configuration.underlying getString "files.pic"
+  val picFile = { id: String => new File(s"${configuration.underlying getString "files.pic"}$id.png") }
 
   def options(p: String, id: String = ""): Action[AnyContent] = Action { implicit request =>
     val methods = p match {
@@ -96,23 +96,25 @@ class CharlistController @Inject()(charlistDao: CharlistDao, configuration: Conf
   }
 
   def delete(id: String): Action[AnyContent] = Action.async {
-    new File(s"$picPath$id.png").delete()
+    picFile(id).delete()
     charlistDao delete id map { list => Ok(Json toJson list) } recoverWith throwMsg
   }
 
-  def storePic(id: String): Action[MultipartFormData[TemporaryFile]] =
-    Action.async(parse.multipartFormData) { implicit request =>
+  def storePic(id: String): Action[MultipartFormData[TemporaryFile]] = Action.async(parse.multipartFormData) {
+    implicit request =>
       def tryMove = request.body file "pic" map { p =>
-        Image fromFile p.ref.file cover(110, 150) output new File(s"$picPath$id.png")
+        val pf = picFile(id)
+        if (pf.exists) pf.delete()
+        Image fromFile p.ref.file cover(120, 150) output pf
       } match {
         case s: Some[File] => Accepted("Pic uploaded.")
         case None => BadRequest("Missing file.")
       }
       charlistDao exists id map { e => if (e) tryMove else NotFound("Charlist doesn't exist.") } recoverWith throwMsg
-    }
+  }
 
-  def getPic(id: String): Action[AnyContent] = Action.async {
-    val pic = new File(s"$picPath$id.png")
-    if (pic.exists) Future(Ok sendFile(pic, inline = true)) else Future(NotFound)
+  def getPic(id: String): Action[AnyContent] = Action {
+    val pf = picFile(id)
+    if (pf.exists) Ok sendFile(pf, inline = true) else Redirect("/public/images/default.png")
   }
 }
