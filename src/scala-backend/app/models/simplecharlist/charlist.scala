@@ -36,6 +36,11 @@ case class Charlist(
   stats.fp.base = stats.ht.value
   stats.basicSpeed.base = (stats.dx.value + stats.ht.value) * .25
   stats.basicMove.base = stats.basicSpeed.value.toInt
+  statVars.frightCheck = math.min(13, stats.will.value)
+  statVars.vision = stats.per.value
+  statVars.hearing = stats.per.value
+  statVars.tasteSmell = stats.per.value
+  statVars.touch = stats.per.value
   stats.hp.calcCompr()
   stats.fp.calcCompr()
   statVars.bl = (stats.liftSt.value * stats.liftSt.value * .2).toInt
@@ -145,11 +150,11 @@ case class Stats(
 
 /** Charlist subcontainer for calculated stats */
 case class StatVars(
-                     frightCheck: Int = 0,
-                     vision: Int = 0,
-                     hearing: Int = 0,
-                     tasteSmell: Int = 0,
-                     touch: Int = 0,
+                     var frightCheck: Int = 0,
+                     var vision: Int = 0,
+                     var hearing: Int = 0,
+                     var tasteSmell: Int = 0,
+                     var touch: Int = 0,
                      var thrDmg: String = "",
                      var swDmg: String = "",
                      var bl: Int = 0,
