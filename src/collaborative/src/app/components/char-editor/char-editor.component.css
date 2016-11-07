@@ -1,3 +1,11 @@
+.to_top {
+  vertical-align: top;
+}
+
+table.mainvars td {  
+  vertical-align: top;
+}
+
 .traits {
   display: inline-block;
   vertical-align: top;

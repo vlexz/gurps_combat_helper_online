@@ -12,13 +12,13 @@
     </table>
   </div>
   <div>
-    <table>
+    <table class="mainvars">
       <tr>
         <td><img [src]="portraitUrl" (click)="uploadPortrait()"/>
           <input class="file" type="file" (change)="processUpload($event)" id="portrait_file"/>
         </td>
         <td>
-          <table>    
+          <table class="top">    
             <tr>
               <td><b>ST:</b></td>
               <td>
@@ -64,7 +64,7 @@
           </table>
         </td>
         <td>
-          <table>    
+          <table class="top"> 
             <tr>
               <td><b>Lift ST:</b></td>
               <td>
@@ -110,7 +110,89 @@
           </table>
         </td>
         <td>
-          <table>
+          <table class="top">
+            <tr>
+              <td><b>Fright Check:</b></td>
+              <td><span>{{current.statVars.frightCheck}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td><b>Vision:</b></td>
+              <td><span>{{current.statVars.vision}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td><b>Hearing:</b></td>
+              <td><span>{{current.statVars.hearing}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td><b>Taste/Smell:</b></td>
+              <td><span>{{current.statVars.tasteSmell}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td><b>Touch:</b></td>
+              <td><span>{{current.statVars.touch}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td><b>Basic Lift:</b></td>
+              <td><span>{{current.statVars.bl}}</span>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td>
+          <table class="top">
+            <tr>
+              <td><b>Size:</b></td>
+              <td><span>{{current.statVars.sm}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td><b>Dodge:</b></td>
+              <td><span>{{current.statVars.dodge}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td><b>Thrust:</b></td>
+              <td><span>{{current.statVars.thrDmg}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td><b>Swing:</b></td>
+              <td><span>{{current.statVars.swDmg}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td><b>Combat Enc.:</b></td>
+              <td><span>{{current.statVars.combatEncumbrance}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td><b>Travel Enc.:</b></td>
+              <td><span>{{current.statVars.travelEncumbrance}}</span>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td>
+          <table class="top">
+            <tr>
+              <td><b>Combat Move:</b></td>
+              <td><span>{{current.statVars.combMove}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td><b>Travel Move:</b></td>
+              <td><span>{{current.statVars.travMove}}</span>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td>
+          <table class="top">
             <tr>
               <td><b>Point Total:</b></td>
               <td>
@@ -123,7 +205,7 @@
               </td>
             </tr>
             <tr>
-              <td><b>Advatages:</b></td>
+              <td><b>Advantages:</b></td>
               <td><span>{{current.cp.adv}}</span>
               </td>
             </tr>
