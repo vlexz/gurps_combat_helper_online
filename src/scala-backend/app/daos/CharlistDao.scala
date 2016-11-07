@@ -22,6 +22,8 @@ trait CharlistDao {
 
   def find(id: String): Future[JsValue]
 
+  def exists(id: String): Future[Boolean]
+
   def update(charlist: Charlist): Future[UpdateResult]
 
   def delete(id: String): Future[Seq[JsObject]]
@@ -43,6 +45,8 @@ class MongoCharlistDao @Inject()(mongo: Mongo) extends CharlistDao {
   override def find(): Future[Seq[JsObject]] = charlists find() map documentToJsonHeader toFuture()
 
   override def find(id: String): Future[JsValue] = charlists find Filters.equal(ID, id) head() map (Json parse _.toJson)
+
+  override def exists(id: String): Future[Boolean] = charlists count Filters.eq(ID, id) head() map (_ > 0)
 
   override def update(charlist: Charlist): Future[UpdateResult] =
     charlists replaceOne(Filters.equal(ID, charlist._id), toDoc(charlist)) head()
