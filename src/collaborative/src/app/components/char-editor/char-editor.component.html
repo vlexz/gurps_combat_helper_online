@@ -14,7 +14,7 @@
   <div>
     <table>
       <tr>
-        <td><img src="/assets/default_portrait.png" (click)="uploadPortrait()"/>
+        <td><img [src]="portraitUrl" (click)="uploadPortrait()"/>
           <input class="file" type="file" (change)="processUpload($event)" id="portrait_file"/>
         </td>
         <td>

@@ -15,7 +15,7 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class CharacterService {
 
-  private apiEndPoint: string = environment.apiEndpoint;
+  apiEndPoint: string = environment.apiEndpoint;
 
   constructor(private http: Http) {
   }
@@ -33,8 +33,13 @@ export class CharacterService {
     .map(res => Character.fromJson(res.json() || {}));
   }
 
-  uploadPortrait(id: string, element: any) {
+  uploadPortrait(id: string, element: any): Observable<any> {
     console.log(element.files);
+    let data = new FormData();
+    for(let i = 0; i < element.files.length; ++i) {
+      data.append('pic', element.files[i]);
+    }
+    return this.http.put(this.apiEndPoint + `char/${id}/pic`, data);
   }
 
   updateMainInfo(id: string, data): Observable<Character> {

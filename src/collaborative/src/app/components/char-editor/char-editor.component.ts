@@ -11,12 +11,25 @@ import { Character } from '../../interfaces/character';
 export class CharEditorComponent implements OnInit {
 
   private current: Character = null;
+  private timestamp: number = new Date().getTime();
+  private setchar: any;
 
   @Output() characterAdded = new EventEmitter();
 
   constructor(
     private chars: CharacterService
-  ) {}
+  ) {
+    this.setchar = this.setCharacter.bind(this);
+  }
+
+
+  get portraitUrl() {
+    if (this.current._id) {
+      return this.chars.apiEndPoint + 'char/' + this.current._id + '/pic?' + this.timestamp;
+    } else {
+      return '/assets/default_portrait.png';
+    }
+  }
 
 
   ensureCharacterExists(): Promise<boolean> {
@@ -40,7 +53,7 @@ export class CharEditorComponent implements OnInit {
     .then(saved => {
       if (!saved) {
         this.chars.updateStat(this.current._id, ev.name, ev.delta)
-        .subscribe(char => this.current = char);
+        .subscribe(this.setchar);
       } else {
         console.log('Character already saved');
       }
@@ -52,7 +65,7 @@ export class CharEditorComponent implements OnInit {
     this.ensureCharacterExists()
     .then(saved => {
       this.chars.updateCp(this.current._id, parseInt(ev.srcElement.value, 10))
-      .subscribe(char => this.current = char);
+      .subscribe(this.setchar);
     });
   }
 
@@ -64,7 +77,8 @@ export class CharEditorComponent implements OnInit {
     console.log('Upload portrait');
     this.ensureCharacterExists()
     .then(saved => {
-      this.chars.uploadPortrait(this.current._id, document.getElementById('portrait_file'));
+      this.chars.uploadPortrait(this.current._id, document.getElementById('portrait_file'))
+      .subscribe(() => this.timestamp = new Date().getTime());
     });
   }
 
@@ -91,7 +105,7 @@ export class CharEditorComponent implements OnInit {
     .then(saved => {
       if (!saved) {
         this.chars.updateTraits(this.current._id, this.current.traits)
-        .subscribe(char => this.current = char);
+        .subscribe(this.setchar);
       }
     });
   }
@@ -101,24 +115,24 @@ export class CharEditorComponent implements OnInit {
     .then(saved => {
       if (!saved) {
         this.chars.updateSkills(this.current._id, this.current.skills)
-        .subscribe(char => this.current = char);
+        .subscribe(this.setchar);
       }
     });
   }
 
   setCharacter(char: Character) {
     this.current = char;
+    this.timestamp = new Date().getTime();
   }
 
   loadCharacter(id: string) {
     this.chars.load(id)
-    .subscribe(char => this.current = char);
+    .subscribe(this.setchar);
   }
 
   loadDefaultChracter() {
     this.chars.defaultCharacter()
-    .subscribe(this.setCharacter.bind(this));
-    console.log(this.current);
+    .subscribe(this.setchar);
   }
 
   ngOnInit() {
