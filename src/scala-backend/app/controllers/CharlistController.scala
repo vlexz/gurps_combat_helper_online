@@ -115,6 +115,7 @@ class CharlistController @Inject()(charlistDao: CharlistDao, configuration: Conf
 
   def getPic(id: String): Action[AnyContent] = Action {
     val pf = picFile(id)
-    if (pf.exists) Ok sendFile(pf, inline = true) else Redirect("/public/images/default.png")
+    val dpf = new File(getClass.getResource(configuration.underlying getString "url.defaultpic").getPath)
+    Ok sendFile(if (pf.exists) pf else dpf, inline = true)
   }
 }
