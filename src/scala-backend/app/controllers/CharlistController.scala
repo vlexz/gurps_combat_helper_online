@@ -27,7 +27,7 @@ class CharlistController @Inject()(charlistDao: CharlistDao, configuration: Conf
     case e: IllegalStateException => Future(NotFound(Json.obj("Empty database return." -> e.toString)))
     case t: Throwable => Future(InternalServerError(t.toString))
   }
-  val picFile = { id: String => new File(s"${configuration.underlying getString "files.pic"}$id.png") }
+  val picFile = { id: String => new File(s"${configuration.underlying getString "files.picfolder"}$id.png") }
 
   def options(p: String, id: String = ""): Action[AnyContent] = Action { implicit request =>
     val methods = p match {
@@ -115,7 +115,6 @@ class CharlistController @Inject()(charlistDao: CharlistDao, configuration: Conf
 
   def getPic(id: String): Action[AnyContent] = Action {
     val pf = picFile(id)
-    val dpf = new File(getClass.getResource(configuration.underlying getString "url.defaultpic").getPath)
-    Ok sendFile(if (pf.exists) pf else dpf, inline = true)
+    Ok sendFile(if (pf.exists) pf else new File(configuration.underlying getString "files.defaultpic"), inline = true)
   }
 }
