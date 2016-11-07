@@ -165,6 +165,21 @@ gulp.task('upload:scala', function(){
     }))
 })
 
+gulp.task('start:scala', function(cb) {
+    let cmdpath = __dirname + '/scala-backend/target/universal/stage/bin/ggmtools';
+    let cmd = spawn(cmdpath, ['-Dconfig.resource=dev.conf'], {
+        cwd: 'scala-backend/target/universal/stage'
+    })
+    cmd.stdout.on('data', data => process.stdout.write(data));
+    cmd.stderr.on('data', data => process.stderr.write(data));
+    cmd.on('close', cb)
+})
+
+gulp.task('start:dev', series(
+    'build:scala',
+    'start:scala'
+))
+
 gulp.task('deploy:stage', series(
     'build:front:stage',
     'upload:front:stage',
