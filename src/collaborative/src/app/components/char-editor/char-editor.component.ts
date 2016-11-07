@@ -120,6 +120,16 @@ export class CharEditorComponent implements OnInit {
     });
   }
 
+  techniqueChanged() {
+    this.ensureCharacterExists()
+    .then(saved => {
+      if (!saved) {
+        this.chars.updateTechniques(this.current._id, this.current.techniques)
+        .subscribe(this.setchar);
+      }
+    });
+  }
+
   setCharacter(char: Character) {
     this.current = char;
     this.timestamp = new Date().getTime();

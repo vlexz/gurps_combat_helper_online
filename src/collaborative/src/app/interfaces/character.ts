@@ -1,6 +1,7 @@
 
 import { Trait } from './trait';
 import { Skill } from './skill';
+import { Technique } from './technique';
 
 export class Stat {
   base: number;
@@ -38,6 +39,7 @@ export class Character {
   stats: Stats;
   traits: Trait[];
   skills: Skill[];
+  techniques: Technique[];
 
   static fromJson(json: Object) {
     let char = new Character;

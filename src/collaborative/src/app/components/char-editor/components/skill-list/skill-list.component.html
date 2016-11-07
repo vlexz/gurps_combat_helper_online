@@ -14,7 +14,7 @@
     </tr>
     <tr *ngFor="let skill of skills; let i = index">    
       <td>
-        <input type="text" [(ngModel)]="skill.skillString" (change)="skillChanged()"/>
+        <input type="text" [(ngModel)]="skill.name" (change)="skillChanged()"/>
       </td>
       <td>
         <select [(ngModel)]="skill.attr" (change)="skillChanged()">

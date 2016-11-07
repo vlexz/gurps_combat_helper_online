@@ -85,10 +85,12 @@ div(*ngIf='current')
   div: +mainInfo
   div: +mainVariables
   .container
-    .traits
+    .container
       app-trait-list([traits]='current.traits', [category]="'Advantage'", (change)='traitChanged()')
       app-trait-list([traits]='current.traits', [category]="'Disadvantage'", (change)='traitChanged()')
-    app-skill-list([skills]='current.skills', (change)='skillChanged()')
+    .container
+      app-skill-list([skills]='current.skills', (change)='skillChanged()')
+      app-techniques([skills]='current.skills', [techniques]='current.techniques', (change)='techniqueChanged()')
 
       
   

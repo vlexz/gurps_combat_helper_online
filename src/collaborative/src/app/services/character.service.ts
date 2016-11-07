@@ -4,6 +4,7 @@ import { Http, Response } from '@angular/http';
 import { Character } from '../interfaces/character';
 import { Skill } from '../interfaces/skill';
 import { Trait } from '../interfaces/trait';
+import { Technique } from '../interfaces/technique';
 import { CharacterDescriptor } from '../interfaces/char_descriptor';
 
 import { Observable }     from 'rxjs/Observable';
@@ -61,6 +62,11 @@ export class CharacterService {
     .map(res => Character.fromJson(res.json() || {}));
   }
 
+  updateTechniques(id: string, techniques: Technique[]): Observable<Character> {
+    return this.http.patch(this.apiEndPoint + `char/${id}`, {techniques})
+    .map(res => Character.fromJson(res.json() || {}));
+  }
+
   charList(): Observable<CharacterDescriptor[]> {
     console.log('get character list');
     return this.http.get(this.apiEndPoint + 'chars')
@@ -108,5 +114,11 @@ export class CharacterService {
     console.log('get default skill from scala api');
     return this.http.get(this.apiEndPoint + 'chars/skill')
     .map(res => Skill.fromJson(res.json()));
+  }
+
+  defaultTechnique(): Observable<Technique> {
+    console.log('get default technique from scala api');
+    return this.http.get(this.apiEndPoint + 'chars/teq')
+    .map(res => Technique.fromJson(res.json()));
   }
 }

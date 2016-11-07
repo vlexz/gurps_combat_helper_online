@@ -10,6 +10,7 @@ import { CharListComponent } from './components/char-list/char-list.component';
 import { CharacterManagerComponent } from './components/character-manager/character-manager.component';
 import { SkillListComponent } from './components/char-editor/components/skill-list/skill-list.component';
 import { TraitListComponent } from './components/char-editor/components/trait-list/trait-list.component';
+import { TechniquesComponent } from './components/char-editor/components/techniques/techniques.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { TraitListComponent } from './components/char-editor/components/trait-li
     CharListComponent,
     CharacterManagerComponent,
     SkillListComponent,
-    TraitListComponent
+    TraitListComponent,
+    TechniquesComponent
   ],
   imports: [
     BrowserModule,

@@ -11,7 +11,7 @@
       th Cost
       th 
     tr(*ngFor='let skill of skills; let i = index')     
-      td: input(type='text', [(ngModel)]='skill.skillString', (change)='skillChanged()')      
+      td: input(type='text', [(ngModel)]='skill.name', (change)='skillChanged()')      
       td
         select([(ngModel)]='skill.attr', (change)='skillChanged()')
           option(*ngFor='let attr of tables.attributes; let i = index', value='{{attr}}')  {{attr}}

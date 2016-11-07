@@ -1,5 +1,6 @@
 
 export class Skill {
+  name: string = ''; 
   skillString: string = '';
   attr: string = 'DX';
   diff: string = 'E';

@@ -15,4 +15,9 @@ export class ConstantTables {
     {val: 'VH', name: 'Very Hard'},
     {val: 'W', name: 'Wildcard'},
   ];
+
+  public techniqueDifficulties: Object[] = [
+    {val: 'A', name: 'Average'},
+    {val: 'H', name: 'Hard'},
+  ];
 }

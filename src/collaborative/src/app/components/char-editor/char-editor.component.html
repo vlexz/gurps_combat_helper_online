@@ -230,10 +230,13 @@
     </table>
   </div>
   <div class="container">
-    <div class="traits">
+    <div class="container">
       <app-trait-list [traits]="current.traits" [category]="'Advantage'" (change)="traitChanged()"></app-trait-list>
       <app-trait-list [traits]="current.traits" [category]="'Disadvantage'" (change)="traitChanged()"></app-trait-list>
     </div>
-    <app-skill-list [skills]="current.skills" (change)="skillChanged()"></app-skill-list>
+    <div class="container">
+      <app-skill-list [skills]="current.skills" (change)="skillChanged()"></app-skill-list>
+      <app-techniques [skills]="current.skills" [techniques]="current.techniques" (change)="techniqueChanged()"></app-techniques>
+    </div>
   </div>
 </div>
