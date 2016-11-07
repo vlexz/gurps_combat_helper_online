@@ -65,6 +65,11 @@ case class Charlist(
       }
       s.calcLvl(attrVal, statVars.travelEncumbrance)
     }
+    for (t <- techniques) {
+      def sFltr(s: Skill) = s.name == t.skill && (if (t.spc != "") s.spc == t.spc else true)
+      val l = skills collectFirst { case s if sFltr(s) => s.lvl } getOrElse 0
+      t.calcLvl(l)
+    }
 
     val thr = stats.strikeSt.value match {
       case x if x < 1 => (0, 0)
@@ -326,15 +331,26 @@ case class Technique(
                       name: String = "",
                       skill: String = "",
                       spc: String = "",
-                      tchString: String = "",
-                      diff: String = "",
+                      var tchString: String = "",
+                      diff: String = SkillDifficulty.AVERAGE,
                       style: String = "",
                       defLvl: Int = 0,
                       maxLvl: Int = 0,
                       notes: String = "",
-                      cp: Int = 0,
+                      var cp: Int = 0,
                       relLvl: Int = 0,
-                      lvl: Int = 0)
+                      var lvl: Int = 0) {
+  assert(SkillDifficulty techniqueCanBe diff, s"invalid technique's difficulty string ($diff in $name)")
+  assert(relLvl >= defLvl && relLvl <= maxLvl,
+    s"technique's relative level value out of bounds ($relLvl, $defLvl, $maxLvl in $name")
+  tchString = s"$name ($skill${if (spc != "") " (" + spc + ")"})"
+  cp = relLvl - defLvl + (if (diff == SkillDifficulty.HARD && relLvl > defLvl) 1 else 0)
+
+  def calcLvl(skill: Int): Technique = {
+    lvl = skill + relLvl
+    this
+  }
+}
 
 /** Charlist subcontainer for attribute bonuses list's element stats */
 case class BonusAttribute(attr: String = "", perLvl: Boolean = true, bonus: Int = 0)
