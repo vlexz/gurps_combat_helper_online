@@ -335,7 +335,7 @@ case class Technique(
                       diff: String = SkillDifficulty.AVERAGE,
                       style: String = "",
                       defLvl: Int = 0,
-                      maxLvl: Int = 0,
+                      maxLvl: Int = 100,
                       notes: String = "",
                       var cp: Int = 0,
                       relLvl: Int = 0,
