@@ -22,7 +22,7 @@ case class Charlist(
                      equip: Equipment = Equipment(),
                      conditions: Conditions = Conditions(),
                      var api: String = "") {
-  api = "0.1.1"
+  api = "0.1.2"
 
   stats.st.base = 10
   stats.dx.base = 10
@@ -516,15 +516,15 @@ case class Equipment(
 
   import ItemState._
 
-  totalCost = (weapons ++ armor ++ items).foldLeft(0.0)(_ + _.totalCost)
+  totalCost = (weapons.filter(! _.innate) ++ armor ++ items).foldLeft(0.0)(_ + _.totalCost)
 
   private def weight(f: String => Boolean) =
-    (for {p <- weapons ++ armor ++ items; if f(p.carried)} yield p.totalWt).sum
+    (for {p <- weapons.filter(! _.innate) ++ armor ++ items; if f(p.state)} yield p.totalWt).sum
 
   totalCombWt = weight(Set(READY, EQUIPPED, COMBAT))
   totalTravWt = totalCombWt + weight(_ == TRAVEL)
-  private val equip = (p: Possession) => Set(READY, EQUIPPED)(p.carried) && !p.broken
-  totalDb = (weapons.withFilter(equip).map(_.db) ++ armor.withFilter(equip).map(_.db)).sum
+  private val equip = (p: Possession) => Set(READY, EQUIPPED)(p.state) && !p.broken
+  totalDb = (weapons.withFilter(equip).flatMap(_.blocks map (_.db)) ++ armor.withFilter(equip).map(_.db)).sum
   for (a <- armor; l <- a.locations) {
     if (a.front) frontDR.add(a.dr, a.ep, a.epi, l)
     if (a.back) rearDR.add(a.dr, a.ep, a.epi, l)
@@ -532,7 +532,7 @@ case class Equipment(
 }
 
 sealed abstract class Possession {
-  var carried: String
+  var state: String
   val broken: Boolean
 
   def totalCost: Double
@@ -544,14 +544,14 @@ sealed abstract class Possession {
   * applicable, holds all its stats and attacks it can make as subcontainers. */
 case class Weapon(
                    name: String = "",
-                   var carried: String = ItemState.STASH,
+                   var state: String = ItemState.STASH,
+                   innate: Boolean = false,
                    attacksMelee: Seq[MeleeAttack] = Seq(),
                    attacksRanged: Seq[RangedAttack] = Seq(),
-                   grips: Seq[String] = Seq(), // For future functionality
-                   offHand: Boolean = false, // For future functionality
+                   blocks: Seq[BlockDefence] = Seq(),
+                   var grips: Seq[String] = Seq(),
+                   offHand: Boolean = false,
                    var bulk: Int = 0,
-                   block: Boolean = false,
-                   db: Int = 0,
                    var dr: Int = 0,
                    var hp: Int = 1,
                    var hpLeft: Int = 1,
@@ -564,7 +564,7 @@ case class Weapon(
                    var totalWt: Double = 0,
                    var totalCost: Double = 0)
   extends Possession {
-  if (ItemState canBe carried) () else carried = ItemState.STASH
+  if (ItemState canBe state) () else state = ItemState.STASH
   if (bulk > 0) bulk = 0
   if (dr < 0) dr = 0
   if (hp < 0) hp = 0
@@ -573,6 +573,7 @@ case class Weapon(
   if (tl < 0) tl = 0 else if (tl > 12) tl = 12
   if (wt < 0) wt = 0
   if (cost < 0) cost = 0
+  grips = (attacksMelee.map(_.grip) ++ attacksRanged.map(_.grip) ++ blocks.map(_.grip)).distinct
   totalWt = wt + attacksRanged.map(_.shots.totalWt).sum
   totalCost = cost + attacksRanged.map(_.shots.totalCost).sum
 }
@@ -581,7 +582,8 @@ case class Weapon(
   * string. */
 case class MeleeAttack(
                         name: String = "",
-                        available: Boolean = false,
+                        available: Boolean = true,
+                        grip: String = "",
                         damage: MeleeDamage = MeleeDamage(),
                         followup: Seq[MeleeDamage] = Seq(),
                         linked: Seq[MeleeDamage] = Seq(),
@@ -647,12 +649,14 @@ object AttackType {
 /** Charlist subcontainer for ranged attack's stats, holds damage, RoF, and shots subcontainers */
 case class RangedAttack(
                          name: String = "",
-                         available: Boolean = false, // For future functionality
+                         available: Boolean = true,
+                         grip: String = "",
                          damage: RangedDamage = RangedDamage(),
                          followup: Seq[RangedDamage] = Seq[RangedDamage](),
                          linked: Seq[RangedDamage] = Seq[RangedDamage](),
                          skill: String = "",
                          spc: String = "",
+                         jet: Boolean = false,
                          var acc: Int = 0,
                          var accMod: Int = 0,
                          rng: String = "",
@@ -668,6 +672,7 @@ case class RangedAttack(
   if (rcl <= 0) rcl = 1
   if (st <= 0) st = 1
   if (malf > 18) malf = 18 else if (malf < 4) malf = 4
+  if (jet) rof.rofString = "Jet"
 }
 
 /** Charlist subcontainer for ranged damage stat, calculates damage string */
@@ -728,11 +733,10 @@ case class RangedRoF(
                       var rof: Int = 1,
                       var rofMult: Int = 1,
                       rofFA: Boolean = false,
-                      rofJet: Boolean = false,
                       var rofString: String = "") {
   if (rof <= 0) rof = 1
   if (rofMult <= 0) rofMult = 1
-  rofString = s"$rof${if (rofMult != 1) "x" + rofMult else ""}${if (rofFA) "!" else if (rofJet) " Jet" else ""}"
+  rofString = s"$rof${if (rofMult != 1) "x" + rofMult else ""}${if (rofFA) "!" else ""}"
 }
 
 /** Charlist subcontainer for ranged attack shots stat, producing shots string and calculating carried ammunition
@@ -758,10 +762,22 @@ case class RangedShots(
   totalCost = (shotsCarried + shotsLoaded) * shotCost
 }
 
+/** */
+case class BlockDefence(
+                         name: String = "",
+                         available: Boolean = true,
+                         grip: String = "",
+                         skill: String = "",
+                         spc: String = "",
+                         var db: Int = 1,
+                         notes: String = "") {
+  if (db < 1) db = 1
+}
+
 /** Charlist subcontainer for armor list's element, holds its stats */
 case class Armor(
                   name: String = "",
-                  var carried: String = ItemState.EQUIPPED,
+                  var state: String = ItemState.EQUIPPED,
                   var db: Int = 0,
                   var dr: Int = 0,
                   var ep: Int = 0,
@@ -779,7 +795,7 @@ case class Armor(
                   var wt: Double = 0,
                   var cost: Double = 0)
   extends Possession {
-  if (ItemState canBe carried) () else carried = ItemState.EQUIPPED
+  if (ItemState canBe state) () else state = ItemState.EQUIPPED
   if (db < 0) db = 0 else if (db > 3) db = 3
   if (dr < 0) dr = 0
   if (ep < 0) ep = 0
@@ -842,7 +858,7 @@ object HitLocation {
 /** Charlist subcontainer for items list's element, holds its stats and calculates element's total weight and cost */
 case class Item(
                  name: String = "",
-                 var carried: String = ItemState.STASH,
+                 var state: String = ItemState.STASH,
                  var dr: Int = 0,
                  var hp: Int = 1,
                  var hpLeft: Int = 1,
@@ -856,7 +872,7 @@ case class Item(
                  var totalWt: Double = 0,
                  var totalCost: Double = 0)
   extends Possession {
-  if (ItemState canBe carried) () else carried = ItemState.STASH
+  if (ItemState canBe state) () else state = ItemState.STASH
   if (dr < 0) dr = 0
   if (hp < 0) hp = 0
   if (hpLeft < 0) hpLeft = 0 else if (hpLeft > hp) hpLeft = hp
@@ -1003,6 +1019,7 @@ object Charlist {
   implicit val conditionsFormat = Json.format[Conditions]
   implicit val itemFormat = Json.format[Item]
   implicit val armorElementFormat = Json.format[Armor]
+  implicit val blockDefenceFormat = Json.format[BlockDefence]
   implicit val rangedShotsFormat = Json.format[RangedShots]
   implicit val rangedRoFFormat = Json.format[RangedRoF]
   implicit val rangedDamageFormat = Json.format[RangedDamage]
