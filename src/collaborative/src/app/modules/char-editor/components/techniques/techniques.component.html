@@ -1,0 +1,43 @@
+
+<div class="skills">
+  <h3>Techniques </h3>
+  <table> 
+    <tr>
+      <th>Name</th>
+      <th>Skill</th>
+      <th>Diff</th>
+      <th>Default</th>
+      <th>Level</th>
+      <th>Total</th>
+      <th>Cost</th>
+      <th> </th>
+    </tr>
+    <tr *ngFor="let tech of techniques; let i = index">    
+      <td>
+        <input type="text" [(ngModel)]="tech.name" (change)="techChanged()"/>
+      </td>
+      <td>
+        <select [(ngModel)]="tech.skill" (change)="techChanged()">
+          <option *ngFor="let name of skillNames; let i = index" value="{{name}}"> {{name}}</option>
+        </select>
+      </td>
+      <td>
+        <select [(ngModel)]="tech.diff" (change)="techChanged()">
+          <option *ngFor="let attr of tables.techniqueDifficulties; let i = index" value="{{attr.val}}"> {{attr.name}}</option>
+        </select>
+      </td>
+      <td>
+        <input class="cost" type="number" [(ngModel)]="tech.defLvl" (change)="techChanged()"/>
+      </td>
+      <td>
+        <input class="cost" type="number" [(ngModel)]="tech.relLvl" (change)="techChanged()"/>
+      </td>
+      <td>{{tech.lvl}}</td>
+      <td>{{tech.cp}}</td>
+      <td><a (click)="remove(i)">Remove</a></td>
+    </tr>
+    <tr>
+      <td><a (click)="add()">Add Technique</a></td>
+    </tr>
+  </table>
+</div>

@@ -1,0 +1,11 @@
+div.container([class.visible]='visible')
+  span Existing characters:
+  table
+    tr
+      th Player
+      th Character Name 
+    tr(*ngFor="let char of characters; let i = index")
+      td {{char.player}}
+      td {{char.name}}
+      td: a((click)='selectCharacter(i)') Edit
+      td: a((click)='deleteCharacter(i)') Delete

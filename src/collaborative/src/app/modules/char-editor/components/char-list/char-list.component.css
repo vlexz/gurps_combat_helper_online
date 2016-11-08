@@ -1,0 +1,11 @@
+app-char-list {
+  display: inline-block;
+}
+
+.container {
+  display: none;
+}
+
+.visible {
+  display: block;
+}

@@ -1,0 +1,15 @@
+
+<div class="container" [class.visible]="visible"><span>Existing characters:</span>
+  <table>
+    <tr>
+      <th>Player</th>
+      <th>Character Name </th>
+    </tr>
+    <tr *ngFor="let char of characters; let i = index">
+      <td>{{char.player}}</td>
+      <td>{{char.name}}</td>
+      <td><a (click)="selectCharacter(i)">Edit</a></td>
+      <td><a (click)="deleteCharacter(i)">Delete</a></td>
+    </tr>
+  </table>
+</div>

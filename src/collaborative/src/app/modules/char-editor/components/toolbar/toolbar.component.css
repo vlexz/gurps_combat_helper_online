@@ -1,0 +1,23 @@
+ul {
+  list-style-type: none;
+}
+
+ul li {
+  display: inline-block;
+  margin-left: 10px;
+}
+
+li a {
+  cursor: pointer;
+}
+
+.dropdown {
+  position: relative;  
+}
+
+app-char-list{
+  width: 300px;
+  position: absolute;
+  background: lightgray;
+}
+

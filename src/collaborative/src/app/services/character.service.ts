@@ -121,4 +121,5 @@ export class CharacterService {
     return this.http.get(this.apiEndPoint + 'chars/teq')
     .map(res => Technique.fromJson(res.json()));
   }
+
 }
