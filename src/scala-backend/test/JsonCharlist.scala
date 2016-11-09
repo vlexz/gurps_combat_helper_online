@@ -9,14 +9,13 @@ object JsonCharlist {
     player = "vlex",
     name = "Bjorn Masterson",
     cp = CharacterPoints(cp = 265),
-    description = Description("35", "6f6i", "250", "somelink", "longbio"),
+    description = Description("35", "6f6i", "250", "longbio"),
     stats = Stats(
       dx = StatInt(delta = 3),
       ht = StatInt(delta = 2),
       will = StatInt(delta = 2),
       per = StatInt(delta = 2),
-      basicSpeed = StatDouble(delta = -0.25)
-    ),
+      basicSpeed = StatDouble(delta = -0.25)),
     traits = Seq[Trait](
       Trait(
         name = "Combat Reflexes",
@@ -27,32 +26,27 @@ object JsonCharlist {
           BonusAttribute(BonusToAttribute.DODGE, perLvl = false, bonus = 1),
           BonusAttribute(BonusToAttribute.PARRY, perLvl = false, bonus = 1),
           BonusAttribute(BonusToAttribute.BLOCK, perLvl = false, bonus = 1),
-          BonusAttribute(BonusToAttribute.FC, perLvl = false, bonus = 2)
-        ),
+          BonusAttribute(BonusToAttribute.FC, perLvl = false, bonus = 2)),
         skillBonuses = Seq(BonusSkill(skill = "Fast-Draw", perLvl = false, bonus = 1)),
-        cpBase = 15
-      ),
+        cpBase = 15),
       Trait(
         name = "Sorcery",
         types = Seq(TraitType.MENTAL, TraitType.SUPER),
         category = TraitCategory.ADVANTAGE,
         cpBase = 10,
         level = 2,
-        cpPerLvl = 10
-      ),
+        cpPerLvl = 10),
       Trait(
         name = "Hot Pilot",
         types = Seq(TraitType.MENTAL, TraitType.MUNDANE),
         category = TraitCategory.TALENT,
         skillBonuses = Seq(
           BonusSkill(skill = "Piloting", bonus = 1),
-          BonusSkill(skill = "Navigation", spc = "Air", spcCompare = NameCompare.IS, bonus = 1)
-        ),
+          BonusSkill(skill = "Navigation", spc = "Air", spcCompare = NameCompare.IS, bonus = 1)),
         reactBonuses = Seq(BonusReaction(affected = "Airshipmen", perLvl = true, bonus = 1)),
         ref = "B89",
         level = 3,
-        cpPerLvl = 5
-      ),
+        cpPerLvl = 5),
       Trait(
         name = "Positive Reputation: Airshipmen",
         types = Seq(TraitType.SOCIAL, TraitType.MUNDANE),
@@ -63,16 +57,12 @@ object JsonCharlist {
           TraitModifier(
             name = "Frequency of recognition: Sometimes",
             reactBonuses = Seq(
-              BonusReaction(affected = "Airshipmen", reputation = true, perLvl = true, freq = 10, bonus = 1)
-            ),
+              BonusReaction(affected = "Airshipmen", reputation = true, perLvl = true, freq = 10, bonus = 1)),
             affects = TraitModifierAffects.TOTAL,
             costType = TraitModifierCostType.MULTIPLIER,
-            cost = .5
-          )
-        ),
+            cost = .5)),
         level = 2,
-        cpPerLvl = 5
-      ),
+        cpPerLvl = 5),
       Trait(
         name = "Weapon Master (Knife)",
         types = Seq(TraitType.MENTAL, TraitType.MUNDANE),
@@ -82,15 +72,12 @@ object JsonCharlist {
           TraitModifier(
             name = "One specific weapon",
             dmgBonuses = Seq(
-              BonusDamage(skill = "Knife", relSkill = 1, perDie = true, bonus = 1),
-              BonusDamage(skill = "Knife", relSkill = 2, perDie = true, bonus = 1)
-            ),
+              BonusDamage(skill = "Shield", relSkill = 1, perDie = true, bonus = 1),
+              BonusDamage(skill = "Shield", relSkill = 2, perDie = true, bonus = 1)),
             affects = TraitModifierAffects.TOTAL,
             costType = TraitModifierCostType.POINTS,
-            cost = 20)
-        )
-      ),
-      Trait(name = "Skull", drBonuses = Seq(BonusDR(Seq(HitLocation.SKULL), dr = 2))),
+            cost = 20))),
+      Trait(name = "Skull", drBonuses = Seq(BonusDR(Seq(HitLocation.SKULL), protection = DrSet(2)))),
       Trait(
         name = "Gigantism",
         types = Seq(TraitType.PHYSICAL, TraitType.MUNDANE),
@@ -98,24 +85,19 @@ object JsonCharlist {
         ref = "B20",
         attrBonuses = Seq(
           BonusAttribute(BonusToAttribute.SM, perLvl = false, bonus = 1),
-          BonusAttribute(BonusToAttribute.BASIC_MOVE, perLvl = false, bonus = 1)
-        ),
+          BonusAttribute(BonusToAttribute.BASIC_MOVE, perLvl = false, bonus = 1)),
         skillBonuses = Seq(
           BonusSkill(skill = "Disguise", perLvl = false, bonus = -2),
           BonusSkill(skill = "Shadowing", perLvl = false, bonus = -2)),
-        attrCostMods = Seq(BonusAttributeCost(attr = SkillBaseAttribute.ST, cost = -10))
-      )
-    ),
+        attrCostMods = Seq(BonusAttributeCost(attr = SkillBaseAttribute.ST, cost = -10)))),
     skills = Seq[Skill](
-      Skill(name = "Guns", spc = "Pistol", diff = SkillDifficulty.AVERAGE, cp = 4, tl = 5),
+      Skill(name = "Guns", spc = "Pistol", diff = SkillDifficulty.AVERAGE, tl = 5, relLvl = 3),
       Skill(
         name = "Brawling",
         dmgBonuses = Seq(
           BonusDamage(skill = "Brawling", relSkill = 1, perDie = true, bonus = 1),
-          BonusDamage(skill = "Brawling", relSkill = 2, perDie = true, bonus = 1)
-        ),
-        cp = 4
-      ),
+          BonusDamage(skill = "Brawling", relSkill = 2, perDie = true, bonus = 1)),
+        relLvl = 2),
       Skill(name = "Piloting", spc = "Lighter-Than-Air", tl = 5, diff = SkillDifficulty.AVERAGE, cp = 8),
       Skill(
         name = "Navigation",
@@ -123,18 +105,15 @@ object JsonCharlist {
         attr = SkillBaseAttribute.IQ,
         tl = 5,
         diff = SkillDifficulty.AVERAGE,
-        cp = 2
-      ),
+        cp = 2),
       Skill(
         name = "Navigation",
         spc = "Land",
         attr = SkillBaseAttribute.IQ,
         tl = 5,
         diff = SkillDifficulty.AVERAGE,
-        cp = 2
-      ),
-      Skill(name = "Knife", cp = 8)
-    ),
+        cp = 2),
+      Skill(name = "Shield", cp = 8)),
     techniques = Seq[Technique](
       Technique(
         name = "Off-hand weapon training",
@@ -143,14 +122,13 @@ object JsonCharlist {
         diff = SkillDifficulty.HARD,
         style = "Trench Warfare",
         defLvl = -4,
-        cp = 5
-      )
-    ),
+        lvl = -1)),
     equip = Equipment(
       weapons = Seq[Weapon](
         Weapon(
           name = "Brawling",
-          carried = ItemState.READY,
+          state = ItemState.READY,
+          innate = true,
           attacksMelee = Seq[MeleeAttack](
             MeleeAttack(
               name = "Punch",
@@ -168,23 +146,19 @@ object JsonCharlist {
               damage = MeleeDamage(attackType = AttackType.THRUSTING),
               skill = "Brawling",
               parryType = "No",
-              reach = "1"
-            )
-          ),
+              reach = "1")),
           hp = 4,
-          hpLeft = 4
-        ),
+          hpLeft = 4),
         Weapon(
           name = "Revolver",
-          carried = ItemState.READY,
+          state = ItemState.READY,
           attacksRanged = Seq[RangedAttack](
             RangedAttack(
               name = "LE",
               available = true,
               damage = RangedDamage(dmgDice = 1, dmgMod = 2, armorDiv = 0.5, dmgType = DamageType.PIERCING_LARGE),
               followup = Seq[RangedDamage](
-                RangedDamage(dmgDice = 1, dmgMod = 1, dmgType = DamageType.CRUSHING_EXPLOSION, fragDice = 1)
-              ),
+                RangedDamage(dmgDice = 1, dmgMod = 1, dmgType = DamageType.CRUSHING_EXPLOSION, fragDice = 1)),
               linked = Seq[RangedDamage](RangedDamage(dmgDice = 2, dmgType = DamageType.TOXIC)),
               skill = "Guns",
               spc = "Pistol",
@@ -196,12 +170,9 @@ object JsonCharlist {
                 shotsLoaded = 6,
                 shotsCarried = 30,
                 shotWt = 0.1,
-                shotCost = 2
-              ),
+                shotCost = 2),
               st = 9,
-              malf = 17
-            )
-          ),
+              malf = 17)),
           offHand = true,
           bulk = -2,
           dr = 7,
@@ -210,55 +181,46 @@ object JsonCharlist {
           lc = 4,
           tl = 5,
           wt = 4.1,
-          cost = 350
-        ),
+          cost = 350),
         Weapon(
-          name = "Knife",
-          attacksMelee = Seq(
-            MeleeAttack(
-              name = "swing",
-              damage = MeleeDamage(attackType = AttackType.SWINGING, dmgType = DamageType.CUTTING),
-              skill = "Knife",
-              parry = -1,
-              st = 6,
-              reach = "C,1"),
-            MeleeAttack(
-              name = "Thrust",
-              damage = MeleeDamage(attackType = AttackType.THRUSTING, dmgType = DamageType.IMPALING),
-              skill = "Knife",
-              parry = -1,
-              st = 6,
-              reach = "C")
-          ),
-          bulk = -1,
+          name = "Shield",
+          state = ItemState.READY,
+          attacksMelee = Seq(MeleeAttack(
+            name = "Bash",
+            grip = "Normal",
+            damage = MeleeDamage(attackType = AttackType.THRUSTING, dmgType = DamageType.CRUSHING),
+            skill = "Shield",
+            parryType = "No",
+            st = 6,
+            reach = "1")),
+          blocks = Seq(BlockDefence(
+            name = "Block",
+            grip = "Normal",
+            skill = "Shield",
+            db = 2)),
+          bulk = -6,
           dr = 7,
-          hp = 5,
-          hpLeft = 5,
-          wt = 1.0,
-          cost = 50
-        )
-      ),
+          hp = 40,
+          hpLeft = 40,
+          tl = 1,
+          wt = 15.0,
+          cost = 60)),
       armor = Seq[Armor](
         Armor(
           name = "Boots",
-          carried = ItemState.EQUIPPED,
-          dr = 1,
-          ep = 1,
-          epi = 1,
+          state = ItemState.EQUIPPED,
+          protection = DrSet(1, 1, 0),
           locations = Seq[String](HitLocation.FEET),
           hp = 5,
           hpLeft = 5,
           tl = 5,
           wt = 2,
-          cost = 50
-        )
-      ),
+          cost = 50)),
       items = Seq[Item](
-        Item(name = "Holster", carried = ItemState.EQUIPPED, dr = 1, hp = 5, hpLeft = 5, tl = 5, wt = 0.5, cost = 75),
-        Item(name = "Small Backpack", carried = ItemState.TRAVEL, hp = 5, hpLeft = 5, tl = 5, wt = 3, cost = 60)
-      )
-    )
-  )
+        Item(name = "Holster", state = ItemState.EQUIPPED, dr = 1, hp = 5, hpLeft = 5, tl = 5, wt = 0.5, cost = 75),
+        Item(name = "Small Backpack", state = ItemState.TRAVEL, hp = 5, hpLeft = 5, tl = 5, wt = 3, cost = 60))),
+    currentStats = StatsCurrent(hpLost = 1, fpLost = 10),
+    wounds = Seq(Wound()))
   val jsonCharlist = Json toJson charlist
 }
 
