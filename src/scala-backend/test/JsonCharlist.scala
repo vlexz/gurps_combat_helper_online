@@ -9,7 +9,7 @@ object JsonCharlist {
     player = "vlex",
     name = "Bjorn Masterson",
     cp = CharacterPoints(cp = 265),
-    description = Description("35", "6f6i", "250", "somelink", "longbio"),
+    description = Description("35", "6f6i", "250", "longbio"),
     stats = Stats(
       dx = StatInt(delta = 3),
       ht = StatInt(delta = 2),
@@ -77,7 +77,7 @@ object JsonCharlist {
             affects = TraitModifierAffects.TOTAL,
             costType = TraitModifierCostType.POINTS,
             cost = 20))),
-      Trait(name = "Skull", drBonuses = Seq(BonusDR(Seq(HitLocation.SKULL), dr = 2))),
+      Trait(name = "Skull", drBonuses = Seq(BonusDR(Seq(HitLocation.SKULL), protection = DrSet(2)))),
       Trait(
         name = "Gigantism",
         types = Seq(TraitType.PHYSICAL, TraitType.MUNDANE),
@@ -91,13 +91,13 @@ object JsonCharlist {
           BonusSkill(skill = "Shadowing", perLvl = false, bonus = -2)),
         attrCostMods = Seq(BonusAttributeCost(attr = SkillBaseAttribute.ST, cost = -10)))),
     skills = Seq[Skill](
-      Skill(name = "Guns", spc = "Pistol", diff = SkillDifficulty.AVERAGE, cp = 4, tl = 5),
+      Skill(name = "Guns", spc = "Pistol", diff = SkillDifficulty.AVERAGE, tl = 5, relLvl = 3),
       Skill(
         name = "Brawling",
         dmgBonuses = Seq(
           BonusDamage(skill = "Brawling", relSkill = 1, perDie = true, bonus = 1),
           BonusDamage(skill = "Brawling", relSkill = 2, perDie = true, bonus = 1)),
-        cp = 4),
+        relLvl = 2),
       Skill(name = "Piloting", spc = "Lighter-Than-Air", tl = 5, diff = SkillDifficulty.AVERAGE, cp = 8),
       Skill(
         name = "Navigation",
@@ -209,9 +209,7 @@ object JsonCharlist {
         Armor(
           name = "Boots",
           state = ItemState.EQUIPPED,
-          dr = 1,
-          ep = 1,
-          epi = 1,
+          protection = DrSet(1, 1, 0),
           locations = Seq[String](HitLocation.FEET),
           hp = 5,
           hpLeft = 5,
@@ -220,7 +218,9 @@ object JsonCharlist {
           cost = 50)),
       items = Seq[Item](
         Item(name = "Holster", state = ItemState.EQUIPPED, dr = 1, hp = 5, hpLeft = 5, tl = 5, wt = 0.5, cost = 75),
-        Item(name = "Small Backpack", state = ItemState.TRAVEL, hp = 5, hpLeft = 5, tl = 5, wt = 3, cost = 60))))
+        Item(name = "Small Backpack", state = ItemState.TRAVEL, hp = 5, hpLeft = 5, tl = 5, wt = 3, cost = 60))),
+    currentStats = StatsCurrent(hpLost = 1, fpLost = 10),
+    wounds = Seq(Wound()))
   val jsonCharlist = Json toJson charlist
 }
 
