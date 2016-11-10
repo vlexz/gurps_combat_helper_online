@@ -1,4 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { CharListComponent } from '../char-list/char-list.component';
 
 
@@ -9,8 +10,6 @@ import { CharListComponent } from '../char-list/char-list.component';
 })
 export class ToolbarComponent implements OnInit {
 
-  @Output() create: EventEmitter<any> = new EventEmitter();
-  @Output() selected: EventEmitter<any> = new EventEmitter();
   @Output() clone: EventEmitter<any> = new EventEmitter();
 
   @ViewChild(CharListComponent)
@@ -19,7 +18,9 @@ export class ToolbarComponent implements OnInit {
   showCharlist: boolean = false;
 
 
-  constructor() { }
+  constructor(
+    private router: Router
+  ) { }
 
   showCharacters() {
     this.showCharlist = !this.showCharlist;
@@ -30,13 +31,12 @@ export class ToolbarComponent implements OnInit {
   }
 
   _selected(ev) {
-    console.log(ev);
-    this.selected.emit(ev.character);
+    this.router.navigate(['/char-editor', {id: ev.character}]);
     this.showCharlist = false;
   }
 
   _create() {
-    this.create.emit({});
+    this.router.navigate(['/char-editor', {id: 'new'}]);
   }
 
   _clone() {

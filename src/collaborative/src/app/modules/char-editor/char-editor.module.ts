@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+import { CharEditorRoutingModule } from './char-editor-routing.module';
+
 import { CharEditorComponent } from './char-editor.component';
 import { CharListComponent } from './components/char-list/char-list.component';
 import { SkillListComponent } from './components/skill-list/skill-list.component';
@@ -18,7 +20,8 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    CharEditorRoutingModule
   ],
   declarations: [
     CharEditorComponent,

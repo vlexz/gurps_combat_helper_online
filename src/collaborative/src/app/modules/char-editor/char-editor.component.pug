@@ -80,7 +80,7 @@ mixin mainVariables
           +statblock('Skills:', 'cp.skills', false, true)
           +statblock('Unspent:', 'cp.unspent', false, true)
 
-char-editor-toolbar( (create)='loadDefaultChracter()', (selected)='loadCharacter($event)')
+char-editor-toolbar
 div(*ngIf='current')  
   div: +mainInfo
   div: +mainVariables

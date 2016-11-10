@@ -1,7 +1,9 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { CharacterService } from '../../services/character.service';
 import { Character } from '../../interfaces/character';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
+
 
 @Component({
   selector: 'char-editor-root',
@@ -21,6 +23,8 @@ export class CharEditorComponent implements OnInit {
   @Output() characterAdded = new EventEmitter();
 
   constructor(
+    private router: Router,
+    private route: ActivatedRoute,
     private chars: CharacterService
   ) {
     this.setchar = this.setCharacter.bind(this);
@@ -44,7 +48,8 @@ export class CharEditorComponent implements OnInit {
         return this.chars.add(this.current)
         .subscribe(char => {
           this.current = char;
-          this.toolbar.updateCharlist();
+          this.toolbar.updateCharList();
+          this.router.navigate(['/char-editor', {id: char._id}]);
           resolve(true);
         });
       }
@@ -140,8 +145,12 @@ export class CharEditorComponent implements OnInit {
   }
 
   loadCharacter(id: string) {
-    this.chars.load(id)
-    .subscribe(this.setchar);
+    if (id === 'new') {
+      this.loadDefaultChracter();
+    } else {
+      this.chars.load(id)
+      .subscribe(this.setchar);
+    }
   }
 
   loadDefaultChracter() {
@@ -150,6 +159,13 @@ export class CharEditorComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.route.params.forEach((params: Params) => {
+      if (params['id']) {
+        this.loadCharacter(params['id']);
+      }
+    });
+    // extract character id from router if any
+    // if (this.route)
     // console.log('on init routine in char editor');
     // this.loadDefaultChracter();
   }
