@@ -4,3 +4,11 @@ a {
   cursor: pointer;
   color: blue;
 }
+
+input.cost {
+  width: 45px;
+}
+
+h3 {
+  margin-top: 5px;
+}

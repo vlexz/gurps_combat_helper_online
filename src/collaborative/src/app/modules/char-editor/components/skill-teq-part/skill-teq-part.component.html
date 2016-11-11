@@ -1,0 +1,3 @@
+
+<app-skill-list *ngIf="current.char" [skills]="current.char.skills" (change)="current.updateSkills()"></app-skill-list>
+<app-techniques *ngIf="current.char" [skills]="current.char.skills" [techniques]="current.char.techniques" (change)="current.updateTechniques()"></app-techniques>

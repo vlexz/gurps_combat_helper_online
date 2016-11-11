@@ -1,66 +1,66 @@
 
 <char-editor-toolbar></char-editor-toolbar>
-<div *ngIf="current"> 
+<div *ngIf="current.char"> 
   <div>
     <table>
       <tr></tr>
       <td>Name 
-        <input type="text" name="name" [(ngModel)]="current.name" (change)="mainInfoChanged($event)"/>
+        <input type="text" name="name" [(ngModel)]="current.char.name" (change)="mainInfoChanged($event)"/>
       </td>
       <td>Player
-        <input type="text" name="player" [(ngModel)]="current.player" (change)="mainInfoChanged($event)"/>
+        <input type="text" name="player" [(ngModel)]="current.char.player" (change)="mainInfoChanged($event)"/>
       </td>
     </table>
   </div>
   <div>
     <table class="mainvars">
       <tr>
-        <td><img [src]="portraitUrl" (click)="uploadPortrait()"/>
-          <input class="file" type="file" (change)="processUpload($event)" id="portrait_file"/>
+        <td><img [src]="current.portrait" (click)="uploadPortrait()"/>
+          <input class="file" type="file" (change)="current.uploadPortrait($event.srcElement.files)" id="portrait_file"/>
         </td>
         <td>
           <table class="top">    
             <tr>
               <td><b>ST:</b></td>
               <td>
-                <app-stat-block [statName]="'st'" [stat]="current.stats.st" (statChanged)="statChanged($event)"></app-stat-block>
+                <app-stat-block [statName]="'st'" [stat]="current.char.stats.st" (statChanged)="current.updateStats($event)"></app-stat-block>
               </td>
-              <td>{{current.stats.st.cp}}</td>
+              <td>{{current.char.stats.st.cp}}</td>
             </tr>
             <tr>
               <td><b>DX:</b></td>
               <td>
-                <app-stat-block [statName]="'dx'" [stat]="current.stats.dx" (statChanged)="statChanged($event)"></app-stat-block>
+                <app-stat-block [statName]="'dx'" [stat]="current.char.stats.dx" (statChanged)="current.updateStats($event)"></app-stat-block>
               </td>
-              <td>{{current.stats.dx.cp}}</td>
+              <td>{{current.char.stats.dx.cp}}</td>
             </tr>
             <tr>
               <td><b>IQ:</b></td>
               <td>
-                <app-stat-block [statName]="'iq'" [stat]="current.stats.iq" (statChanged)="statChanged($event)"></app-stat-block>
+                <app-stat-block [statName]="'iq'" [stat]="current.char.stats.iq" (statChanged)="current.updateStats($event)"></app-stat-block>
               </td>
-              <td>{{current.stats.iq.cp}}</td>
+              <td>{{current.char.stats.iq.cp}}</td>
             </tr>
             <tr>
               <td><b>HT:</b></td>
               <td>
-                <app-stat-block [statName]="'ht'" [stat]="current.stats.ht" (statChanged)="statChanged($event)"></app-stat-block>
+                <app-stat-block [statName]="'ht'" [stat]="current.char.stats.ht" (statChanged)="current.updateStats($event)"></app-stat-block>
               </td>
-              <td>{{current.stats.ht.cp}}</td>
+              <td>{{current.char.stats.ht.cp}}</td>
             </tr>
             <tr>
               <td><b>Will:</b></td>
               <td>
-                <app-stat-block [statName]="'will'" [stat]="current.stats.will" (statChanged)="statChanged($event)"></app-stat-block>
+                <app-stat-block [statName]="'will'" [stat]="current.char.stats.will" (statChanged)="current.updateStats($event)"></app-stat-block>
               </td>
-              <td>{{current.stats.will.cp}}</td>
+              <td>{{current.char.stats.will.cp}}</td>
             </tr>
             <tr>
               <td><b>Per:</b></td>
               <td>
-                <app-stat-block [statName]="'per'" [stat]="current.stats.per" (statChanged)="statChanged($event)"></app-stat-block>
+                <app-stat-block [statName]="'per'" [stat]="current.char.stats.per" (statChanged)="current.updateStats($event)"></app-stat-block>
               </td>
-              <td>{{current.stats.per.cp}}</td>
+              <td>{{current.char.stats.per.cp}}</td>
             </tr>
           </table>
         </td>
@@ -69,44 +69,44 @@
             <tr>
               <td><b>Lift ST:</b></td>
               <td>
-                <app-stat-block [statName]="'liftSt'" [stat]="current.stats.liftSt" (statChanged)="statChanged($event)"></app-stat-block>
+                <app-stat-block [statName]="'liftSt'" [stat]="current.char.stats.liftSt" (statChanged)="current.updateStats($event)"></app-stat-block>
               </td>
-              <td>{{current.stats.liftSt.cp}}</td>
+              <td>{{current.char.stats.liftSt.cp}}</td>
             </tr>
             <tr>
               <td><b>Strike ST:</b></td>
               <td>
-                <app-stat-block [statName]="'strikeSt'" [stat]="current.stats.strikeSt" (statChanged)="statChanged($event)"></app-stat-block>
+                <app-stat-block [statName]="'strikeSt'" [stat]="current.char.stats.strikeSt" (statChanged)="current.updateStats($event)"></app-stat-block>
               </td>
-              <td>{{current.stats.strikeSt.cp}}</td>
+              <td>{{current.char.stats.strikeSt.cp}}</td>
             </tr>
             <tr>
               <td><b>BM:</b></td>
               <td>
-                <app-stat-block [statName]="'basicMove'" [stat]="current.stats.basicMove" (statChanged)="statChanged($event)"></app-stat-block>
+                <app-stat-block [statName]="'basicMove'" [stat]="current.char.stats.basicMove" (statChanged)="current.updateStats($event)"></app-stat-block>
               </td>
-              <td>{{current.stats.basicMove.cp}}</td>
+              <td>{{current.char.stats.basicMove.cp}}</td>
             </tr>
             <tr>
               <td><b>BS:</b></td>
               <td>
-                <app-stat-block [statName]="'basicSpeed'" [stat]="current.stats.basicSpeed" (statChanged)="statChanged($event)"></app-stat-block>
+                <app-stat-block [statName]="'basicSpeed'" [stat]="current.char.stats.basicSpeed" (statChanged)="current.updateStats($event)"></app-stat-block>
               </td>
-              <td>{{current.stats.basicSpeed.cp}}</td>
+              <td>{{current.char.stats.basicSpeed.cp}}</td>
             </tr>
             <tr>
               <td><b>FP:</b></td>
               <td>
-                <app-stat-block [statName]="'fp'" [stat]="current.stats.fp" (statChanged)="statChanged($event)"></app-stat-block>
+                <app-stat-block [statName]="'fp'" [stat]="current.char.stats.fp" (statChanged)="current.updateStats($event)"></app-stat-block>
               </td>
-              <td>{{current.stats.fp.cp}}</td>
+              <td>{{current.char.stats.fp.cp}}</td>
             </tr>
             <tr>
               <td><b>HP:</b></td>
               <td>
-                <app-stat-block [statName]="'hp'" [stat]="current.stats.hp" (statChanged)="statChanged($event)"></app-stat-block>
+                <app-stat-block [statName]="'hp'" [stat]="current.char.stats.hp" (statChanged)="current.updateStats($event)"></app-stat-block>
               </td>
-              <td>{{current.stats.hp.cp}}</td>
+              <td>{{current.char.stats.hp.cp}}</td>
             </tr>
           </table>
         </td>
@@ -114,32 +114,32 @@
           <table class="top">
             <tr>
               <td><b>Fright Check:</b></td>
-              <td><span>{{current.statVars.frightCheck}}</span>
+              <td><span>{{current.char.statVars.frightCheck}}</span>
               </td>
             </tr>
             <tr>
               <td><b>Vision:</b></td>
-              <td><span>{{current.statVars.vision}}</span>
+              <td><span>{{current.char.statVars.vision}}</span>
               </td>
             </tr>
             <tr>
               <td><b>Hearing:</b></td>
-              <td><span>{{current.statVars.hearing}}</span>
+              <td><span>{{current.char.statVars.hearing}}</span>
               </td>
             </tr>
             <tr>
               <td><b>Taste/Smell:</b></td>
-              <td><span>{{current.statVars.tasteSmell}}</span>
+              <td><span>{{current.char.statVars.tasteSmell}}</span>
               </td>
             </tr>
             <tr>
               <td><b>Touch:</b></td>
-              <td><span>{{current.statVars.touch}}</span>
+              <td><span>{{current.char.statVars.touch}}</span>
               </td>
             </tr>
             <tr>
               <td><b>Basic Lift:</b></td>
-              <td><span>{{current.statVars.bl}}</span>
+              <td><span>{{current.char.statVars.bl}}</span>
               </td>
             </tr>
           </table>
@@ -148,32 +148,32 @@
           <table class="top">
             <tr>
               <td><b>Size:</b></td>
-              <td><span>{{current.statVars.sm}}</span>
+              <td><span>{{current.char.statVars.sm}}</span>
               </td>
             </tr>
             <tr>
               <td><b>Dodge:</b></td>
-              <td><span>{{current.statVars.dodge}}</span>
+              <td><span>{{current.char.statVars.dodge}}</span>
               </td>
             </tr>
             <tr>
               <td><b>Thrust:</b></td>
-              <td><span>{{current.statVars.thrDmg}}</span>
+              <td><span>{{current.char.statVars.thrDmg}}</span>
               </td>
             </tr>
             <tr>
               <td><b>Swing:</b></td>
-              <td><span>{{current.statVars.swDmg}}</span>
+              <td><span>{{current.char.statVars.swDmg}}</span>
               </td>
             </tr>
             <tr>
               <td><b>Combat Enc.:</b></td>
-              <td><span>{{current.statVars.combatEncumbrance}}</span>
+              <td><span>{{current.char.statVars.combatEncumbrance}}</span>
               </td>
             </tr>
             <tr>
               <td><b>Travel Enc.:</b></td>
-              <td><span>{{current.statVars.travelEncumbrance}}</span>
+              <td><span>{{current.char.statVars.travelEncumbrance}}</span>
               </td>
             </tr>
           </table>
@@ -182,12 +182,12 @@
           <table class="top">
             <tr>
               <td><b>Combat Move:</b></td>
-              <td><span>{{current.statVars.combMove}}</span>
+              <td><span>{{current.char.statVars.combMove}}</span>
               </td>
             </tr>
             <tr>
               <td><b>Travel Move:</b></td>
-              <td><span>{{current.statVars.travMove}}</span>
+              <td><span>{{current.char.statVars.travMove}}</span>
               </td>
             </tr>
           </table>
@@ -197,32 +197,32 @@
             <tr>
               <td><b>Point Total:</b></td>
               <td>
-                <input class="cost" type="number" [(ngModel)]="current.cp.cp" (change)="cpChanged($event)"/>
+                <input class="cost" type="number" [(ngModel)]="current.char.cp.cp" (change)="current.updateCp($event)"/>
               </td>
             </tr>
             <tr>
               <td><b>Stats:</b></td>
-              <td><span>{{current.cp.stats}}</span>
+              <td><span>{{current.char.cp.stats}}</span>
               </td>
             </tr>
             <tr>
               <td><b>Advantages:</b></td>
-              <td><span>{{current.cp.adv}}</span>
+              <td><span>{{current.char.cp.adv}}</span>
               </td>
             </tr>
             <tr>
               <td><b>Disadvantages:</b></td>
-              <td><span>{{current.cp.dis}}</span>
+              <td><span>{{current.char.cp.dis}}</span>
               </td>
             </tr>
             <tr>
               <td><b>Skills:</b></td>
-              <td><span>{{current.cp.skills}}</span>
+              <td><span>{{current.char.cp.skills}}</span>
               </td>
             </tr>
             <tr>
               <td><b>Unspent:</b></td>
-              <td><span>{{current.cp.unspent}}</span>
+              <td><span>{{current.char.cp.unspent}}</span>
               </td>
             </tr>
           </table>
@@ -230,15 +230,10 @@
       </tr>
     </table>
   </div>
+</div>
+<div [hidden]="!current.char">
+  <nav><a routerLink="advdis">Adv/Dis </a><a routerLink="skills">Skills </a></nav>
   <div class="container">
-    <div class="container">
-      <app-trait-list [traits]="current.traits" [category]="'Advantage'" (change)="traitChanged()"></app-trait-list>
-      <app-trait-list [traits]="current.traits" [category]="'Disadvantage'" (change)="traitChanged()"></app-trait-list>
-    </div>
-    <div class="container">
-      <app-skill-list [skills]="current.skills" (change)="skillChanged()"></app-skill-list>
-      <app-techniques [skills]="current.skills" [techniques]="current.techniques" (change)="techniqueChanged()"></app-techniques>
-    </div>
-    <h2>Equipment</h2>
+    <router-outlet></router-outlet>
   </div>
 </div>

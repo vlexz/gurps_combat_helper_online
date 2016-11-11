@@ -27,3 +27,15 @@ app-skill-list {
 input.cost {
   width: 45px;
 }
+
+nav {
+  display: inline-block;
+}
+
+router-outlet {
+  display: inline-block;
+}
+
+a[routerLink] {
+  display: block;
+}

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { CharacterService } from '../../../../services/character.service';
+import { CharacterService } from '../../../../shared/services/character.service';
 import { Trait } from '../../../../interfaces/trait';
 
 @Component({

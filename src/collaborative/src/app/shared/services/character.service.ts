@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 
 import { Http, Response } from '@angular/http';
-import { Character } from '../interfaces/character';
-import { Skill } from '../interfaces/skill';
-import { Trait } from '../interfaces/trait';
-import { Technique } from '../interfaces/technique';
-import { CharacterDescriptor } from '../interfaces/char_descriptor';
+import { Character } from '../../interfaces/character';
+import { Skill } from '../../interfaces/skill';
+import { Trait } from '../../interfaces/trait';
+import { Technique } from '../../interfaces/technique';
+import { CharacterDescriptor } from '../../interfaces/char_descriptor';
 
 import { Observable }     from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class CharacterService {
@@ -34,11 +34,11 @@ export class CharacterService {
     .map(res => Character.fromJson(res.json() || {}));
   }
 
-  uploadPortrait(id: string, element: any): Observable<any> {
-    console.log(element.files);
+  uploadPortrait(id: string, files: FileList): Observable<any> {
+    console.log(files);
     let data = new FormData();
-    for(let i = 0; i < element.files.length; ++i) {
-      data.append('pic', element.files[i]);
+    for (let i = 0; i < files.length; ++i) {
+      data.append('pic', files[i]);
     }
     return this.http.put(this.apiEndPoint + `char/${id}/pic`, data);
   }

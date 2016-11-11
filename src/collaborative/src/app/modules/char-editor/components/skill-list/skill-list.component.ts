@@ -1,13 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { CharacterService } from '../../../../services/character.service';
+import { CharacterService } from '../../../../shared/services/character.service';
 import { Skill } from '../../../../interfaces/skill';
 import { ConstantTables } from '../../../../interfaces/tables';
 
 @Component({
   selector: 'app-skill-list',
   templateUrl: './skill-list.component.html',
-  styleUrls: ['./skill-list.component.css'],
-  providers: [CharacterService]
+  styleUrls: ['./skill-list.component.css']
 })
 export class SkillListComponent implements OnInit {
 

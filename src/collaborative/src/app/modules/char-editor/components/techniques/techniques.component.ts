@@ -1,14 +1,13 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { CharacterService } from '../../../../services/character.service';
-import { Technique } from '../../../../interfaces/technique';
-import { Skill } from '../../../../interfaces/skill';
-import { ConstantTables } from '../../../../interfaces/tables';
+import { CharacterService } from 'shared/services/character.service';
+import { Technique } from 'interfaces/technique';
+import { Skill } from 'interfaces/skill';
+import { ConstantTables } from 'interfaces/tables';
 
 @Component({
   selector: 'app-techniques',
   templateUrl: './techniques.component.html',
-  styleUrls: ['./techniques.component.css'],
-  providers: [CharacterService]
+  styleUrls: ['./techniques.component.css']
 })
 export class TechniquesComponent implements OnInit {
 
@@ -32,7 +31,7 @@ export class TechniquesComponent implements OnInit {
     this.change.emit({});
   }
 
-  remove(i: number){
+  remove(i: number) {
     this.techniques.splice(i, 1);
     this.change.emit({});
   }

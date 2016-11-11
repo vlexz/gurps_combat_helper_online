@@ -1,12 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { CharacterService } from '../../../../services/character.service';
+import { CharacterService } from '../../../../shared/services/character.service';
 import { CharacterDescriptor } from '../../../../interfaces/char_descriptor';
 
 @Component({
   selector: 'app-char-list',
   templateUrl: './char-list.component.html',
-  styleUrls: ['./char-list.component.css'],
-  providers: [CharacterService]
+  styleUrls: ['./char-list.component.css']
 })
 export class CharListComponent implements OnInit {
 

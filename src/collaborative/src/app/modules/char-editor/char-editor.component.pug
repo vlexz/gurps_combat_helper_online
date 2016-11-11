@@ -4,16 +4,16 @@ mixin statblock(caption, name, stat, readonly)
     td
       if (!readonly)
         if(stat)
-          app-stat-block([statName]="\'" + name + "\'", [stat]= 'current.stats.' + name, (statChanged)='statChanged($event)')
+          app-stat-block([statName]="\'" + name + "\'", [stat]= 'current.char.stats.' + name, (statChanged)='current.updateStats($event)')
         else
-          input.cost(type='number', [(ngModel)]='current.' + name, (change)='cpChanged($event)')
+          input.cost(type='number', [(ngModel)]='current.char.' + name, (change)='current.updateCp($event)')
       else
         if stat 
-          span= '{{current.stats.' + name + '}}'
+          span= '{{current.char.stats.' + name + '}}'
         else
-          span= '{{current.' + name + '}}'
+          span= '{{current.char.' + name + '}}'
     if(stat)    
-      td= '{{current.stats.' + name + '.cp}}' 
+      td= '{{current.char.stats.' + name + '.cp}}' 
 
 
 
@@ -21,16 +21,16 @@ mixin mainInfo
   table
     tr
     td Name 
-      input(type="text", name='name', [(ngModel)]='current.name', (change)='mainInfoChanged($event)')
+      input(type="text", name='name', [(ngModel)]='current.char.name', (change)='mainInfoChanged($event)')
     td Player
-      input(type="text", name='player', [(ngModel)]='current.player', (change)='mainInfoChanged($event)')
+      input(type="text", name='player', [(ngModel)]='current.char.player', (change)='mainInfoChanged($event)')
 
 mixin mainVariables
   table.mainvars
     tr
       td
-        img([src]='portraitUrl', (click)='uploadPortrait()')
-        input.file(type='file', (change)='processUpload($event)', id='portrait_file')
+        img([src]='current.portrait', (click)='uploadPortrait()')
+        input.file(type='file', (change)='current.uploadPortrait($event.srcElement.files)', id='portrait_file')
       td
         table.top     
           +statblock('ST:', 'st', true, false)
@@ -81,17 +81,15 @@ mixin mainVariables
           +statblock('Unspent:', 'cp.unspent', false, true)
 
 char-editor-toolbar
-div(*ngIf='current')  
+div(*ngIf='current.char')  
   div: +mainInfo
-  div: +mainVariables
+  div: +mainVariables  
+div([hidden]='!current.char')
+  nav
+    a(routerLink='advdis') Adv/Dis 
+    a(routerLink='skills') Skills 
   .container
-    .container
-      app-trait-list([traits]='current.traits', [category]="'Advantage'", (change)='traitChanged()')
-      app-trait-list([traits]='current.traits', [category]="'Disadvantage'", (change)='traitChanged()')
-    .container
-      app-skill-list([skills]='current.skills', (change)='skillChanged()')
-      app-techniques([skills]='current.skills', [techniques]='current.techniques', (change)='techniqueChanged()')
-    h2 Equipment
+    router-outlet
 
       
   
