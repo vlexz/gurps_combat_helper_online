@@ -19,7 +19,8 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
                     var damageResistance: DamageResistance = DamageResistance(),
                     var reactions: Seq[Reaction] = Seq(),
                     traits: Seq[Trait] = Seq(
-                      Trait(name = "Skull", drBonuses = Seq(BonusDR(Seq(HitLocation.SKULL), protection = DrSet(2))))),
+                      Trait(name = "Skull", modifiers = Seq(TraitModifier(drBonuses = Seq(
+                        BonusDR(Seq(HitLocation.SKULL), protection = DrSet(2))))))),
                     skills: Seq[Skill] = Seq(),
                     techniques: Seq[Technique] = Seq(),
                     equip: Equipment = Equipment(),
@@ -29,29 +30,29 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
                     var api: String = "") {
   api = "0.3.0"
 
-  private val foldSum = { x: (String, Seq[(String, Int)]) => (x._1, x._2.foldLeft(0)(_ + _._2)) }
+  private val foldSum = { (a: String, b: Seq[(String, Int)]) => (a, b.foldLeft(0)(_ + _._2)) }
   {
     import BonusToAttribute._
     import HitLocation._
 
     val tdr: Seq[(String, DrSet, DrSet)] = for {
       t <- traits
-      b <- t.drBonuses ++ t.modifiers.flatMap(_.drBonuses)
+      b <- t.modifiers withFilter (_.on) flatMap (_.drBonuses)
       l <- b.locations flatMap locMap
     } yield (l, if (b.front) b.protection else DrSet(), if (b.back) b.protection else DrSet())
     val adr: Seq[(String, DrSet, DrSet)] = for {
       a <- equip.armor
       l <- a.locations flatMap locMap
     } yield (l, if (a.front) a.protection else DrSet(), if (a.back) a.protection else DrSet())
-    val drMap: Map[String, HitLocationDR] =
-      (tdr ++ adr) groupBy (_._1) map { x =>
-        (x._1, HitLocationDR(x._2.foldLeft(DrSet())(_ |+| _._2), x._2.foldLeft(DrSet())(_ |+| _._3)))
-      } withDefaultValue HitLocationDR(DrSet(), DrSet())
+    val drMap: Map[String, HitLocationDR] = {
+      for {(a, b) <- (tdr ++ adr) groupBy (_._1)}
+        yield (a, HitLocationDR(b.foldLeft(DrSet())(_ |+| _._2), b.foldLeft(DrSet())(_ |+| _._3)))
+    } withDefaultValue HitLocationDR(DrSet(), DrSet())
     damageResistance = DamageResistance(drMap(SKULL), drMap(EYES), drMap(FACE), drMap(NECK), drMap(ARM_LEFT),
       drMap(ARM_RIGHT), drMap(HAND_LEFT), drMap(HAND_RIGHT), drMap(CHEST), drMap(VITALS), drMap(ABDOMEN), drMap(GROIN),
       drMap(LEG_LEFT), drMap(LEG_RIGHT), drMap(FOOT_LEFT), drMap(FOOT_RIGHT))
 
-    val bonuses = traits flatMap (_.attrBonusValues) groupBy (_._1) map foldSum withDefaultValue 0
+    val bonuses = traits flatMap (_.attrBonusValues) groupBy (_._1) map foldSum.tupled withDefaultValue 0
     stats.st.base = 10
     stats.dx.base = 10
     stats.iq.base = 10
@@ -106,39 +107,16 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
       t.calcLvl(l)
     }
 
-    reactions =
-      (traits.flatMap { t => t.reactBonuses ++ t.modifiers.flatMap(_.reactBonuses) } ++ skills.flatMap(_.reactBonuses))
-        .groupBy(_.affected)
-        .map { case (group, react) =>
-          val reactions =
-            react
-              .groupBy(_.freq)
-              .map { case (group2, react2) =>
-                val bonusReaction =
-                  react2
-                    .groupBy(_.reputation)
-                    .map { case (group3, react3) =>
-                      react3
-                        .reduce { (a, b) =>
-                          val bonus = a.bonusValue + b.bonusValue
-                          a.copy(
-                            bonus = if (group3) bonus match {
-                              case x if x > 4 => 4
-                              case x if x < -4 => -4
-                              case x => x
-                            } else bonus,
-                            notes = a.notes + (if (a.notes.nonEmpty && b.notes.nonEmpty) "; " else "") + b.notes)
-                        }
-                    }
-                    .reduce { (a, b) =>
-                      a.copy(
-                        bonus = a.bonusValue + b.bonusValue,
-                        notes = a.notes + (if (a.notes.nonEmpty && b.notes.nonEmpty) "; " else "") + b.notes)
-                    }
-                ReactionMod(group2, bonusReaction.bonusValue, bonusReaction.notes)
-              }(breakOut)
-          Reaction(group, reactions)
-        }(breakOut)
+    reactions = (for {(g, r) <- traits.flatMap(_.reactBonuses) ++ skills.flatMap(_.reactBonuses) groupBy (_.affected)}
+      yield Reaction(
+        g,
+        (for {(group2, react2) <- r groupBy (_.freq)}
+          yield {
+            val bonusReaction = (for {(group3, react3) <- react2 groupBy (_.reputation)}
+              yield react3.fold(BonusReaction())(if (group3) _ |^| _ else _ |+| _))
+              .fold(BonusReaction())(_ |+| _)
+            ReactionMod(group2, bonusReaction.bVal, bonusReaction.notes)
+          }) (breakOut))) (breakOut)
 
     val thr = stats.strikeSt.value match {
       case x if x < 1 => (0, 0)
@@ -153,19 +131,15 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
     val dStr = (d: Int, m: Int) => s"${d}d${if (m < 0) m else if (m > 0) "+" + m else ""}"
     statVars.thrDmg = dStr(thr._1, thr._2)
     statVars.swDmg = dStr(sw._1, sw._2)
-    for (weapon <- equip.weapons; mAttack <- weapon.attacksMelee) {
-      def sFltr(s: Skill) = s.name == mAttack.skill && (if (mAttack.spc != "") s.spc == mAttack.spc else true)
-      val bonus =
-        (skills ++ traits ++ traits.flatMap(_.modifiers))
-          .foldLeft(0, 0) { (a, bns) =>
-            val lvl = skills collectFirst { case s if sFltr(s) => s.relLvl } getOrElse -4
-            a |+| bns.dmgBonusValue(mAttack.skill, mAttack.spc, lvl)
-          }
-      mAttack.damage.calcDmg(thr, sw, bonus)
-      for (m <- mAttack.followup ++ mAttack.linked) m.calcDmg(thr, sw, (0, 0))
+    for (w <- equip.weapons; a <- w.attacksMelee) {
+      def sFltr(s: Skill) = s.name == a.skill && (if (a.spc != "") s.spc == a.spc else true)
+      val lvl = skills collectFirst { case s if sFltr(s) => s.relLvl } getOrElse -4
+      val bns = (skills ++ traits.flatMap(_.modifiers)).foldLeft(0, 0)(_ |+| _.dmgBVal(a.skill, a.spc, lvl))
+      a.damage.calcDmg(thr, sw, bns)
+      for (m <- a.followup ++ a.linked) m.calcDmg(thr, sw, (0, 0))
     }
 
-    val costMods = traits flatMap (_.attrCostModValues) groupBy (_._1) map foldSum withDefaultValue 0
+    val costMods = traits flatMap (_.attrCostModValues) groupBy (_._1) map foldSum.tupled withDefaultValue 0
     stats.st.cpMod = 100 + costMods(ST)
     stats.dx.cpMod = 100 + costMods(DX)
     stats.iq.cpMod = 100 + costMods(IQ)
@@ -344,11 +318,12 @@ case class Reaction(affected: String = "", modifiers: Seq[ReactionMod] = Seq())
 /** Charlist subcontainer for NPC reaction modifiers list's element stats */
 case class ReactionMod(freq: Int = 16, mod: Int = 0, notes: String = "")
 
-abstract class DamageBonusing {
+/** Parent uniting all case classes carrying a bonus to melee damage */
+sealed abstract class DamageBonusing {
+  val dmgBonuses: Seq[BonusDamage]
+  val on: Boolean
 
-  def dmgBonuses: Seq[BonusDamage]
-
-  def dmgBonusValue(s: String, spc: String, lvl: Int): (Int, Int) = {
+  def dmgBVal(s: String, spc: String, lvl: Int): (Int, Int) = {
     import NameCompare.{ANY, _}
     val skillFit = (b: BonusDamage) => b.skillCompare match {
       case IS => b.skill == s
@@ -360,7 +335,7 @@ abstract class DamageBonusing {
       case BEGINS => b.spc.regionMatches(true, 0, spc, 0, b.spc.length)
     }
     val fit = (b: BonusDamage) => skillFit(b) && spcFit(b) && b.relSkill <= lvl
-    dmgBonuses.collect { case b if fit(b) => if (b.perDie) (b.bonus, 0) else (0, b.bonus) }.fold(0, 0)(_ |+| _)
+    dmgBonuses.collect { case b if on && fit(b) => if (b.perDie) (b.bonus, 0) else (0, b.bonus) } .fold(0, 0)(_ |+| _)
   }
 }
 
@@ -373,32 +348,23 @@ case class Trait(
                   notes: String = "",
                   prerequisites: Seq[String] = Seq(), // For future functionality
                   modifiers: Seq[TraitModifier] = Seq(),
-                  attrBonuses: Seq[BonusAttribute] = Seq(),
-                  skillBonuses: Seq[BonusSkill] = Seq(),
-                  dmgBonuses: Seq[BonusDamage] = Seq(),
-                  drBonuses: Seq[BonusDR] = Seq(),
-                  attrCostMods: Seq[BonusAttributeCost] = Seq(),
-                  reactBonuses: Seq[BonusReaction] = Seq(),
                   cpBase: Int = 0,
                   var level: Int = 0,
                   cpPerLvl: Int = 0,
-                  var cp: Int = 0)
-  extends DamageBonusing {
+                  var cp: Int = 0) {
   if (TraitType canBe types) () else types = Seq(TraitType.PHYSICAL)
   if (TraitCategory canBe category) () else category = TraitCategory.ADVANTAGE
   if (level < 0) level = 0
-  for (b <- reactBonuses ++ modifiers.flatMap(_.reactBonuses)) b.calcValue(level)
-  for (b <- drBonuses ++ modifiers.flatMap(_.drBonuses)) b.calcValue(level)
 
   import Charlist.rndUp
   import TraitModifierAffects._
 
-  case class MCost(pts: Int = 0, pct: Int = 0, mlt: Double = 1) {
+  private case class MCost(pts: Int = 0, pct: Int = 0, mlt: Double = 1) {
     def |+|(that: (Int, Int, Double)): MCost = MCost(pts + that._1, pct + that._2, mlt * that._3)
   }
 
-  private val cpMods: Map[String, MCost] =
-    modifiers groupBy (_.affects) map { x => (x._1, x._2.foldLeft(MCost())(_ |+| _.costVal)) } withDefaultValue MCost()
+  private val cpMods: Map[String, MCost] = (for {(a, b) <- modifiers filter (_.on) groupBy (_.affects)}
+    yield (a, b.foldLeft(MCost())(_ |+| _.costVal))) withDefaultValue MCost()
   private val MCost(bPts, bPct, bMlt) = cpMods(BASE)
   private val MCost(lPts, lPct, lMlt) = cpMods(LEVELS)
   private val MCost(tPts, tPct, tMlt) = cpMods(TOTAL)
@@ -407,9 +373,8 @@ case class Trait(
     * lMlt + tPts) * math.max(.2, tPct * .01 + 1) * tMlt)
 
   val attrBonusValues: Seq[(String, Int)] =
-    for (b <- attrBonuses ++ modifiers.flatMap(_.attrBonuses)) yield (b.attr, b.bonus * (if (b.perLvl) level else 1))
-  val attrCostModValues: Seq[(String, Int)] =
-    for (m <- attrCostMods ++ modifiers.flatMap(_.attrCostMods)) yield (m.attr, m.cost)
+    for (b <- modifiers withFilter (_.on) flatMap (_.attrBonuses))
+      yield (b.attr, b.bonus * (if (b.perLvl) level else 1))
   val skillBonusValue = (s: String, spc: String) => {
     import NameCompare.{ANY, _}
     val skillFit = (b: BonusSkill) => b.skillCompare match {
@@ -421,21 +386,27 @@ case class Trait(
       case IS => b.spc == spc
       case BEGINS => b.spc.regionMatches(true, 0, spc, 0, b.spc.length)
     }
-    (skillBonuses ++ modifiers.flatMap(_.skillBonuses))
-      .collect { case b if skillFit(b) && spcFit(b) => b.bonus * (if (b.perLvl) level else 1) }
-      .sum
+    val fit: PartialFunction[BonusSkill, Int] = {
+      case b: BonusSkill if skillFit(b) && spcFit(b) => b.bonus * (if (b.perLvl) level else 1)
+    }
+    modifiers.withFilter(_.on).flatMap(_.skillBonuses).collect(fit).sum
   }
+  val attrCostModValues: Seq[(String, Int)] =
+    for (m <- modifiers withFilter (_.on) flatMap (_.attrCostMods)) yield (m.attr, m.cost)
+  val reactBonuses: Seq[BonusReaction] =
+    for (b <- modifiers withFilter (_.on) flatMap (_.reactBonuses)) yield b.calcValue(level)
 }
 
 /** Charlist subcontainer for trait modifiers list's element stats */
 case class TraitModifier(
+                          on: Boolean = true,
                           name: String = "",
                           ref: String = "",
                           notes: String = "",
                           attrBonuses: Seq[BonusAttribute] = Seq(),
                           skillBonuses: Seq[BonusSkill] = Seq(),
                           dmgBonuses: Seq[BonusDamage] = Seq(),
-                          drBonuses: Seq[BonusDR] = Seq(), //
+                          drBonuses: Seq[BonusDR] = Seq(),
                           attrCostMods: Seq[BonusAttributeCost] = Seq(),
                           reactBonuses: Seq[BonusReaction] = Seq(),
                           var affects: String = TraitModifierAffects.TOTAL,
@@ -481,6 +452,7 @@ case class Skill(
   if (SkillBaseAttribute canBe attr) () else attr = SkillBaseAttribute.DX
   if (SkillDifficulty canBe diff) () else diff = SkillDifficulty.EASY
   skillString = name + (if (tl != 0) s"/TL$tl" else "") + (if (spc != "") s" ($spc)" else "")
+  val on = true
 
   def calcLvl(attrVal: Int, enc: Int): Skill = {
     val l = relLvl - (SkillDifficulty values diff) + 1
@@ -510,14 +482,11 @@ case class Technique(
   tchString = s"$name ($skill${if (spc != "") " (" + spc + ")"})"
   cp = relLvl - defLvl + (if (diff == SkillDifficulty.HARD && relLvl > defLvl) 1 else 0)
 
-  def calcLvl(skill: Int): Technique = {
-    lvl = skill + relLvl
-    this
-  }
+  def calcLvl(skill: Int): Unit = lvl = skill + relLvl
 }
 
 /** Charlist subcontainer for attribute bonuses list's element stats */
-case class BonusAttribute(var attr: String = BonusToAttribute.ST, perLvl: Boolean = true, bonus: Int = 0) {
+case class BonusAttribute(var attr: String = BonusToAttribute.ST, perLvl: Boolean = false, bonus: Int = 0) {
   if (BonusToAttribute canBe attr) () else attr = BonusToAttribute.ST
 }
 
@@ -527,7 +496,7 @@ case class BonusSkill(
                        var skillCompare: String = NameCompare.IS,
                        spc: String = "",
                        var spcCompare: String = NameCompare.ANY,
-                       perLvl: Boolean = true,
+                       perLvl: Boolean = false,
                        bonus: Int = 0) {
   if (NameCompare canBe skillCompare) () else skillCompare = NameCompare.IS
   if (NameCompare canBe spcCompare) () else spcCompare = NameCompare.ANY
@@ -551,13 +520,11 @@ case class BonusDamage(
 /** Charlist subcontainer for DR bonuses list's element stats */
 case class BonusDR(
                     var locations: Seq[String] = Seq(HitLocation.SKIN),
-                    perLvl: Boolean = true,
+                    perLvl: Boolean = false,
                     front: Boolean = true,
                     back: Boolean = true,
                     var protection: DrSet = DrSet()) {
   if (HitLocation canBe locations) () else locations = Seq(HitLocation.SKIN)
-
-  def calcValue(lvl: Int) = if (perLvl) protection *= lvl
 }
 
 /** Charlist subcontainer for attribute cost modifiers list's element stats */
@@ -574,9 +541,18 @@ case class BonusReaction(
                           bonus: Int = 0,
                           notes: String = "") {
   if (ReactionFrequency canBe freq) () else freq = 16
-  var bonusValue: Int = bonus
+  var bVal: Int = bonus
+  private val noteSum = (n: String) => Seq(this.notes, n) filterNot (_.isEmpty) mkString "; "
 
-  def calcValue(lvl: Int) = if (perLvl) bonusValue *= lvl
+  def calcValue(lvl: Int): BonusReaction = {
+    if (perLvl) bVal *= lvl
+    this
+  }
+
+  def |+|(that: BonusReaction): BonusReaction = this copy(bonus = this.bVal + that.bVal, notes = noteSum(that.notes))
+
+  def |^|(that: BonusReaction): BonusReaction =
+    this copy(bonus = math.max(math.min(this.bVal + that.bVal, 4), -4), notes = noteSum(that.notes))
 }
 
 /** Charlist subnamespace for trait type strings and validation method */
@@ -953,7 +929,7 @@ case class BlockDefence(
 }
 
 /** Charlist subcontainer for armor list's element, holds its stats */
-case class Armor(// TODO: make common extension with BonusDR?
+case class Armor(
                  name: String = "",
                  var state: String = ItemState.EQUIPPED,
                  var db: Int = 0,
