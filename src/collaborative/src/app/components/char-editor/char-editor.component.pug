@@ -1,0 +1,74 @@
+mixin statblock(caption, name)
+  tr
+    td=caption
+    td
+      app-stat-block([statName]="\'" + name + "\'", [stat]= 'current.stats.' + name, (statChanged)='statChanged($event)')
+
+mixin mainInfo 
+  table
+    tr
+    td Name 
+      input(type="text", name='name', [(ngModel)]='current.name', (change)='mainInfoChanged($event)')
+    td Player
+      input(type="text", name='player', [(ngModel)]='current.player', (change)='mainInfoChanged($event)')
+
+mixin mainVariables
+  table
+    tr
+      td
+        table     
+          +statblock('ST:', 'st')
+          +statblock('DX:', 'dx')
+          +statblock('IQ:', 'iq')
+          +statblock('HT:', 'ht')
+          +statblock('Will:', 'will')
+          +statblock('Per:', 'per')
+      td
+        table     
+          +statblock('Lift ST:', 'liftSt')
+          +statblock('Strike ST:', 'strikeSt')
+          +statblock('BM:', 'basicMove')
+          +statblock('BS:', 'basicSpeed')
+          +statblock('FP:', 'fp')
+          +statblock('HP:', 'hp')
+
+mixin traitList(list, type)
+  div
+    b= type + 's'
+    table
+      tr
+        th Name
+        th Cost
+      tr(*ngFor='let trait of '+ list + '; let i = index')
+        td: input(type='text', [(ngModel)]='trait.name', (change)='traitChanged($event)')
+        td: input(type='number', [(ngModel)]='trait.cp', (change)='traitChanged($event)')
+      tr: td(colspan=2): a(href='#', (click)='add' + type + '()')= 'Add ' + type
+
+mixin skillList(list)
+  .skills
+    b Skills 
+    table 
+      tr
+        th Name
+        th Attr
+        th Diff
+        th Rel
+        th Bonus
+        th Total
+        th Cost
+      tr(*ngFor='let skill of ' + list + '; let i = index') 
+      tr
+        td: a(href='#', click='addSkill()') Add Skill
+
+
+div(*ngIf='current')
+  div: +mainInfo
+  div: +mainVariables
+  .container
+    .traits
+      +traitList('current.advatages', 'Advantage')
+      +traitList('current.disadvantages', 'Disadvatange')
+    +skillList
+      
+  
+
