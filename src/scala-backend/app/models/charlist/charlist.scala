@@ -36,7 +36,7 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
     import HitLocation._
 
     val tdr: Seq[(String, DrSet, DrSet)] = for {
-      t <- traits
+      t <- traits withFilter (_.active)
       b <- t.modifiers withFilter (_.on) flatMap (_.drBonuses)
       l <- b.locations flatMap locMap
     } yield (l, if (b.front) b.protection else DrSet(), if (b.back) b.protection else DrSet())
@@ -133,8 +133,9 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
     statVars.swDmg = dStr(sw._1, sw._2)
     for (w <- equip.weapons; a <- w.attacksMelee) {
       def sFltr(s: Skill) = s.name == a.skill && (if (a.spc != "") s.spc == a.spc else true)
-      val lvl = skills collectFirst { case s if sFltr(s) => s.relLvl } getOrElse -4
-      val bns = (skills ++ traits.flatMap(_.modifiers)).foldLeft(0, 0)(_ |+| _.dmgBVal(a.skill, a.spc, lvl))
+      val l = skills collectFirst { case s if sFltr(s) => s.relLvl } getOrElse -4
+      val bns =
+        (skills ++ traits.withFilter(_.active).flatMap(_.modifiers)).foldLeft(0, 0)(_ |+| _.dmgBVal(a.skill, a.spc, l))
       a.damage.calcDmg(thr, sw, bns)
       for (m <- a.followup ++ a.linked) m.calcDmg(thr, sw, (0, 0))
     }
@@ -335,7 +336,7 @@ sealed abstract class DamageBonusing {
       case BEGINS => b.spc.regionMatches(true, 0, spc, 0, b.spc.length)
     }
     val fit = (b: BonusDamage) => skillFit(b) && spcFit(b) && b.relSkill <= lvl
-    dmgBonuses.collect { case b if on && fit(b) => if (b.perDie) (b.bonus, 0) else (0, b.bonus) } .fold(0, 0)(_ |+| _)
+    dmgBonuses.collect { case b if on && fit(b) => if (b.perDie) (b.bonus, 0) else (0, b.bonus) }.fold(0, 0)(_ |+| _)
   }
 }
 
@@ -344,9 +345,11 @@ case class Trait(
                   name: String = "",
                   var types: Seq[String] = Seq(TraitType.PHYSICAL),
                   var category: String = TraitCategory.ADVANTAGE,
+                  var switch: String = TraitSwitch.ALWAYSON,
                   ref: String = "",
                   notes: String = "",
                   prerequisites: Seq[String] = Seq(), // For future functionality
+                  var active: Boolean = true,
                   modifiers: Seq[TraitModifier] = Seq(),
                   cpBase: Int = 0,
                   var level: Int = 0,
@@ -354,6 +357,8 @@ case class Trait(
                   var cp: Int = 0) {
   if (TraitType canBe types) () else types = Seq(TraitType.PHYSICAL)
   if (TraitCategory canBe category) () else category = TraitCategory.ADVANTAGE
+  if (TraitSwitch canBe switch) () else switch = TraitSwitch.ALWAYSON
+  if (switch == TraitSwitch.ALWAYSON) active = true
   if (level < 0) level = 0
 
   import Charlist.rndUp
@@ -372,10 +377,11 @@ case class Trait(
     + level * (lPts + cpPerLvl) * math.max(.2, lPct * .01 + 1)
     * lMlt + tPts) * math.max(.2, tPct * .01 + 1) * tMlt)
 
-  val attrBonusValues: Seq[(String, Int)] =
+  val attrBonusValues: Seq[(String, Int)] = if (active) {
     for (b <- modifiers withFilter (_.on) flatMap (_.attrBonuses))
       yield (b.attr, b.bonus * (if (b.perLvl) level else 1))
-  val skillBonusValue = (s: String, spc: String) => {
+  } else Seq()
+  val skillBonusValue: (String, String) => Int = (s: String, spc: String) => if (active) {
     import NameCompare.{ANY, _}
     val skillFit = (b: BonusSkill) => b.skillCompare match {
       case IS => b.skill == s
@@ -390,11 +396,12 @@ case class Trait(
       case b: BonusSkill if skillFit(b) && spcFit(b) => b.bonus * (if (b.perLvl) level else 1)
     }
     modifiers.withFilter(_.on).flatMap(_.skillBonuses).collect(fit).sum
-  }
+  } else 0
   val attrCostModValues: Seq[(String, Int)] =
     for (m <- modifiers withFilter (_.on) flatMap (_.attrCostMods)) yield (m.attr, m.cost)
-  val reactBonuses: Seq[BonusReaction] =
+  val reactBonuses: Seq[BonusReaction] = if (active) {
     for (b <- modifiers withFilter (_.on) flatMap (_.reactBonuses)) yield b.calcValue(level)
+  } else Seq()
 }
 
 /** Charlist subcontainer for trait modifiers list's element stats */
@@ -553,6 +560,14 @@ case class BonusReaction(
 
   def |^|(that: BonusReaction): BonusReaction =
     this copy(bonus = math.max(math.min(this.bVal + that.bVal, 4), -4), notes = noteSum(that.notes))
+}
+
+/** */
+object TraitSwitch {
+  val ALWAYSON = "Always on"
+  val SWITCHABLE = "Switchable"
+  val ATTACK = "Attack"
+  val canBe = Set(ALWAYSON, SWITCHABLE, ATTACK)
 }
 
 /** Charlist subnamespace for trait type strings and validation method */
@@ -930,22 +945,22 @@ case class BlockDefence(
 
 /** Charlist subcontainer for armor list's element, holds its stats */
 case class Armor(
-                 name: String = "",
-                 var state: String = ItemState.EQUIPPED,
-                 var db: Int = 0,
-                 var protection: DrSet = DrSet(),
-                 var front: Boolean = true,
-                 back: Boolean = true,
-                 var drType: String = DrType.HARD,
-                 var locations: Seq[String] = Seq(HitLocation.CHEST),
-                 var hp: Int = 1,
-                 var hpLeft: Int = 1,
-                 broken: Boolean = false,
-                 var lc: Int = 5,
-                 var tl: Int = 0,
-                 notes: String = "",
-                 var wt: Double = 0,
-                 var cost: Double = 0)
+                  name: String = "",
+                  var state: String = ItemState.EQUIPPED,
+                  var db: Int = 0,
+                  var protection: DrSet = DrSet(),
+                  var front: Boolean = true,
+                  back: Boolean = true,
+                  var drType: String = DrType.HARD,
+                  var locations: Seq[String] = Seq(HitLocation.CHEST),
+                  var hp: Int = 1,
+                  var hpLeft: Int = 1,
+                  broken: Boolean = false,
+                  var lc: Int = 5,
+                  var tl: Int = 0,
+                  notes: String = "",
+                  var wt: Double = 0,
+                  var cost: Double = 0)
   extends Possession {
   if (ItemState canBe state) () else state = ItemState.EQUIPPED
   if (db < 0) db = 0 else if (db > 3) db = 3
