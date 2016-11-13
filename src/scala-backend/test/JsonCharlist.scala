@@ -41,7 +41,7 @@ object JsonCharlist {
       Trait(
         name = "Hot Pilot",
         types = Seq(TraitType.MENTAL, TraitType.MUNDANE),
-        category = TraitCategory.TALENT,
+        category = TraitCategory.ADVANTAGE,
         ref = "B89",
         modifiers = Seq(TraitModifier(
           name = "Talent",

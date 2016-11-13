@@ -28,7 +28,7 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
                     wounds: Seq[Wound] = Seq(),
                     conditions: Conditions = Conditions(),
                     var api: String = "") {
-  api = "0.3.0"
+  api = "0.3.1"
 
   private val foldSum = { (a: String, b: Seq[(String, Int)]) => (a, b.foldLeft(0)(_ + _._2)) }
   {
@@ -116,7 +116,7 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
               yield react3.fold(BonusReaction())(if (group3) _ |^| _ else _ |+| _))
               .fold(BonusReaction())(_ |+| _)
             ReactionMod(group2, bonusReaction.bVal, bonusReaction.notes)
-          }) (breakOut))) (breakOut)
+          }) (breakOut))) (breakOut) // TODO: make freq-bonus sums
 
     val thr = stats.strikeSt.value match {
       case x if x < 1 => (0, 0)
@@ -242,8 +242,9 @@ case class StatVars(
     combMove = (bm * .2 * (5 - cEnc)).toInt
     travMove = (bm * .2 * (5 - tEnc)).toInt
     dodge = bd - cEnc
-    combatEncumbrance = cEnc.toString
-    travelEncumbrance = tEnc.toString
+    val encStr = "None" :: "Light" :: "Medium" :: "Heavy" :: "Extra-Heavy" :: Nil
+    combatEncumbrance = encStr(cEnc)
+    travelEncumbrance = encStr(tEnc)
     this
   }
 }
@@ -588,8 +589,7 @@ object TraitCategory {
   val PERK = "Perk"
   val QUIRK = "Quirk"
   val LANGUAGE = "Language"
-  val TALENT = "Talent"
-  val canBe = (c: String) => Set(ADVANTAGE, DISADVANTAGE, PERK, QUIRK, LANGUAGE, TALENT)(c)
+  val canBe = Set(ADVANTAGE, DISADVANTAGE, PERK, QUIRK, LANGUAGE)
 }
 
 /** Charlist subnamespace for trait modifier cost effect strings and validation method */
@@ -597,7 +597,7 @@ object TraitModifierAffects {
   val TOTAL = "total"
   val BASE = "base"
   val LEVELS = "levels"
-  val canBe = (a: String) => Set(TOTAL, BASE, LEVELS)(a)
+  val canBe = Set(TOTAL, BASE, LEVELS)
 }
 
 /** Charlist subnamespace for trait modifier cost type strings and validation method */
@@ -606,7 +606,7 @@ object TraitModifierCostType {
   val LEVEL = "percent per level"
   val POINTS = "points"
   val MULTIPLIER = "multiplier"
-  val canBe = (t: String) => Set(PERCENT, LEVEL, POINTS, MULTIPLIER)(t)
+  val canBe = Set(PERCENT, LEVEL, POINTS, MULTIPLIER)
 }
 
 /** Charlist subnamespace for skill difficulties strings and validation method */
@@ -617,8 +617,8 @@ object SkillDifficulty {
   val VERY_HARD = "VH"
   val WOW = "W"
   val values: Map[String, Int] = Map(EASY -> 0, AVERAGE -> -1, HARD -> -2, VERY_HARD -> -3, WOW -> -4)
-  val canBe = (d: String) => Set(EASY, AVERAGE, HARD, VERY_HARD, WOW)(d)
-  val techniqueCanBe = (d: String) => Set(AVERAGE, HARD)(d)
+  val canBe = Set(EASY, AVERAGE, HARD, VERY_HARD, WOW)
+  val techniqueCanBe = Set(AVERAGE, HARD)
 }
 
 /** Charlist subnamespace for base skill attributes and validation method */
@@ -629,7 +629,7 @@ object SkillBaseAttribute {
   val HT = "HT"
   val WILL = "Will"
   val PER = "Per"
-  val canBe = (a: String) => Set(ST, IQ, DX, HT, WILL, PER)(a)
+  val canBe = Set(ST, IQ, DX, HT, WILL, PER)
 }
 
 /** Charlist subnamespace for attribute strings and validation method */
@@ -653,8 +653,8 @@ object BonusToAttribute {
   val HP = "hp"
   val FP = "fp"
   val SM = "sm"
-  val canBe = (a: String) => Set(ST, DX, IQ, HT, WILL, FC, PER, VISION, HEARING, TASTE_SMELL, TOUCH, DODGE, PARRY,
-    BLOCK, BASIC_SPEED, BASIC_MOVE, HP, FP, SM)(a)
+  val canBe = Set(ST, DX, IQ, HT, WILL, FC, PER, VISION, HEARING, TASTE_SMELL, TOUCH, DODGE, PARRY, BLOCK, BASIC_SPEED,
+    BASIC_MOVE, HP, FP, SM)
 }
 
 /** Charlist subnamespace for stat name comparison strings and validation method */
@@ -662,7 +662,7 @@ object NameCompare {
   val ANY = "any"
   val IS = "is"
   val BEGINS = "begins with"
-  val canBe = (s: String) => Set(ANY, IS, BEGINS)(s)
+  val canBe = Set(ANY, IS, BEGINS)
 }
 
 /** Charlist subnamespace for reaction bonus' recognition frequency values and validation method */
@@ -672,7 +672,7 @@ object ReactionFrequency {
   val SOMETIMES = 10
   val OCCASIONALLY = 7
   val values: Map[Int, Double] = Map(ALLWAYS -> 1.0, OFTEN -> (2.0 / 3.0), SOMETIMES -> .5, OCCASIONALLY -> (1.0 / 3.0))
-  val canBe = (freq: Int) => Set(ALLWAYS, OFTEN, SOMETIMES, OCCASIONALLY)(freq)
+  val canBe = Set(ALLWAYS, OFTEN, SOMETIMES, OCCASIONALLY)
 }
 
 /** Charlist subcontainer for character possessions, calculates total weights and cost and holds armor, weapons, and all
@@ -812,7 +812,7 @@ object AttackType {
   val THRUSTING = "thr"
   val SWINGING = "sw"
   val WEAPON = ""
-  val canBe = (s: String) => Set(THRUSTING, SWINGING, WEAPON)(s)
+  val canBe = Set(THRUSTING, SWINGING, WEAPON)
 }
 
 /** Charlist subcontainer for ranged attack's stats, holds damage, RoF, and shots subcontainers */
@@ -873,7 +873,7 @@ case class RangedDamage(
 
 /** Charlist subnamespace that holds armor divisors validation method */
 object ArmorDivisor {
-  val canBe = (div: Double) => Set(0.1, 0.2, 0.5, 1, 2, 3, 5, 10, 100)(div)
+  val canBe = Set(0.1, 0.2, 0.5, 1, 2, 3, 5, 10, 100)
 }
 
 /** Charlist subnamespace that holds damage types strings and validation method */
@@ -893,8 +893,8 @@ object DamageType {
   val AFFLICTION = "aff"
   val FATIGUE = "fat"
   val SPECIAL = "spec."
-  val canBe = (key: String) => Set(CRUSHING, CRUSHING_EXPLOSION, CUTTING, IMPALING, PIERCING_SMALL, PIERCING,
-    PIERCING_LARGE, PIERCING_HUGE, BURNING, BURNING_EXPLOSION, TOXIC, CORROSION, AFFLICTION, FATIGUE, SPECIAL)(key)
+  val canBe = Set(CRUSHING, CRUSHING_EXPLOSION, CUTTING, IMPALING, PIERCING_SMALL, PIERCING, PIERCING_LARGE,
+    PIERCING_HUGE, BURNING, BURNING_EXPLOSION, TOXIC, CORROSION, AFFLICTION, FATIGUE, SPECIAL)
 }
 
 /** Charlist subcontainer for ranged attack's RoF stat, producing RoF string */
@@ -985,7 +985,7 @@ object DrType {
   val SOFT = "soft"
   val FIELD = "force field"
   val SKIN = "tough skin"
-  val canBe = (dr: String) => Set(HARD, SOFT, FIELD, SKIN)(dr)
+  val canBe = Set(HARD, SOFT, FIELD, SKIN)
 }
 
 /** Charlist subnamespace that holds hit locations strings and validation method */
@@ -1014,7 +1014,7 @@ object HitLocation {
   val FOOT_LEFT = "left foot"
   val SKIN = "skin"
   val BODY = "body"
-  val locMap: PartialFunction[String, Seq[String]] = {
+  val locMap: (String => Seq[String]) = {
     case HEAD => Seq(SKULL, FACE)
     case LEGS => Seq(LEG_RIGHT, LEG_LEFT)
     case ARMS => Seq(ARM_RIGHT, ARM_LEFT)
@@ -1027,8 +1027,8 @@ object HitLocation {
       GROIN, LEG_LEFT, LEG_RIGHT, FOOT_LEFT, FOOT_RIGHT)
     case x: String => Seq(x)
   }
-  val woundCanBe = (loc: String) => Set(EYES, SKULL, FACE, NECK, LEG_LEFT, LEG_RIGHT, ARM_LEFT, ARM_RIGHT, CHEST,
-    VITALS, ABDOMEN, GROIN, HAND_LEFT, HAND_RIGHT, FOOT_LEFT, FOOT_RIGHT)(loc)
+  val woundCanBe = Set(EYES, SKULL, FACE, NECK, LEG_LEFT, LEG_RIGHT, ARM_LEFT, ARM_RIGHT, CHEST, VITALS, ABDOMEN, GROIN,
+    HAND_LEFT, HAND_RIGHT, FOOT_LEFT, FOOT_RIGHT)
   val canBe = (loc: Seq[String]) => loc forall Set(EYES, SKULL, FACE, HEAD, NECK, LEG_LEFT, LEG_RIGHT, LEGS,
     ARM_LEFT, ARM_RIGHT, ARMS, CHEST, VITALS, ABDOMEN, GROIN, TORSO, HANDS, HAND_LEFT, HAND_RIGHT, FEET, FOOT_LEFT,
     FOOT_RIGHT, SKIN, BODY)
@@ -1071,7 +1071,7 @@ object ItemState {
   val COMBAT = "Combat"
   val TRAVEL = "Travel"
   val STASH = "Stash"
-  val canBe = (key: String) => Set(READY, EQUIPPED, COMBAT, TRAVEL, STASH)(key)
+  val canBe = Set(READY, EQUIPPED, COMBAT, TRAVEL, STASH)
 }
 
 /** Charlist subcontainer for total DR coverage stats, holds its calculation method */
@@ -1168,8 +1168,7 @@ object Posture {
   val CRAWLING = "Crawling"
   val LYING_PRONE = "Prone"
   val LYING_FACE_UP = "On Back"
-  val canBe = (posture: String) =>
-    Set(STANDING, CROUCHING, SITTING, KNEELING, CRAWLING, LYING_PRONE, LYING_FACE_UP)(posture)
+  val canBe = Set(STANDING, CROUCHING, SITTING, KNEELING, CRAWLING, LYING_PRONE, LYING_FACE_UP)
 }
 
 object Charlist {
