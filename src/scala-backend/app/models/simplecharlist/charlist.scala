@@ -24,7 +24,7 @@ case class Charlist(
                      wounds: Seq[Wound] = Seq(),
                      conditions: Conditions = Conditions(),
                      var api: String = "") {
-  api = "0.1.3"
+  api = "0.1.4"
 
   import HitLocation._
 
@@ -197,8 +197,9 @@ case class StatVars(
     combMove = (bm * .2 * (5 - cEnc)).toInt
     travMove = (bm * .2 * (5 - tEnc)).toInt
     dodge = bd - cEnc
-    combatEncumbrance = cEnc.toString
-    travelEncumbrance = tEnc.toString
+    val encStr = "None" :: "Light" :: "Medium" :: "Heavy" :: "Extra-Heavy" :: Nil
+    combatEncumbrance = encStr(cEnc)
+    travelEncumbrance = encStr(tEnc)
     this
   }
 }
@@ -431,8 +432,7 @@ object TraitCategory {
   val PERK = "Perk"
   val QUIRK = "Quirk"
   val LANGUAGE = "Language"
-  val TALENT = "Talent"
-  val canBe = (c: String) => Set(ADVANTAGE, DISADVANTAGE, PERK, QUIRK, LANGUAGE, TALENT)(c)
+  val canBe = (c: String) => Set(ADVANTAGE, DISADVANTAGE, PERK, QUIRK, LANGUAGE)(c)
 }
 
 /** Charlist subnamespace for trait modifier cost effect strings and validation method */

@@ -1,0 +1,1019 @@
+{
+  "_id" : "", // special field
+  "timestamp" : "0", // special field
+  "player" : "vlex",
+  "access" : [ ], // for future functionality
+  "name" : "Bjorn Masterson",
+  "cp" : {
+    "cp" : 265,
+    "stats" : 190, // calculated field
+    "adv" : 83, // calculated field
+    "dis" : 0, // calculated field
+    "skills" : 28, // calculated field
+    "unspent" : 59 // calculated field
+  },
+  "description" : {
+    "age" : "35",
+    "height" : "6f6i",
+    "weight" : "250",
+    "bio" : "longbio"
+  },
+  "stats" : {
+    "st" : {
+      "delta" : 0,
+      "base" : 10, // calculated field
+      "bonus" : 0, // calculated field
+      "cpMod" : 90, // calculated field
+      "cp" : 0 // calculated field
+    },
+    "dx" : {
+      "delta" : 3,
+      "base" : 10, // calculated field
+      "bonus" : 0, // calculated field
+      "cpMod" : 100, // calculated field
+      "cp" : 60 // calculated field
+    },
+    "iq" : {
+      "delta" : 0,
+      "base" : 10, // calculated field
+      "bonus" : 0, // calculated field
+      "cpMod" : 100, // calculated field
+      "cp" : 0 // calculated field
+    },
+    "ht" : {
+      "delta" : 2,
+      "base" : 10, // calculated field
+      "bonus" : 0, // calculated field
+      "cpMod" : 100, // calculated field
+      "cp" : 20 // calculated field
+    },
+    "will" : {
+      "delta" : 2,
+      "base" : 10, // calculated field
+      "bonus" : 0, // calculated field
+      "cpMod" : 100, // calculated field
+      "cp" : 10 // calculated field
+    },
+    "per" : {
+      "delta" : 2,
+      "base" : 10, // calculated field
+      "bonus" : 0, // calculated field
+      "cpMod" : 100, // calculated field
+      "cp" : 10 // calculated field
+    },
+    "liftSt" : {
+      "delta" : 0,
+      "base" : 10, // calculated field
+      "bonus" : 0, // calculated field
+      "cpMod" : 100, // calculated field
+      "cp" : 0 // calculated field
+    },
+    "strikeSt" : {
+      "delta" : 0,
+      "base" : 10, // calculated field
+      "bonus" : 0, // calculated field
+      "cpMod" : 100, // calculated field
+      "cp" : 0 // calculated field
+    },
+    "hp" : {
+      "delta" : 0,
+      "base" : 10, // calculated field
+      "bonus" : 0, // calculated field
+      "cpMod" : 100, // calculated field
+      "cp" : 0 // calculated field
+    },
+    "fp" : {
+      "delta" : 0,
+      "base" : 12, // calculated field
+      "bonus" : 0, // calculated field
+      "cpMod" : 100, // calculated field
+      "cp" : 0 // calculated field
+    },
+    "basicSpeed" : {
+      "delta" : -0.25,
+      "base" : 6.25, // calculated field
+      "bonus" : 0, // calculated field
+      "cpMod" : 100, // calculated field
+      "cp" : -5 // calculated field
+    },
+    "basicMove" : {
+      "delta" : 0,
+      "base" : 6, // calculated field
+      "bonus" : 1, // calculated field
+      "cpMod" : 100, // calculated field
+      "cp" : 0 // calculated field
+    }
+  },
+  "statVars" : { // calculated fields
+    "frightCheck" : 13,
+    "vision" : 12,
+    "hearing" : 12,
+    "tasteSmell" : 12,
+    "touch" : 12,
+    "thrDmg" : "1d-2",
+    "swDmg" : "1d",
+    "bl" : 20,
+    "combatEncumbrance" : "Light",
+    "travelEncumbrance" : "Light",
+    "combMove" : 5,
+    "travMove" : 5,
+    "dodge" : 9,
+    "sm" : 1
+  },
+  "damageResistance" : { // calculated fields
+    "skull" : {
+      "front" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      },
+      "rear" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      }
+    },
+    "eyes" : {
+      "front" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      },
+      "rear" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      }
+    },
+    "face" : {
+      "front" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      },
+      "rear" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      }
+    },
+    "neck" : {
+      "front" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      },
+      "rear" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      }
+    },
+    "armLeft" : {
+      "front" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      },
+      "rear" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      }
+    },
+    "armRight" : {
+      "front" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      },
+      "rear" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      }
+    },
+    "handLeft" : {
+      "front" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      },
+      "rear" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      }
+    },
+    "handRight" : {
+      "front" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      },
+      "rear" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      }
+    },
+    "chest" : {
+      "front" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      },
+      "rear" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      }
+    },
+    "vitals" : {
+      "front" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      },
+      "rear" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      }
+    },
+    "abdomen" : {
+      "front" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      },
+      "rear" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      }
+    },
+    "groin" : {
+      "front" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      },
+      "rear" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      }
+    },
+    "legLeft" : {
+      "front" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      },
+      "rear" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      }
+    },
+    "legRight" : {
+      "front" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      },
+      "rear" : {
+        "dr" : 0,
+        "ep" : 0,
+        "epi" : 0
+      }
+    },
+    "footLeft" : {
+      "front" : {
+        "dr" : 1,
+        "ep" : 1,
+        "epi" : 0
+      },
+      "rear" : {
+        "dr" : 1,
+        "ep" : 1,
+        "epi" : 0
+      }
+    },
+    "footRight" : {
+      "front" : {
+        "dr" : 1,
+        "ep" : 1,
+        "epi" : 0
+      },
+      "rear" : {
+        "dr" : 1,
+        "ep" : 1,
+        "epi" : 0
+      }
+    }
+  },
+  "reactions" : [ { // calculated fields
+    "affected" : "Airshipmen",
+    "modifiers" : [ {
+      "freq" : 16,
+      "mod" : 3,
+      "notes" : ""
+    }, {
+      "freq" : 10,
+      "mod" : 2,
+      "notes" : ""
+    } ]
+  } ],
+  "traits" : [ {
+    "name" : "Combat Reflexes",
+    "types" : [ "Mental", "Mundane" ], // valid strings: "Mental" "Physical" "Social" "Mundane" "Exotic" "Supernatural"
+    "category" : "Advantage", // valid strings: "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
+    "switch" : "Always on", // valid strings: "Always on" "Switchable" "Attack"
+    "ref" : "B43",
+    "notes" : "",
+    "prerequisites" : [ ], // for future functionality
+    "active" : true,
+    "modifiers" : [ {
+      "on" : true,
+      "name" : "Default",
+      "ref" : "",
+      "notes" : "",
+      "attrBonuses" : [ {
+        "attr" : "dodge", // valid strings: "st" "dx" "iq" "ht" "will" "fright checks" "per" "vision" "hearing" "taste/smell" "touch" "dodge" "parry" "block" "basic speed" "basic move" "hp" "fp" "sm"
+        "perLvl" : false,
+        "bonus" : 1
+      }, {
+        "attr" : "parry", // valid strings: "st" "dx" "iq" "ht" "will" "fright checks" "per" "vision" "hearing" "taste/smell" "touch" "dodge" "parry" "block" "basic speed" "basic move" "hp" "fp" "sm"
+        "perLvl" : false,
+        "bonus" : 1
+      }, {
+        "attr" : "block", // valid strings: "st" "dx" "iq" "ht" "will" "fright checks" "per" "vision" "hearing" "taste/smell" "touch" "dodge" "parry" "block" "basic speed" "basic move" "hp" "fp" "sm"
+        "perLvl" : false,
+        "bonus" : 1
+      }, {
+        "attr" : "fright checks", // valid strings: "st" "dx" "iq" "ht" "will" "fright checks" "per" "vision" "hearing" "taste/smell" "touch" "dodge" "parry" "block" "basic speed" "basic move" "hp" "fp" "sm"
+        "perLvl" : false,
+        "bonus" : 2
+      } ],
+      "skillBonuses" : [ {
+        "skill" : "Fast-Draw",
+        "skillCompare" : "is", // valid strings: "is" "begins with"
+        "spc" : "",
+        "spcCompare" : "any", // valid strings: "any" "is" "begins with"
+        "perLvl" : false,
+        "bonus" : 1
+      } ],
+      "dmgBonuses" : [ ],
+      "drBonuses" : [ ],
+      "attrCostMods" : [ ],
+      "reactBonuses" : [ ],
+      "affects" : "total",
+      "costType" : "percent",
+      "level" : 0,
+      "cost" : 0
+    } ],
+    "cpBase" : 15,
+    "level" : 0, // valid values >= 0
+    "cpPerLvl" : 0,
+    "cp" : 15 // calculated field
+  }, {
+    "name" : "Sorcery",
+    "types" : [ "Mental", "Supernatural" ], // valid strings: "Mental" "Physical" "Social" "Mundane" "Exotic" "Supernatural"
+    "category" : "Advantage", // valid strings: "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
+    "switch" : "Always on", // valid strings: "Always on" "Switchable" "Attack"
+    "ref" : "",
+    "notes" : "",
+    "prerequisites" : [ ], // for future functionality
+    "active" : true,
+    "modifiers" : [ ],
+    "cpBase" : 10,
+    "level" : 2, //valid values >= 0
+    "cpPerLvl" : 10,
+    "cp" : 30 // calculated field
+  }, {
+    "name" : "Hot Pilot",
+    "types" : [ "Mental", "Mundane" ], // valid strings: "Mental" "Physical" "Social" "Mundane" "Exotic" "Supernatural"
+    "category" : "Advantage", // valid strings: "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
+    "switch" : "Always on", // valid strings: "Always on" "Switchable" "Attack"
+    "ref" : "B89",
+    "notes" : "",
+    "prerequisites" : [ ], // for future functionality
+    "active" : true,
+    "modifiers" : [ {
+      "on" : true,
+      "name" : "Talent",
+      "ref" : "",
+      "notes" : "",
+      "attrBonuses" : [ ],
+      "skillBonuses" : [ {
+        "skill" : "Piloting",
+        "skillCompare" : "is", // valid strings: "is" "begins with"
+        "spc" : "",
+        "spcCompare" : "any", // valid strings: "any" "is" "begins with"
+        "perLvl" : false,
+        "bonus" : 1
+      }, {
+        "skill" : "Navigation",
+        "skillCompare" : "is", // valid strings: "is" "begins with"
+        "spc" : "Air",
+        "spcCompare" : "is", // valid strings: "any" "is" "begins with"
+        "perLvl" : false,
+        "bonus" : 1
+      } ],
+      "dmgBonuses" : [ ],
+      "drBonuses" : [ ],
+      "attrCostMods" : [ ],
+      "reactBonuses" : [ {
+        "affected" : "Airshipmen",
+        "reputation" : false,
+        "perLvl" : true,
+        "freq" : 16, // valid values: 16 13 10 7
+        "bonus" : 1,
+        "notes" : ""
+      } ],
+      "affects" : "total",
+      "costType" : "percent",
+      "level" : 0,
+      "cost" : 0
+    } ],
+    "cpBase" : 0,
+    "level" : 3, //valid values >= 0
+    "cpPerLvl" : 5,
+    "cp" : 15 // calculated field
+  }, {
+    "name" : "Positive Reputation: Airshipmen",
+    "types" : [ "Social", "Mundane" ], // valid strings: "Mental" "Physical" "Social" "Mundane" "Exotic" "Supernatural"
+    "category" : "Advantage", // valid strings: "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
+    "switch" : "Always on", // valid strings: "Always on" "Switchable" "Attack"
+    "ref" : "B26",
+    "notes" : "",
+    "prerequisites" : [ ], // for future functionality
+    "active" : true,
+    "modifiers" : [ {
+      "on" : true,
+      "name" : "Group size: Large",
+      "ref" : "",
+      "notes" : "",
+      "attrBonuses" : [ ],
+      "skillBonuses" : [ ],
+      "dmgBonuses" : [ ],
+      "drBonuses" : [ ],
+      "attrCostMods" : [ ],
+      "reactBonuses" : [ ],
+      "affects" : "total", // valid strings: "total" "base" "levels"
+      "costType" : "multiplier", // valid strings: "percent" "percent per level" "points" "multiplier"
+      "level" : 0, //valid values >= 0
+      "cost" : 0.5
+    }, {
+      "on" : true,
+      "name" : "Frequency of recognition: Sometimes",
+      "ref" : "",
+      "notes" : "",
+      "attrBonuses" : [ ],
+      "skillBonuses" : [ ],
+      "dmgBonuses" : [ ],
+      "drBonuses" : [ ],
+      "attrCostMods" : [ ],
+      "reactBonuses" : [ {
+        "affected" : "Airshipmen",
+        "reputation" : true,
+        "perLvl" : true,
+        "freq" : 10, // valid values: 16 13 10 7
+        "bonus" : 1,
+        "notes" : ""
+      } ],
+      "affects" : "total", // valid strings: "total" "base" "levels"
+      "costType" : "multiplier", // valid strings: "percent" "percent per level" "points" "multiplier"
+      "level" : 0, //valid values >= 0
+      "cost" : 0.5
+    } ],
+    "cpBase" : 0,
+    "level" : 2, //valid values >= 0
+    "cpPerLvl" : 5,
+    "cp" : 3 // calculated field
+  }, {
+    "name" : "Weapon Master (Shield)",
+    "types" : [ "Mental", "Mundane" ], // valid strings: "Mental" "Physical" "Social" "Mundane" "Exotic" "Supernatural"
+    "category" : "Advantage", // valid strings: "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
+    "switch" : "Always on", // valid strings: "Always on" "Switchable" "Attack"
+    "ref" : "B99",
+    "notes" : "",
+    "prerequisites" : [ ], // for future functionality
+    "active" : true,
+    "modifiers" : [ {
+      "name" : "One specific weapon",
+      "ref" : "",
+      "notes" : "",
+      "attrBonuses" : [ ],
+      "skillBonuses" : [ ],
+      "dmgBonuses" : [ {
+        "skill" : "Shield",
+        "skillCompare" : "is", // valid strings: "is" "begins with"
+        "spc" : "",
+        "spcCompare" : "any", // valid strings: "any" "is" "begins with"
+        "relSkill" : 1,
+        "perDie" : true,
+        "bonus" : 1
+      }, {
+        "skill" : "Shield",
+        "skillCompare" : "is", // valid strings: "is" "begins with"
+        "spc" : "",
+        "spcCompare" : "any", // valid strings: "any" "is" "begins with"
+        "relSkill" : 2,
+        "perDie" : true,
+        "bonus" : 1
+      } ],
+      "drBonuses" : [ ],
+      "attrCostMods" : [ ],
+      "reactBonuses" : [ ],
+      "affects" : "total", // valid strings: "total" "base" "levels"
+      "costType" : "points", // valid strings: "percent" "percent per level" "points" "multiplier"
+      "level" : 0, //valid values >= 0
+      "cost" : 20
+    } ],
+    "cpBase" : 0,
+    "level" : 0, //valid values >= 0
+    "cpPerLvl" : 0,
+    "cp" : 20 // calculated field
+  }, {
+    "name" : "Skull",
+    "types" : [ "Physical" ], // valid strings: "Mental" "Physical" "Social" "Mundane" "Exotic" "Supernatural"
+    "category" : "Advantage", // valid strings: "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
+    "switch" : "Always on", // valid strings: "Always on" "Switchable" "Attack"
+    "ref" : "",
+    "notes" : "",
+    "prerequisites" : [ ], // for future functionality
+    "modifiers" : [ ],
+    "attrBonuses" : [ ],
+    "skillBonuses" : [ ],
+    "dmgBonuses" : [ ],
+    "drBonuses" : [ {
+      "locations" : [ "skull" ], // valid strings:  "eyes" "skull" "face" "head" "neck" "right leg" "left leg" "legs" "right arm" "left arm" "arms" "chest" "vitals" "abdomen" "groin" "torso" "hands" "left hand" "right hand" "feet" "right foot" "left foot" "skin" "body"
+      "perLvl" : true,
+      "front" : true,
+      "back" : true,
+      "protection" : {
+        "dr" : 0, //valid values >= 0
+        "ep" : 0, //valid values >= 0
+        "epi" : 0 //valid values >= 0
+      } 
+    } ],
+    "attrCostMods" : [ ],
+    "reactBonuses" : [ ],
+    "cpBase" : 0,
+    "level" : 0, //valid values >= 0
+    "cpPerLvl" : 0,
+    "cp" : 0 // calculated field
+  }, {
+    "name" : "Gigantism",
+    "types" : [ "Physical", "Mundane" ], // valid strings: "Mental" "Physical" "Social" "Mundane" "Exotic" "Supernatural"
+    "category" : "Advantage", // valid strings: "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
+    "switch" : "Always on", // valid strings: "Always on" "Switchable" "Attack"
+    "ref" : "B20",
+    "notes" : "",
+    "prerequisites" : [ ], // for future functionality
+    "active" : true,
+    "modifiers" : [ {
+      "on" : true,
+      "name" : "Default",
+      "ref" : "",
+      "notes" : "",
+      "attrBonuses" : [ {
+        "attr" : "sm", // valid strings: "st" "dx" "iq" "ht" "will" "fright checks" "per" "vision" "hearing" "taste/smell" "touch" "dodge" "parry" "block" "basic speed" "basic move" "hp" "fp" "sm"
+        "perLvl" : false,
+        "bonus" : 1
+      }, {
+        "attr" : "basic move",
+        "perLvl" : false, // valid strings: "st" "dx" "iq" "ht" "will" "fright checks" "per" "vision" "hearing" "taste/smell" "touch" "dodge" "parry" "block" "basic speed" "basic move" "hp" "fp" "sm"
+        "bonus" : 1
+      } ],
+      "skillBonuses" : [ {
+        "skill" : "Disguise",
+        "skillCompare" : "is", // valid strings: "is" "begins with"
+        "spc" : "",
+        "spcCompare" : "any", // valid strings: "any" "is" "begins with"
+        "perLvl" : false,
+        "bonus" : -2
+      }, {
+        "skill" : "Shadowing",
+        "skillCompare" : "is", // valid strings: "is" "begins with"
+        "spc" : "",
+        "spcCompare" : "any", // valid strings: "any" "is" "begins with"
+        "perLvl" : false,
+        "bonus" : -2
+      } ],
+      "dmgBonuses" : [ ],
+      "drBonuses" : [ ],
+      "attrCostMods" : [ {
+        "attr" : "ST", // valid strings: “ST” “DX” “IQ” “HT”
+        "cost" : -10
+      } ],
+      "reactBonuses" : [ ],
+      "affects" : "total",
+      "costType" : "percent",
+      "level" : 0,
+      "cost" : 0
+    } ],
+    "cpBase" : 0,
+    "level" : 0, //valid values >= 0
+    "cpPerLvl" : 0,
+    "cp" : 0 // calculated field
+  } ],
+  "skills" : [ {
+    "name" : "Guns",
+    "spc" : "Pistol",
+    "tl" : 5, // valid values >= 0 & < 13
+    "skillString" : "Guns/TL5 (Pistol)", // calculated field
+    "attr" : "DX", // valid strings: "ST" "IQ" "DX" "HT" "Will" "Per"
+    "diff" : "A", // valid strings: "E" "A" "H" "VH" "W"
+    "defaults" : [ ], // for future functionality
+    "prerequisites" : [ ], // for future functionality
+    "dmgBonuses" : [ ],
+    "reactBonuses" : [ ],
+    "encumbr" : false,
+    "bonus" : 0, // calculated field
+    "categories" : [ ],
+    "notes" : "",
+    "cp" : 12, // calculated field
+    "relLvl" : 3, 
+    "lvl" : 16 // calculated field
+  }, {
+    "name" : "Brawling",
+    "spc" : "",
+    "tl" : 0, // valid values >= 0 & < 13
+    "skillString" : "Brawling", // calculated field
+    "attr" : "DX", // valid strings: "ST" "IQ" "DX" "HT" "Will" "Per"
+    "diff" : "E", // valid strings: "E" "A" "H" "VH" "W"
+    "defaults" : [ ], // for future functionality
+    "prerequisites" : [ ], // for future functionality
+    "dmgBonuses" : [ {
+      "skill" : "Brawling",
+      "skillCompare" : "is", // valid strings: "is" "begins with"
+      "spc" : "",
+      "spcCompare" : "any", // valid strings: "any" "is" "begins with"
+      "relSkill" : 1,
+      "perDie" : true,
+      "bonus" : 1
+    }, {
+      "skill" : "Brawling",
+      "skillCompare" : "is", // valid strings: "is" "begins with"
+      "spc" : "",
+      "spcCompare" : "any", // valid strings: "any" "is" "begins with"
+      "relSkill" : 2,
+      "perDie" : true,
+      "bonus" : 1
+    } ],
+    "reactBonuses" : [ ],
+    "encumbr" : false,
+    "bonus" : 0, // calculated field
+    "categories" : [ ],
+    "notes" : "",
+    "cp" : 4, // calculated field
+    "relLvl" : 2, 
+    "lvl" : 15 // calculated field
+  } ],
+  "techniques" : [ {
+    "name" : "Off-hand weapon training",
+    "skill" : "Guns",
+    "spc" : "Pistol",
+    "tchString" : "Off-hand weapon training (Guns (Pistol))", // calculated field
+    "diff" : "H",  // valid strings: "A" "H"
+    "style" : "Trench Warfare",
+    "defLvl" : -4,
+    "maxLvl" : 0, // valid values > defLvl
+    "notes" : "",
+    "cp" : 5,  // calculated field
+    "relLvl" : 0, // valid values >= defLvl & <= maxLvl
+    "lvl" : 16 // calculated field
+  } ],
+  "equip" : {
+    "weapons" : [ {
+      "name" : "Brawling",
+      "state" : "Ready", // valid strings: "Ready" "Equipped" "Combat" "Travel" "Stash"
+	  "innate" : true,
+      "attacksMelee" : [ {
+        "name" : "Punch",
+        "available" : true, // for future functionality
+		"grip" : "", // for future functionality
+        "damage" : {
+          "attackType" : "thr", // valid strings: "thr" "sw" ""
+          "dmgDice" : 0, // valid values >= 0
+          "dmgMod" : -1,
+          "armorDiv" : 1, // valid values: 0.1, 0.2, 0.5, 1, 2, 3, 5, 10, 100
+          "dmgType" : "cr", // valid strings: "cr" "cr ex" "cut" "imp" "pi-" "pi" "pi+" "pi++" "burn" "burn ex" "tox" "cor" "aff" "fat" "spec."
+          "dmgString" : "1d-1 cr" // calculated field
+        },
+        "followup" : [ {
+          "attackType" : "", // valid strings: "thr" "sw" ""
+          "dmgDice" : 4, // valid values >= 0
+          "dmgMod" : 0,
+          "armorDiv" : 1, // valid values: 0.1, 0.2, 0.5, 1, 2, 3, 5, 10, 100
+          "dmgType" : "burn", // valid strings: "cr" "cr ex" "cut" "imp" "pi-" "pi" "pi+" "pi++" "burn" "burn ex" "tox" "cor" "aff" "fat" "spec."
+          "dmgString" : “4d burn" // calculated field
+        } ],
+        "linked" : [ {
+          "attackType" : "", // valid strings: "thr" "sw" ""
+          "dmgDice" : 2, // valid values >= 0
+          "dmgMod" : 0,
+          "armorDiv" : 1, // valid values: 0.1, 0.2, 0.5, 1, 2, 3, 5, 10, 100
+          "dmgType" : "tox", // valid strings: "cr" "cr ex" "cut" "imp" "pi-" "pi" "pi+" "pi++" "burn" "burn ex" "tox" "cor" "aff" "fat" "spec."
+          "dmgString" : “2d tox" // calculated field
+        } ],
+        "skill" : "Brawling",
+        "spc" : "",
+        "parry" : 0,
+        "parryType" : "",
+        "parryString" : "0", // calculated field
+        "st" : 1, // valid values > 0
+        "hands" : "",
+        "reach" : "C",
+        "notes" : ""
+      }, {
+        "name" : "Kick in Boots",
+        "available" : true, // for future functionality
+		"grip" : "", // for future functionality
+        "damage" : {
+          "attackType" : "thr", // valid strings: "thr" "sw" ""
+          "dmgDice" : 0, // valid values >= 0
+          "dmgMod" : 0,
+          "armorDiv" : 1, // valid values: 0.1, 0.2, 0.5, 1, 2, 3, 5, 10, 100
+          "dmgType" : "cr", // valid strings: "cr" "cr ex" "cut" "imp" "pi-" "pi" "pi+" "pi++" "burn" "burn ex" "tox" "cor" "aff" "fat" "spec."
+          "dmgString" : "1d cr" // calculated field
+        },
+        "followup" : [ ],
+        "linked" : [ ],
+        "skill" : "Brawling",
+        "spc" : "",
+        "parry" : 0,
+        "parryType" : "No",
+        "parryString" : "No", // calculated field
+        "st" : 10, // valid values > 0
+        "hands" : "",
+        "reach" : "1",
+        "notes" : ""
+      } ],
+      "attacksRanged" : [ ],
+	  "blocks" : [ ],
+      "grips" : [ ], // calculated field
+      "offHand" : false, // for future functionality
+      "bulk" : 0, // valid values <= 0
+      "dr" : 0, // valid values >= 0
+      "hp" : 4, // valid values >= 0
+      "hpLeft" : 4, // valid values >= 0 & <= hp
+      "broken" : false,
+      "lc" : 5, // valid values >= 0 & < 6
+      "tl" : 0, // valid values >= 0 & < 13
+      "notes" : "",
+      "wt" : 0, // valid values >= 0
+      "cost" : 0, // valid values >= 0
+      "totalWt" : 0, // calculated field
+      "totalCost" : 0 // calculated field
+    }, {
+      "name" : "Revolver",
+      "state" : "Ready", // valid strings: "Ready" "Equipped" "Combat" "Travel" "Stash"
+	  "innate" : false,
+      "attacksMelee" : [ ],
+      "attacksRanged" : [ {
+        "name" : "LE",
+        "available" : true, // for future functionality
+		"grip" : "", // for future functionality
+        "damage" : {
+          "dmgDice" : 1, // valid values >= 0
+          "diceMult" : 1, // valid values > 0
+          "dmgMod" : 2,
+          "armorDiv" : 0.5, // valid values: 0.1, 0.2, 0.5, 1, 2, 3, 5, 10, 100
+          "dmgType" : "pi+", // valid strings: "cr" "cr ex" "cut" "imp" "pi-" "pi" "pi+" "pi++" "burn" "burn ex" "tox" "cor" "aff" "fat" "spec."
+          "fragDice" : 0, // valid values >= 0
+          "dmgString" : "1d+2(0.5) pi+" // calculated field
+        },
+        "followup" : [ {
+          "dmgDice" : 1, // valid values >= 0
+          "diceMult" : 1, // valid values > 0
+          "dmgMod" : 1,
+          "armorDiv" : 1, // valid values: 0.1, 0.2, 0.5, 1, 2, 3, 5, 10, 100
+          "dmgType" : "cr ex", // valid strings: "cr" "cr ex" "cut" "imp" "pi-" "pi" "pi+" "pi++" "burn" "burn ex" "tox" "cor" "aff" "fat" "spec."
+          "fragDice" : 1, // valid values >= 0
+          "dmgString" : "1d+1 cr ex [1d]" // calculated field
+        } ],
+        "linked" : [ {
+          "dmgDice" : 2, // valid values >= 0
+          "diceMult" : 1, // valid values > 0
+          "dmgMod" : 0,
+          "armorDiv" : 1, // valid values: 0.1, 0.2, 0.5, 1, 2, 3, 5, 10, 100
+          "dmgType" : "tox", // valid strings: "cr" "cr ex" "cut" "imp" "pi-" "pi" "pi+" "pi++" "burn" "burn ex" "tox" "cor" "aff" "fat" "spec."
+          "fragDice" : 0, // valid values >= 0
+          "dmgString" : "2d tox" // calculated field
+        } ],
+        "skill" : "Guns",
+        "spc" : "Pistol",
+		"jet" : false,
+        "acc" : 2, // valid values >= 0
+        "accMod" : 0, // valid values >= 0
+        "rng" : "50/200",
+        "rof" : {
+          "rof" : 1, // valid values > 0
+          "rofMult" : 1, // valid values > 0
+          "rofFA" : false,
+          "rofString" : "1" // calculated field
+        },
+        "rcl" : 2, // valid values > 0
+        "shots" : {
+          "shots" : 6, // valid values >= 0
+          "reload" : "(3i)",
+          "shotsLoaded" : 6, // valid values >= 0 & <= shots
+          "shotsCarried" : 30, // valid values >= 0
+          "shotWt" : 0.1, // valid values >= 0
+          "shotCost" : 2, // valid values >= 0
+          "shotsString" : "6/6(3i) 30", // calculated field
+          "totalWt" : 3.6, // calculated field
+          "totalCost" : 72 // calculated field
+        },
+        "st" : 9, // valid values > 0
+        "hands" : "",
+        "malf" : 17, // valid values < 19 & > 3
+        "notes" : ""
+      } ],
+	  "blocks" : [ ],
+      "grips" : [ "" ], // calculated field
+      "offHand" : true, // for future functionality
+      "bulk" : -2, // valid values <= 0
+      "dr" : 7, // valid values >= 0
+      "hp" : 10, // valid values >= 0
+      "hpLeft" : 10, // valid values >= 0 & <= hp
+      "broken" : false,
+      "lc" : 4, // valid values >= 0 & < 6
+      "tl" : 5, // valid values >= 0 & < 13
+      "notes" : "",
+      "wt" : 4.1, // valid values >= 0
+      "cost" : 350, // valid values >= 0
+      "totalWt" : 7.699999999999999, // calculated field
+      "totalCost" : 422 // calculated field
+    }, {
+      "name" : "Shield",
+      "state" : "Ready",
+      "innate" : false,
+      "attacksMelee" : [ {
+        "name" : "Bash",
+        "available" : true,
+        "grip" : "Normal",
+        "damage" : {
+          "attackType" : "thr",
+          "dmgDice" : 0,
+          "dmgMod" : 0,
+          "armorDiv" : 1,
+          "dmgType" : "cr",
+          "dmgString" : "1d-2 cr"
+        },
+        "followup" : [ ],
+        "linked" : [ ],
+        "skill" : "Shield",
+        "spc" : "",
+        "parry" : 0,
+        "parryType" : "No",
+        "parryString" : "No",
+        "st" : 6,
+        "hands" : "",
+        "reach" : "1",
+        "notes" : ""
+      } ],
+      "attacksRanged" : [ ],
+      "blocks" : [ {
+        "name" : "Block",
+        "available" : true, // for future functionality
+        "grip" : "Normal", // for future functionality
+        "skill" : "Shield",
+        "spc" : "",
+        "db" : 2, // valid values > 0
+        "notes" : ""
+      } ],
+      "grips" : [ "Normal" ], // calculated field
+      "offHand" : false, // for future functionality
+      "bulk" : -6,
+      "dr" : 7,
+      "hp" : 40,
+      "hpLeft" : 40,
+      "broken" : false,
+      "lc" : 5,
+      "tl" : 1,
+      "notes" : "",
+      "wt" : 15,
+      "cost" : 60,
+      "totalWt" : 15,
+      "totalCost" : 60
+    } ],
+    "armor" : [ {
+      "name" : "Boots",
+      "carried" : "Equipped", // valid strings: "Ready" "Equipped" "Combat" "Travel" "Stash"
+      "db" : 0, // valid values >= 0 & < 4
+      "protection" : {
+        "dr" : 1, // valid values >= 0
+        "ep" : 1, // valid values >= 0
+        "epi" : 0 // valid values >= 0
+      },
+      "front" : true,
+      "back" : true,
+      "drType" : "hard", // valid strings: "hard" "soft" "force field" "tough skin"
+      "locations" : [ "feet" ], // valid strings:  "eyes" "skull" "face" "head" "neck" "right leg" "left leg" "legs" "right arm" "left arm" "arms" "chest" "vitals" "abdomen" "groin" "torso" "hands" "left hand" "right hand" "feet" "right foot" "left foot" "skin" "body"
+      "hp" : 5, // valid values >= 0
+      "hpLeft" : 5, // valid values >= 0 & <= hp
+      "broken" : false,
+      "lc" : 5, // valid values >= 0 & < 6
+      "tl" : 5, // valid values >= 0 & < 13
+      "notes" : "",
+      "wt" : 2, // valid values >= 0
+      "cost" : 50 // valid values >= 0
+    } ],
+    "items" : [ {
+      "name" : "Holster",
+      "carried" : "Equipped", // valid strings: "Ready" "Equipped" "Combat" "Travel" "Stash"
+      "dr" : 1, // valid values >= 0
+      "hp" : 5, // valid values >= 0
+      "hpLeft" : 5, // valid values >= 0 & <= hp
+      "broken" : false,
+      "lc" : 5, // valid values >= 0 & < 6
+      "tl" : 5, // valid values >= 0 & < 13
+      "notes" : "",
+      "wt" : 0.5, // valid values >= 0
+      "cost" : 75, // valid values >= 0
+      "n" : 1, // valid values >= 0
+      "totalWt" : 0.5, // calculated field
+      "totalCost" : 75 // calculated field
+    }, {
+      "name" : "Small Backpack",
+      "carried" : "Travel", // valid strings: "Ready" "Equipped" "Combat" "Travel" "Stash"
+      "dr" : 0, // valid values >= 0
+      "hp" : 5, // valid values >= 0
+      "hpLeft" : 5, // valid values >= 0 & <= hp
+      "broken" : false,
+      "lc" : 5, // valid values >= 0 & < 6
+      "tl" : 5, // valid values >= 0 & < 13
+      "notes" : "",
+      "wt" : 3, // valid values >= 0
+      "cost" : 60, // valid values >= 0
+      "n" : 1, // valid values >= 0
+      "totalWt" : 3, // calculated field
+      "totalCost" : 60 // calculated field
+    } ],
+    "totalDb" : 2, // calculated field
+    "totalCost" : 667, // calculated field
+    "totalCombWt" : 25.2, // calculated field
+    "totalTravWt" : 28.2, // calculated field
+	"combat" : false // for future functionality
+  },
+  "currentStats" : { // for future functionality
+    "hpLost" : 1, // valid values > 0
+    "fpLost" : 10, // valid values > 0
+    "reeling" : false,
+    "tired" : true,
+    "collapsing" : false,
+    "fallingAslp" : false,
+    "vision" : 0, // calculated field
+    "hearing" : 0, // calculated field
+    "move" : 5, // calculated field
+    "dodge" : 9 // calculated field
+  },
+  "wounds" : [ { // for future functionality
+    "location" : "chest", // valid strings: "eyes" "skull" "face" "neck" "right leg" "left leg" "right arm" "left arm" "chest" "vitals" "abdomen" "groin" "left hand" "right hand" "right foot" "left foot"
+    "dType" : "cr", // valid strings: "cr" "cr ex" "cut" "imp" "pi-" "pi" "pi+" "pi++" "burn" "burn ex" "tox" "cor" "aff" "fat" "spec." 
+    "points" : 1, // valid values > 0
+    "firstAid" : false,
+    "bleeding" : false,
+    "crippling" : false,
+    "lasting" : false
+  } ],
+  "conditions" : { // for future functionality
+    "unconscious" : false,
+    "mortallyWounded" : false,
+    "dead" : false,
+    "shock" : 0, // valid values >= 0 & < 9
+    "stunned" : false,
+    "afflictions" : {
+      "coughing" : false,
+      "drowsy" : false,
+      "drunk" : false,
+      "euphoria" : false,
+      "nauseated" : false,
+      "pain" : false,
+      "tipsy" : false,
+      "agony" : false,
+      "choking" : false,
+      "daze" : false,
+      "ecstasy" : false,
+      "hallucinating" : false,
+      "paralysis" : false,
+      "retching" : false,
+      "seizure" : false,
+      "coma" : false,
+      "heartAttack" : false
+    },
+    "posture" : "Standing", // valid strings: "Standing" "Crouching" "Sitting" "Kneeling" "Crawling" "Prone" "On Back"
+    "closeCombat" : false,
+    "grappled" : false,
+    "pinned" : false,
+    "sprinting" : false,
+    "mounted" : false
+  },
+  "api" : "0.3.1" // hardcoded
+}

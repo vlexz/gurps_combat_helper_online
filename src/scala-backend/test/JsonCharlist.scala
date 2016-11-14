@@ -22,12 +22,14 @@ object JsonCharlist {
         types = Seq(TraitType.MENTAL, TraitType.MUNDANE),
         category = TraitCategory.ADVANTAGE,
         ref = "B43",
-        attrBonuses = Seq(
-          BonusAttribute(BonusToAttribute.DODGE, perLvl = false, bonus = 1),
-          BonusAttribute(BonusToAttribute.PARRY, perLvl = false, bonus = 1),
-          BonusAttribute(BonusToAttribute.BLOCK, perLvl = false, bonus = 1),
-          BonusAttribute(BonusToAttribute.FC, perLvl = false, bonus = 2)),
-        skillBonuses = Seq(BonusSkill(skill = "Fast-Draw", perLvl = false, bonus = 1)),
+        modifiers = Seq(TraitModifier(
+          name = "Default",
+          attrBonuses = Seq(
+            BonusAttribute(BonusToAttribute.DODGE, perLvl = false, bonus = 1),
+            BonusAttribute(BonusToAttribute.PARRY, perLvl = false, bonus = 1),
+            BonusAttribute(BonusToAttribute.BLOCK, perLvl = false, bonus = 1),
+            BonusAttribute(BonusToAttribute.FC, perLvl = false, bonus = 2)),
+          skillBonuses = Seq(BonusSkill(skill = "Fast-Draw", perLvl = false, bonus = 1)))),
         cpBase = 15),
       Trait(
         name = "Sorcery",
@@ -39,12 +41,14 @@ object JsonCharlist {
       Trait(
         name = "Hot Pilot",
         types = Seq(TraitType.MENTAL, TraitType.MUNDANE),
-        category = TraitCategory.TALENT,
-        skillBonuses = Seq(
-          BonusSkill(skill = "Piloting", bonus = 1),
-          BonusSkill(skill = "Navigation", spc = "Air", spcCompare = NameCompare.IS, bonus = 1)),
-        reactBonuses = Seq(BonusReaction(affected = "Airshipmen", perLvl = true, bonus = 1)),
+        category = TraitCategory.ADVANTAGE,
         ref = "B89",
+        modifiers = Seq(TraitModifier(
+          name = "Talent",
+          skillBonuses = Seq(
+            BonusSkill(skill = "Piloting", bonus = 1),
+            BonusSkill(skill = "Navigation", spc = "Air", spcCompare = NameCompare.IS, bonus = 1)),
+          reactBonuses = Seq(BonusReaction(affected = "Airshipmen", perLvl = true, bonus = 1)))),
         level = 3,
         cpPerLvl = 5),
       Trait(
@@ -77,19 +81,20 @@ object JsonCharlist {
             affects = TraitModifierAffects.TOTAL,
             costType = TraitModifierCostType.POINTS,
             cost = 20))),
-      Trait(name = "Skull", drBonuses = Seq(BonusDR(Seq(HitLocation.SKULL), protection = DrSet(2)))),
       Trait(
         name = "Gigantism",
         types = Seq(TraitType.PHYSICAL, TraitType.MUNDANE),
         category = TraitCategory.ADVANTAGE,
         ref = "B20",
-        attrBonuses = Seq(
-          BonusAttribute(BonusToAttribute.SM, perLvl = false, bonus = 1),
-          BonusAttribute(BonusToAttribute.BASIC_MOVE, perLvl = false, bonus = 1)),
-        skillBonuses = Seq(
-          BonusSkill(skill = "Disguise", perLvl = false, bonus = -2),
-          BonusSkill(skill = "Shadowing", perLvl = false, bonus = -2)),
-        attrCostMods = Seq(BonusAttributeCost(attr = SkillBaseAttribute.ST, cost = -10)))),
+        modifiers = Seq(TraitModifier(
+          name = "Default",
+          attrBonuses = Seq(
+            BonusAttribute(BonusToAttribute.SM, perLvl = false, bonus = 1),
+            BonusAttribute(BonusToAttribute.BASIC_MOVE, perLvl = false, bonus = 1)),
+          skillBonuses = Seq(
+            BonusSkill(skill = "Disguise", perLvl = false, bonus = -2),
+            BonusSkill(skill = "Shadowing", perLvl = false, bonus = -2)),
+          attrCostMods = Seq(BonusAttributeCost(attr = SkillBaseAttribute.ST, cost = -10)))))),
     skills = Seq[Skill](
       Skill(name = "Guns", spc = "Pistol", diff = SkillDifficulty.AVERAGE, tl = 5, relLvl = 3),
       Skill(
