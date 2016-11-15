@@ -711,7 +711,7 @@
           "dmgMod" : 0,
           "armorDiv" : 1, // valid values: 0.1, 0.2, 0.5, 1, 2, 3, 5, 10, 100
           "dmgType" : "burn", // valid strings: "cr" "cr ex" "cut" "imp" "pi-" "pi" "pi+" "pi++" "burn" "burn ex" "tox" "cor" "aff" "fat" "spec."
-          "dmgString" : “4d burn" // calculated field
+          "dmgString" : "4d burn" // calculated field
         } ],
         "linked" : [ {
           "attackType" : "", // valid strings: "thr" "sw" ""
@@ -719,7 +719,7 @@
           "dmgMod" : 0,
           "armorDiv" : 1, // valid values: 0.1, 0.2, 0.5, 1, 2, 3, 5, 10, 100
           "dmgType" : "tox", // valid strings: "cr" "cr ex" "cut" "imp" "pi-" "pi" "pi+" "pi++" "burn" "burn ex" "tox" "cor" "aff" "fat" "spec."
-          "dmgString" : “2d tox" // calculated field
+          "dmgString" : "2d tox" // calculated field
         } ],
         "skill" : "Brawling",
         "spc" : "",

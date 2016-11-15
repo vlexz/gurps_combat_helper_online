@@ -2,9 +2,11 @@ name := """ggmtools"""
 
 version := "0.1"
 
-lazy val `ggmtools` = (project in file(".")).enablePlugins(PlayScala)
+lazy val commonSettings = Seq(scalaVersion := "2.11.8")
 
-scalaVersion := "2.11.8"
+lazy val ggmtools = project in file(".") enablePlugins PlayScala settings (commonSettings: _*)
+
+lazy val preloader = project dependsOn ggmtools settings (commonSettings: _*)
 
 routesGenerator := InjectedRoutesGenerator
 
