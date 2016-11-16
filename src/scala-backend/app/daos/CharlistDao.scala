@@ -31,9 +31,9 @@ trait CharlistDao {
 
 @Singleton
 class MongoCharlistDao @Inject()(mongo: Mongo) extends CharlistDao {
-  private val charlists: MongoCollection[Document] = mongo.db.getCollection("characters")
-  private val toDoc: Charlist => Document = x => Document(Json.toJson(x).toString)
-  private val documentToJsonHeader: Document => JsObject =
+  private val charlists: MongoCollection[Document] = mongo.db getCollection "characters"
+  private val toDoc: Charlist => Document = x => Document(Json toJson x toString())
+  private val docHeaderToJson: Document => JsObject =
     doc => Json.obj(
       ID -> doc.get(ID).get.asString.getValue,
       TIMESTAMP -> doc.get(TIMESTAMP).get.asString.getValue,
@@ -42,7 +42,7 @@ class MongoCharlistDao @Inject()(mongo: Mongo) extends CharlistDao {
 
   override def save(charlist: Charlist): Future[Completed] = charlists insertOne toDoc(charlist) head()
 
-  override def find(): Future[Seq[JsObject]] = charlists find() map documentToJsonHeader toFuture()
+  override def find(): Future[Seq[JsObject]] = charlists find() map docHeaderToJson toFuture()
 
   override def find(id: String): Future[JsValue] = charlists find Filters.equal(ID, id) head() map (Json parse _.toJson)
 
@@ -53,6 +53,6 @@ class MongoCharlistDao @Inject()(mongo: Mongo) extends CharlistDao {
 
   override def delete(id: String): Future[Seq[JsObject]] = {
     charlists deleteOne Filters.equal(ID, id) head()
-    charlists find() map documentToJsonHeader toFuture()
+    charlists find() map docHeaderToJson toFuture()
   }
 }

@@ -1,5 +1,7 @@
 package models.charlist
 
+import play.api.libs.json.Json
+
 import scala.collection.breakOut
 import scalaz.Scalaz._
 
@@ -332,13 +334,13 @@ sealed abstract class DamageBonusing {
     import NameCompare.{ANY, _}
     val skillFit = (b: BonusDamage) => b.skillCompare match {
       case IS => s equalsIgnoreCase b.skill
-      case BEGINS => s regionMatches (true, 0, b.skill, 0, b.skill.length)
+      case BEGINS => s regionMatches(true, 0, b.skill, 0, b.skill.length)
       case CONTAINS => s contains b.skill
     }
     val spcFit = (b: BonusDamage) => b.spcCompare match {
       case ANY => true
       case IS => spc equalsIgnoreCase b.spc
-      case BEGINS => spc regionMatches (true, 0, b.spc, 0, b.spc.length)
+      case BEGINS => spc regionMatches(true, 0, b.spc, 0, b.spc.length)
       case CONTAINS => spc contains b.spc
       case ISNT => spc != b.spc
     }
@@ -392,13 +394,13 @@ case class Trait(
     import NameCompare.{ANY, _}
     val skillFit = (b: BonusSkill) => b.skillCompare match {
       case IS => s equalsIgnoreCase b.skill
-      case BEGINS => s regionMatches (true, 0, b.skill, 0, b.skill.length)
+      case BEGINS => s regionMatches(true, 0, b.skill, 0, b.skill.length)
       case CONTAINS => s contains b.skill
     }
     val spcFit = (b: BonusSkill) => b.spcCompare match {
       case ANY => true
       case IS => spc equalsIgnoreCase b.spc
-      case BEGINS => spc regionMatches (true, 0, b.spc, 0, b.spc.length)
+      case BEGINS => spc regionMatches(true, 0, b.spc, 0, b.spc.length)
       case CONTAINS => spc contains b.spc
       case ISNT => spc != b.spc
     }
@@ -1182,9 +1184,6 @@ object Posture {
 }
 
 object Charlist {
-
-  import play.api.libs.json.Json
-
   val rndUp = (x: Double) => math.ceil(x - 0.01).toInt
   implicit val afflictionsFormat = Json.format[Afflictions]
   implicit val conditionsFormat = Json.format[Conditions]

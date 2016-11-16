@@ -4,7 +4,7 @@ import play.api.libs.json.Json
 /**
   * Created for testing by crimson on 10/18/16.
   */
-object JsonCharlist {
+class JsonCharlist {
   val charlist = Charlist(
     player = "vlex",
     name = "Bjorn Masterson",
@@ -230,5 +230,5 @@ object JsonCharlist {
 }
 
 object JsonPrinter extends App {
-  println(Json prettyPrint JsonCharlist.jsonCharlist)
+  println(Json prettyPrint (new JsonCharlist).jsonCharlist)
 }
