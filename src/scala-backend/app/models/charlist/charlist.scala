@@ -30,7 +30,6 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
                     var api: String = "") {
   api = "0.3.1"
 
-  private val foldSum = { (a: String, b: Seq[(String, Int)]) => (a, b.foldLeft(0)(_ + _._2)) }
   {
     import BonusToAttribute._
     import HitLocation._
@@ -52,38 +51,40 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
       drMap(ARM_RIGHT), drMap(HAND_LEFT), drMap(HAND_RIGHT), drMap(CHEST), drMap(VITALS), drMap(ABDOMEN), drMap(GROIN),
       drMap(LEG_LEFT), drMap(LEG_RIGHT), drMap(FOOT_LEFT), drMap(FOOT_RIGHT))
 
-    val bonuses = traits flatMap (_.attrBonusValues) groupBy (_._1) map foldSum.tupled withDefaultValue 0
+    val bonuses = traits flatMap (_.attrBonusValues) groupBy (_._1) map { case (a, b) =>
+      (a, b.foldLeft(0.0)(_ + _._2))
+    } withDefaultValue 0.0
     stats.st.base = 10
     stats.dx.base = 10
     stats.iq.base = 10
     stats.ht.base = 10
     stats.will.base = 10
     stats.per.base = 10
-    stats.st.bonus = bonuses(ST)
-    stats.dx.bonus = bonuses(DX)
-    stats.iq.bonus = bonuses(IQ)
-    stats.ht.bonus = bonuses(HT)
-    stats.will.bonus = bonuses(WILL)
-    stats.per.bonus = bonuses(PER)
+    stats.st.bonus = bonuses(ST).toInt
+    stats.dx.bonus = bonuses(DX).toInt
+    stats.iq.bonus = bonuses(IQ).toInt
+    stats.ht.bonus = bonuses(HT).toInt
+    stats.will.bonus = bonuses(WILL).toInt
+    stats.per.bonus = bonuses(PER).toInt
     stats.basicSpeed.bonus = bonuses(BASIC_SPEED)
-    stats.basicMove.bonus = bonuses(BASIC_MOVE)
-    stats.hp.bonus = bonuses(HP)
-    stats.fp.bonus = bonuses(FP)
-    statVars.sm = bonuses(SM)
+    stats.basicMove.bonus = bonuses(BASIC_MOVE).toInt
+    stats.hp.bonus = bonuses(HP).toInt
+    stats.fp.bonus = bonuses(FP).toInt
+    statVars.sm = bonuses(SM).toInt
     stats.liftSt.base = stats.st.value
     stats.strikeSt.base = stats.st.value
     stats.hp.base = stats.st.value
     stats.fp.base = stats.ht.value
     stats.basicSpeed.base = (stats.dx.value + stats.ht.value) * .25
     stats.basicMove.base = stats.basicSpeed.value.toInt
-    statVars.frightCheck = math.min(13, stats.will.value + bonuses(FC))
-    statVars.vision = stats.per.value + bonuses(VISION)
-    statVars.hearing = stats.per.value + bonuses(HEARING)
-    statVars.tasteSmell = stats.per.value + bonuses(TASTE_SMELL)
-    statVars.touch = stats.per.value + bonuses(TOUCH)
+    statVars.frightCheck = math.min(13, stats.will.value + bonuses(FC).toInt)
+    statVars.vision = stats.per.value + bonuses(VISION).toInt
+    statVars.hearing = stats.per.value + bonuses(HEARING).toInt
+    statVars.tasteSmell = stats.per.value + bonuses(TASTE_SMELL).toInt
+    statVars.touch = stats.per.value + bonuses(TOUCH).toInt
     statVars.bl = (stats.liftSt.value * stats.liftSt.value * .2).toInt
     statVars.calc(equip.totalCombWt, equip.totalTravWt, stats.basicMove.value,
-      stats.basicSpeed.value.toInt + 3 + bonuses(DODGE))
+      stats.basicSpeed.value.toInt + 3 + bonuses(DODGE).toInt)
     currentStats.calc(stats.hp.value, stats.fp.value, statVars.combMove, statVars.dodge)
   }
   {
@@ -140,7 +141,9 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
       for (m <- a.followup ++ a.linked) m.calcDmg(thr, sw, (0, 0))
     }
 
-    val costMods = traits flatMap (_.attrCostModValues) groupBy (_._1) map foldSum.tupled withDefaultValue 0
+    val costMods = traits flatMap (_.attrCostModValues) groupBy (_._1) map { case (a, b) =>
+      (a, b.foldLeft(0)(_ + _._2))
+    } withDefaultValue 0
     stats.st.cpMod = 100 + costMods(ST)
     stats.dx.cpMod = 100 + costMods(DX)
     stats.iq.cpMod = 100 + costMods(IQ)
@@ -328,13 +331,16 @@ sealed abstract class DamageBonusing {
   def dmgBVal(s: String, spc: String, lvl: Int): (Int, Int) = {
     import NameCompare.{ANY, _}
     val skillFit = (b: BonusDamage) => b.skillCompare match {
-      case IS => b.skill == s
-      case BEGINS => b.skill.regionMatches(true, 0, s, 0, b.skill.length)
+      case IS => s equalsIgnoreCase b.skill
+      case BEGINS => s regionMatches (true, 0, b.skill, 0, b.skill.length)
+      case CONTAINS => s contains b.skill
     }
     val spcFit = (b: BonusDamage) => b.spcCompare match {
       case ANY => true
-      case IS => b.spc == spc
-      case BEGINS => b.spc.regionMatches(true, 0, spc, 0, b.spc.length)
+      case IS => spc equalsIgnoreCase b.spc
+      case BEGINS => spc regionMatches (true, 0, b.spc, 0, b.spc.length)
+      case CONTAINS => spc contains b.spc
+      case ISNT => spc != b.spc
     }
     val fit = (b: BonusDamage) => skillFit(b) && spcFit(b) && b.relSkill <= lvl
     dmgBonuses.collect { case b if on && fit(b) => if (b.perDie) (b.bonus, 0) else (0, b.bonus) }.fold(0, 0)(_ |+| _)
@@ -378,20 +384,23 @@ case class Trait(
     + level * (lPts + cpPerLvl) * math.max(.2, lPct * .01 + 1)
     * lMlt + tPts) * math.max(.2, tPct * .01 + 1) * tMlt)
 
-  val attrBonusValues: Seq[(String, Int)] = if (active) {
+  val attrBonusValues: Seq[(String, Double)] = if (active) {
     for (b <- modifiers withFilter (_.on) flatMap (_.attrBonuses))
       yield (b.attr, b.bonus * (if (b.perLvl) level else 1))
   } else Seq()
   val skillBonusValue: (String, String) => Int = (s: String, spc: String) => if (active) {
     import NameCompare.{ANY, _}
     val skillFit = (b: BonusSkill) => b.skillCompare match {
-      case IS => b.skill == s
-      case BEGINS => b.skill.regionMatches(true, 0, s, 0, b.skill.length)
+      case IS => s equalsIgnoreCase b.skill
+      case BEGINS => s regionMatches (true, 0, b.skill, 0, b.skill.length)
+      case CONTAINS => s contains b.skill
     }
     val spcFit = (b: BonusSkill) => b.spcCompare match {
       case ANY => true
-      case IS => b.spc == spc
-      case BEGINS => b.spc.regionMatches(true, 0, spc, 0, b.spc.length)
+      case IS => spc equalsIgnoreCase b.spc
+      case BEGINS => spc regionMatches (true, 0, b.spc, 0, b.spc.length)
+      case CONTAINS => spc contains b.spc
+      case ISNT => spc != b.spc
     }
     val fit: PartialFunction[BonusSkill, Int] = {
       case b: BonusSkill if skillFit(b) && spcFit(b) => b.bonus * (if (b.perLvl) level else 1)
@@ -494,7 +503,7 @@ case class Technique(
 }
 
 /** Charlist subcontainer for attribute bonuses list's element stats */
-case class BonusAttribute(var attr: String = BonusToAttribute.ST, perLvl: Boolean = false, bonus: Int = 0) {
+case class BonusAttribute(var attr: String = BonusToAttribute.ST, perLvl: Boolean = false, bonus: Double = 0) {
   if (BonusToAttribute canBe attr) () else attr = BonusToAttribute.ST
 }
 
@@ -507,8 +516,7 @@ case class BonusSkill(
                        perLvl: Boolean = false,
                        bonus: Int = 0) {
   if (NameCompare canBe skillCompare) () else skillCompare = NameCompare.IS
-  if (NameCompare canBe spcCompare) () else spcCompare = NameCompare.ANY
-  if (spc != "" && spcCompare == NameCompare.ANY) spcCompare = NameCompare.IS
+  if (NameCompare spcCanBe spcCompare) () else spcCompare = NameCompare.ANY
 }
 
 /** Charlist subcontainer for damage bonuses list's element stats */
@@ -521,8 +529,7 @@ case class BonusDamage(
                         perDie: Boolean = false,
                         bonus: Int = 0) {
   if (NameCompare canBe skillCompare) () else skillCompare = NameCompare.IS
-  if (NameCompare canBe spcCompare) () else spcCompare = NameCompare.ANY
-  if (spc != "" && spcCompare == NameCompare.ANY) spcCompare = NameCompare.IS
+  if (NameCompare spcCanBe spcCompare) () else spcCompare = NameCompare.ANY
 }
 
 /** Charlist subcontainer for DR bonuses list's element stats */
@@ -596,14 +603,14 @@ object TraitCategory {
 object TraitModifierAffects {
   val TOTAL = "total"
   val BASE = "base"
-  val LEVELS = "levels"
+  val LEVELS = "levels only"
   val canBe = Set(TOTAL, BASE, LEVELS)
 }
 
 /** Charlist subnamespace for trait modifier cost type strings and validation method */
 object TraitModifierCostType {
-  val PERCENT = "percent"
-  val LEVEL = "percent per level"
+  val PERCENT = "percentage"
+  val LEVEL = "percentage per level"
   val POINTS = "points"
   val MULTIPLIER = "multiplier"
   val canBe = Set(PERCENT, LEVEL, POINTS, MULTIPLIER)
@@ -639,17 +646,17 @@ object BonusToAttribute {
   val IQ = "iq"
   val HT = "ht"
   val WILL = "will"
-  val FC = "fright checks"
-  val PER = "per"
+  val FC = "fright check"
+  val PER = "perception"
   val VISION = "vision"
   val HEARING = "hearing"
-  val TASTE_SMELL = "taste/smell"
+  val TASTE_SMELL = "taste smell"
   val TOUCH = "touch"
   val DODGE = "dodge"
   val PARRY = "parry"
   val BLOCK = "block"
-  val BASIC_SPEED = "basic speed"
-  val BASIC_MOVE = "basic move"
+  val BASIC_SPEED = "speed"
+  val BASIC_MOVE = "move"
   val HP = "hp"
   val FP = "fp"
   val SM = "sm"
@@ -659,10 +666,13 @@ object BonusToAttribute {
 
 /** Charlist subnamespace for stat name comparison strings and validation method */
 object NameCompare {
-  val ANY = "any"
+  val ANY = "is anything"
   val IS = "is"
-  val BEGINS = "begins with"
-  val canBe = Set(ANY, IS, BEGINS)
+  val BEGINS = "starts with"
+  val CONTAINS = "contains"
+  val ISNT = "is not"
+  val canBe = Set(IS, BEGINS, CONTAINS)
+  val spcCanBe = Set(ANY, IS, BEGINS, CONTAINS, ISNT)
 }
 
 /** Charlist subnamespace for reaction bonus' recognition frequency values and validation method */
@@ -1013,7 +1023,7 @@ object HitLocation {
   val FOOT_RIGHT = "right foot"
   val FOOT_LEFT = "left foot"
   val SKIN = "skin"
-  val BODY = "body"
+  val BODY = "full body"
   val locMap: (String => Seq[String]) = {
     case HEAD => Seq(SKULL, FACE)
     case LEGS => Seq(LEG_RIGHT, LEG_LEFT)

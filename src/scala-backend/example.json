@@ -341,27 +341,27 @@
       "ref" : "",
       "notes" : "",
       "attrBonuses" : [ {
-        "attr" : "dodge", // valid strings: "st" "dx" "iq" "ht" "will" "fright checks" "per" "vision" "hearing" "taste/smell" "touch" "dodge" "parry" "block" "basic speed" "basic move" "hp" "fp" "sm"
+        "attr" : "dodge", // valid strings: "st" "dx" "iq" "ht" "will" "fright check" "perception" "vision" "hearing" "taste smell" "touch" "dodge" "parry" "block" "speed" "move" "hp" "fp" "sm"
         "perLvl" : false,
         "bonus" : 1
       }, {
-        "attr" : "parry", // valid strings: "st" "dx" "iq" "ht" "will" "fright checks" "per" "vision" "hearing" "taste/smell" "touch" "dodge" "parry" "block" "basic speed" "basic move" "hp" "fp" "sm"
+        "attr" : "parry", // valid strings: "st" "dx" "iq" "ht" "will" "fright check" "perception" "vision" "hearing" "taste smell" "touch" "dodge" "parry" "block" "speed" "move" "hp" "fp" "sm"
         "perLvl" : false,
         "bonus" : 1
       }, {
-        "attr" : "block", // valid strings: "st" "dx" "iq" "ht" "will" "fright checks" "per" "vision" "hearing" "taste/smell" "touch" "dodge" "parry" "block" "basic speed" "basic move" "hp" "fp" "sm"
+        "attr" : "block", // valid strings: "st" "dx" "iq" "ht" "will" "fright check" "perception" "vision" "hearing" "taste smell" "touch" "dodge" "parry" "block" "speed" "move" "hp" "fp" "sm"
         "perLvl" : false,
         "bonus" : 1
       }, {
-        "attr" : "fright checks", // valid strings: "st" "dx" "iq" "ht" "will" "fright checks" "per" "vision" "hearing" "taste/smell" "touch" "dodge" "parry" "block" "basic speed" "basic move" "hp" "fp" "sm"
+        "attr" : "fright checks", // valid strings: "st" "dx" "iq" "ht" "will" "fright check" "perception" "vision" "hearing" "taste smell" "touch" "dodge" "parry" "block" "speed" "move" "hp" "fp" "sm"
         "perLvl" : false,
         "bonus" : 2
       } ],
       "skillBonuses" : [ {
         "skill" : "Fast-Draw",
-        "skillCompare" : "is", // valid strings: "is" "begins with"
+        "skillCompare" : "is", // valid strings: "is" "starts with" "contains"
         "spc" : "",
-        "spcCompare" : "any", // valid strings: "any" "is" "begins with"
+        "spcCompare" : "is anything", // valid strings: "is anything" "is" "starts with" "contains" "is not"
         "perLvl" : false,
         "bonus" : 1
       } ],
@@ -369,8 +369,8 @@
       "drBonuses" : [ ],
       "attrCostMods" : [ ],
       "reactBonuses" : [ ],
-      "affects" : "total",
-      "costType" : "percent",
+      "affects" : "total", // valid strings: "total" "base" "levels only"
+      "costType" : "percentage", // valid strings: "points" "percentage" "percentage per level" "multiplier"
       "level" : 0,
       "cost" : 0
     } ],
@@ -409,16 +409,16 @@
       "attrBonuses" : [ ],
       "skillBonuses" : [ {
         "skill" : "Piloting",
-        "skillCompare" : "is", // valid strings: "is" "begins with"
+        "skillCompare" : "is", // valid strings: "is" "starts with" "contains"
         "spc" : "",
-        "spcCompare" : "any", // valid strings: "any" "is" "begins with"
+        "spcCompare" : "is anything", // valid strings: "is anything" "is" "starts with" "contains" "is not"
         "perLvl" : false,
         "bonus" : 1
       }, {
         "skill" : "Navigation",
-        "skillCompare" : "is", // valid strings: "is" "begins with"
+        "skillCompare" : "is", // valid strings: "is" "begins with" "contains"
         "spc" : "Air",
-        "spcCompare" : "is", // valid strings: "any" "is" "begins with"
+        "spcCompare" : "is", // valid strings: "any" "is" "begins with" "contains" "is not"
         "perLvl" : false,
         "bonus" : 1
       } ],
@@ -433,8 +433,8 @@
         "bonus" : 1,
         "notes" : ""
       } ],
-      "affects" : "total",
-      "costType" : "percent",
+      "affects" : "total", // valid strings: "total" "base" "levels only"
+      "costType" : "percentage", // valid strings: "points" "percentage" "percentage per level" "multiplier"
       "level" : 0,
       "cost" : 0
     } ],
@@ -463,7 +463,7 @@
       "attrCostMods" : [ ],
       "reactBonuses" : [ ],
       "affects" : "total", // valid strings: "total" "base" "levels"
-      "costType" : "multiplier", // valid strings: "percent" "percent per level" "points" "multiplier"
+      "costType" : "multiplier", // valid strings: "points" "percentage" "percentage per level" "multiplier"
       "level" : 0, //valid values >= 0
       "cost" : 0.5
     }, {
@@ -484,8 +484,8 @@
         "bonus" : 1,
         "notes" : ""
       } ],
-      "affects" : "total", // valid strings: "total" "base" "levels"
-      "costType" : "multiplier", // valid strings: "percent" "percent per level" "points" "multiplier"
+      "affects" : "total", // valid strings: "total" "base" "levels only"
+      "costType" : "multiplier", // valid strings: "points" "percentage" "percentage per level" "multiplier"
       "level" : 0, //valid values >= 0
       "cost" : 0.5
     } ],
@@ -510,17 +510,17 @@
       "skillBonuses" : [ ],
       "dmgBonuses" : [ {
         "skill" : "Shield",
-        "skillCompare" : "is", // valid strings: "is" "begins with"
+        "skillCompare" : "is", // valid strings: "is" "starts with" "contains"
         "spc" : "",
-        "spcCompare" : "any", // valid strings: "any" "is" "begins with"
+        "spcCompare" : "is anything", // valid strings: "is anything" "is" "starts with" "contains" "is not"
         "relSkill" : 1,
         "perDie" : true,
         "bonus" : 1
       }, {
         "skill" : "Shield",
-        "skillCompare" : "is", // valid strings: "is" "begins with"
+        "skillCompare" : "is", // valid strings: "is" "starts with" "contains"
         "spc" : "",
-        "spcCompare" : "any", // valid strings: "any" "is" "begins with"
+        "spcCompare" : "is anything", // valid strings: "is anything" "is" "starts with" "contains" "is not"
         "relSkill" : 2,
         "perDie" : true,
         "bonus" : 1
@@ -528,8 +528,8 @@
       "drBonuses" : [ ],
       "attrCostMods" : [ ],
       "reactBonuses" : [ ],
-      "affects" : "total", // valid strings: "total" "base" "levels"
-      "costType" : "points", // valid strings: "percent" "percent per level" "points" "multiplier"
+      "affects" : "total", // valid strings: "total" "base" "levels only"
+      "costType" : "points", // valid strings: "points" "percentage" "percentage per level" "multiplier"
       "level" : 0, //valid values >= 0
       "cost" : 20
     } ],
@@ -545,23 +545,33 @@
     "ref" : "",
     "notes" : "",
     "prerequisites" : [ ], // for future functionality
-    "modifiers" : [ ],
-    "attrBonuses" : [ ],
-    "skillBonuses" : [ ],
-    "dmgBonuses" : [ ],
-    "drBonuses" : [ {
-      "locations" : [ "skull" ], // valid strings:  "eyes" "skull" "face" "head" "neck" "right leg" "left leg" "legs" "right arm" "left arm" "arms" "chest" "vitals" "abdomen" "groin" "torso" "hands" "left hand" "right hand" "feet" "right foot" "left foot" "skin" "body"
-      "perLvl" : true,
-      "front" : true,
-      "back" : true,
-      "protection" : {
-        "dr" : 0, //valid values >= 0
-        "ep" : 0, //valid values >= 0
-        "epi" : 0 //valid values >= 0
-      } 
+    "active" : true,
+    "modifiers" : [ {
+      "on" : true,
+      "name" : "Default",
+      "ref" : "",
+      "notes" : "",
+      "attrBonuses" : [ ],
+      "skillBonuses" : [ ],
+      "dmgBonuses" : [ ],
+      "drBonuses" : [ {
+        "locations" : [ "skull" ], // valid strings:  "eyes" "skull" "face" "head" "neck" "right leg" "left leg" "legs" "right arm" "left arm" "arms" "chest" "vitals" "abdomen" "groin" "torso" "hands" "left hand" "right hand" "feet" "right foot" "left foot" "skin" "full body"
+        "perLvl" : true,
+        "front" : true,
+        "back" : true,
+        "protection" : {
+          "dr" : 0, //valid values >= 0
+          "ep" : 0, //valid values >= 0
+          "epi" : 0 //valid values >= 0
+        }
+      } ],
+      "attrCostMods" : [ ],
+      "reactBonuses" : [ ],
+      "affects" : "total", // valid strings: "total" "base" "levels only"
+      "costType" : "points", // valid strings: "points" "percentage" "percentage per level" "multiplier"
+      "level" : 0, //valid values >= 0
+      "cost" : 0
     } ],
-    "attrCostMods" : [ ],
-    "reactBonuses" : [ ],
     "cpBase" : 0,
     "level" : 0, //valid values >= 0
     "cpPerLvl" : 0,
@@ -581,26 +591,26 @@
       "ref" : "",
       "notes" : "",
       "attrBonuses" : [ {
-        "attr" : "sm", // valid strings: "st" "dx" "iq" "ht" "will" "fright checks" "per" "vision" "hearing" "taste/smell" "touch" "dodge" "parry" "block" "basic speed" "basic move" "hp" "fp" "sm"
+        "attr" : "sm", // valid strings: "st" "dx" "iq" "ht" "will" "fright check" "perception" "vision" "hearing" "taste smell" "touch" "dodge" "parry" "block" "speed" "move" "hp" "fp" "sm"
         "perLvl" : false,
         "bonus" : 1
       }, {
         "attr" : "basic move",
-        "perLvl" : false, // valid strings: "st" "dx" "iq" "ht" "will" "fright checks" "per" "vision" "hearing" "taste/smell" "touch" "dodge" "parry" "block" "basic speed" "basic move" "hp" "fp" "sm"
+        "perLvl" : false, // valid strings: "st" "dx" "iq" "ht" "will" "fright check" "perception" "vision" "hearing" "taste smell" "touch" "dodge" "parry" "block" "speed" "move" "hp" "fp" "sm"
         "bonus" : 1
       } ],
       "skillBonuses" : [ {
         "skill" : "Disguise",
-        "skillCompare" : "is", // valid strings: "is" "begins with"
+        "skillCompare" : "is", // valid strings: "is" "starts with" "contains"
         "spc" : "",
-        "spcCompare" : "any", // valid strings: "any" "is" "begins with"
+        "spcCompare" : "is anything", // valid strings: "is anything" "is" "starts with" "contains" "is not"
         "perLvl" : false,
         "bonus" : -2
       }, {
         "skill" : "Shadowing",
-        "skillCompare" : "is", // valid strings: "is" "begins with"
+        "skillCompare" : "is", // valid strings: "is" "starts with" "contains"
         "spc" : "",
-        "spcCompare" : "any", // valid strings: "any" "is" "begins with"
+        "spcCompare" : "is anything", // valid strings: "is anything" "is" "starts with" "contains" "is not"
         "perLvl" : false,
         "bonus" : -2
       } ],
@@ -611,8 +621,8 @@
         "cost" : -10
       } ],
       "reactBonuses" : [ ],
-      "affects" : "total",
-      "costType" : "percent",
+      "affects" : "total", // valid strings: "total" "base" "levels only"
+      "costType" : "percentage", // valid strings: "points" "percentage" "percentage per level" "multiplier"
       "level" : 0,
       "cost" : 0
     } ],
@@ -650,17 +660,17 @@
     "prerequisites" : [ ], // for future functionality
     "dmgBonuses" : [ {
       "skill" : "Brawling",
-      "skillCompare" : "is", // valid strings: "is" "begins with"
+      "skillCompare" : "is", // valid strings: "is" "starts with" "contains"
       "spc" : "",
-      "spcCompare" : "any", // valid strings: "any" "is" "begins with"
+      "spcCompare" : "is anything", // valid strings: "is anything" "is" "starts with" "contains" "is not"
       "relSkill" : 1,
       "perDie" : true,
       "bonus" : 1
     }, {
       "skill" : "Brawling",
-      "skillCompare" : "is", // valid strings: "is" "begins with"
+      "skillCompare" : "is", // valid strings: "is" "starts with" "contains"
       "spc" : "",
-      "spcCompare" : "any", // valid strings: "any" "is" "begins with"
+      "spcCompare" : "is anything", // valid strings: "is anything" "is" "starts with" "contains" "is not"
       "relSkill" : 2,
       "perDie" : true,
       "bonus" : 1
@@ -915,7 +925,7 @@
       "front" : true,
       "back" : true,
       "drType" : "hard", // valid strings: "hard" "soft" "force field" "tough skin"
-      "locations" : [ "feet" ], // valid strings:  "eyes" "skull" "face" "head" "neck" "right leg" "left leg" "legs" "right arm" "left arm" "arms" "chest" "vitals" "abdomen" "groin" "torso" "hands" "left hand" "right hand" "feet" "right foot" "left foot" "skin" "body"
+      "locations" : [ "feet" ], // valid strings:  "eyes" "skull" "face" "head" "neck" "right leg" "left leg" "legs" "right arm" "left arm" "arms" "chest" "vitals" "abdomen" "groin" "torso" "hands" "left hand" "right hand" "feet" "right foot" "left foot" "skin" "full body"
       "hp" : 5, // valid values >= 0
       "hpLeft" : 5, // valid values >= 0 & <= hp
       "broken" : false,
@@ -975,7 +985,7 @@
     "dodge" : 9 // calculated field
   },
   "wounds" : [ { // for future functionality
-    "location" : "chest", // valid strings: "eyes" "skull" "face" "neck" "right leg" "left leg" "right arm" "left arm" "chest" "vitals" "abdomen" "groin" "left hand" "right hand" "right foot" "left foot"
+    "location" : "chest", // valid strings: "eyes" "skull" "face" "neck" "right leg" "left leg" "right arm" "left arm" "chest" "vitals" "abdomen" "groin" "left hand" "right hand" "right foot" "left foot" "skin" "full body"
     "dType" : "cr", // valid strings: "cr" "cr ex" "cut" "imp" "pi-" "pi" "pi+" "pi++" "burn" "burn ex" "tox" "cor" "aff" "fat" "spec." 
     "points" : 1, // valid values > 0
     "firstAid" : false,

@@ -1,3 +1,3 @@
 name := """preloader"""
 
-mainClass in Compile := Some("JsonPrinter")
+mainClass in Compile := Some("Preloader")

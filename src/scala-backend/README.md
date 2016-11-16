@@ -20,3 +20,4 @@
 <p>/api/chars/[trait|skill|teq|weap|armor|item]
 <br>OPTIONS — returns Allow header with implemented methods
 <br>GET — returns a charlist component template</p>
+<p>You can see a sample Charlist structure in <code>example.json</code>.</p>
