@@ -8,11 +8,14 @@
 # Map static resources from the /public folder to the /assets URL path
 #GET           /assets/*file        controllers.Assets.at(path="/public", file)
 
-# Charlists components storage
-OPTIONS        /api/char/trait              controllers.CharlistController.options(p = "base", id = "")
+# Traits storage
+OPTIONS        /api/char/trait              controllers.TraitController.options(p = "base", name = "")
 GET            /api/char/trait              controllers.TraitController.create
+OPTIONS        /api/char/traits             controllers.TraitController.options(p = "list", name = "")
 GET            /api/char/traits             controllers.TraitController.list
+OPTIONS        /api/char/trait/:name        controllers.TraitController.options(p = "elem", name)
 GET            /api/char/trait/:name        controllers.TraitController.get(name)
+# Charlists components storage
 OPTIONS        /api/char/skill              controllers.CharlistController.options(p = "base", id = "")
 GET            /api/char/skill              controllers.CharlistController.create(p = "skill")
 OPTIONS        /api/char/teq                controllers.CharlistController.options(p = "base", id = "")
@@ -26,7 +29,7 @@ GET            /api/char/item               controllers.CharlistController.creat
 # Charlist storage
 OPTIONS        /api/char                    controllers.CharlistController.options(p = "base", id = "")
 POST           /api/char                    controllers.CharlistController.add()
-GET            /api/char                    controllers.CharlistController.create(p = "char")
+GET            /api/char                    controllers.CharlistController.create(p = "")
 OPTIONS        /api/chars                   controllers.CharlistController.options(p = "list", id = "")
 GET            /api/chars                   controllers.CharlistController.list
 OPTIONS        /api/char/:id                controllers.CharlistController.options(p = "elem", id)
