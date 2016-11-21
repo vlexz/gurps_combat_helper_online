@@ -15,8 +15,21 @@ import scala.concurrent.Future
   */
 class TraitController @Inject()(traitDao: TraitDao) extends Controller {
   val throwMsg: PartialFunction[Throwable, Future[Result]] = {
-    case e: IllegalStateException => Future(NotFound(Json.obj("Empty database return." -> e.toString)))
+    case e: IllegalStateException => Future(NotFound(Json obj "Empty database return." -> e.toString))
     case t: Throwable => Future(InternalServerError(t.toString))
+  }
+
+  def options(p: String, name: String = ""): Action[AnyContent] = Action { implicit request =>
+    val methods = p match {
+      case "base" => "GET"
+      case "list" => "GET"
+      case "elem" => "GET"
+    }
+    val requestHeaders = request.headers get ACCESS_CONTROL_REQUEST_HEADERS getOrElse ""
+    Ok withHeaders(
+      ALLOW -> methods,
+      ACCESS_CONTROL_ALLOW_METHODS -> methods,
+      ACCESS_CONTROL_ALLOW_HEADERS -> requestHeaders)
   }
 
   def get(name: String): Action[AnyContent] = Action.async {

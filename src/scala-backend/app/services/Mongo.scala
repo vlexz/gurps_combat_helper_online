@@ -12,8 +12,8 @@ import scala.concurrent.Future
 class Mongo @Inject()(applicationLifecycle: ApplicationLifecycle, configuration: Configuration) {
   val client: MongoClient = MongoClient()
   val db: MongoDatabase = client getDatabase configuration.getString("mongo.db.name").get
-  applicationLifecycle.addStopHook { () =>
-    Logger.warn("Closing Mongo connection")
-    Future.successful(client.close())
+  applicationLifecycle addStopHook { () =>
+    Logger warn "Closing Mongo connection"
+    Future successful client.close()
   }
 }

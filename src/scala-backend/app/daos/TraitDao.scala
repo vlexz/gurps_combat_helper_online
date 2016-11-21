@@ -7,9 +7,8 @@ import org.mongodb.scala.model.Filters
 import org.mongodb.scala.{Completed, Document, MongoCollection}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.{JsObject, JsValue, Json}
-import services.Mongo
-
 import scala.concurrent.Future
+import services.Mongo
 
 /**
   * Created by crimson on 11/16/16.
@@ -27,7 +26,7 @@ trait TraitDao {
 class MongoTraitDao @Inject()(mongo: Mongo) extends TraitDao {
   private val traits: MongoCollection[Document] = mongo.db getCollection "traits"
   private val toDoc: Trait => Document = x => Document(Json toJson x toString())
-  private val docNameToJson: Document => JsObject = doc => Json obj ("name" -> doc.get("name").get.asString.getValue)
+  private val docNameToJson: Document => JsObject = doc => Json obj "name" -> (doc get "name").get.asString.getValue
 
   override def save(cTrait: Trait): Future[Completed] = traits insertOne toDoc(cTrait) head()
 
