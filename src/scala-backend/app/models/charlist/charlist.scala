@@ -1,6 +1,6 @@
 package models.charlist
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 import scala.collection.breakOut
 import scalaz.Scalaz._
@@ -292,7 +292,7 @@ sealed abstract class Stat[A <: AnyVal](implicit x: scala.math.Numeric[A]) {
 
   import x._
 
-  val delta: A
+  var delta: A
   var base: A
   var bonus: A
   var cpMod: Int
@@ -307,20 +307,24 @@ sealed abstract class Stat[A <: AnyVal](implicit x: scala.math.Numeric[A]) {
 }
 
 case class StatInt(
-                    delta: Int = 0,
+                    var delta: Int = 0,
                     var base: Int = 0,
                     var bonus: Int = 0,
                     var cpMod: Int = 100,
                     var cp: Int = 0)
-  extends Stat[Int]
+  extends Stat[Int] {
+  if (value < 1) delta = value - base - bonus + 1
+}
 
 case class StatDouble(
-                       delta: Double = 0,
+                       var delta: Double = 0,
                        var base: Double = 0,
                        var bonus: Double = 0,
                        var cpMod: Int = 100,
                        var cp: Int = 0)
-  extends Stat[Double]
+  extends Stat[Double] {
+  if (value < .25) delta = value - base - bonus + .25
+}
 
 case class Reaction(affected: String = "", modifiers: Seq[ReactionMod] = Seq())
 
@@ -350,8 +354,6 @@ sealed abstract class DamageBonusing {
   } else (0, 0)
 }
 
-
-
 case class Trait(
                   name: String = "",
                   var types: Seq[String] = Seq(TraitType.PHYSICAL),
@@ -366,7 +368,7 @@ case class Trait(
                   var level: Int = 0,
                   cpPerLvl: Int = 0,
                   var cp: Int = 0) {
-  if (TraitType canBe types) () else types = Seq(TraitType.PHYSICAL)
+  if (types forall TraitType.canBe) () else types = Seq(TraitType.PHYSICAL)
   if (TraitCategory canBe category) () else category = TraitCategory.ADVANTAGE
   if (TraitSwitch canBe switch) () else switch = TraitSwitch.ALWAYSON
   if (switch == TraitSwitch.ALWAYSON) active = true
@@ -535,7 +537,7 @@ case class BonusDR(
                     front: Boolean = true,
                     back: Boolean = true,
                     var protection: DrSet = DrSet()) {
-  if (HitLocation canBe locations) () else locations = Seq(HitLocation.SKIN)
+  if (locations forall HitLocation.canBe) () else locations = Seq(HitLocation.SKIN)
   var pVal: DrSet = protection
 
   def calculateVal(lvl: Int): BonusDR = {
@@ -584,7 +586,7 @@ object TraitType {
   val MUNDANE = "Mundane"
   val EXOTIC = "Exotic"
   val SUPER = "Supernatural"
-  val canBe = (t: Seq[String]) => t forall Set(MENTAL, PHYSICAL, SOCIAL, MUNDANE, EXOTIC, SUPER)
+  val canBe = Set(MENTAL, PHYSICAL, SOCIAL, MUNDANE, EXOTIC, SUPER)
 }
 
 object TraitCategory {
@@ -946,7 +948,7 @@ case class Armor(
   if (db < 0) db = 0 else if (db > 3) db = 3
   if (!front && !back) front = true
   if (DrType canBe drType) () else drType = DrType.HARD
-  if (HitLocation canBe locations) () else locations = Seq(HitLocation.CHEST)
+  if (locations forall HitLocation.canBe) () else locations = Seq(HitLocation.CHEST)
   if (hp < 0) hp = 0
   if (hpLeft < 0) hpLeft = 0 else if (hpLeft > hp) hpLeft = hp
   if (lc > 5) lc = 5 else if (lc < 0) lc = 0
@@ -1007,7 +1009,7 @@ object HitLocation {
   }
   val woundCanBe = Set(EYES, SKULL, FACE, NECK, LEG_LEFT, LEG_RIGHT, ARM_LEFT, ARM_RIGHT, CHEST, VITALS, ABDOMEN, GROIN,
     HAND_LEFT, HAND_RIGHT, FOOT_LEFT, FOOT_RIGHT)
-  val canBe = (loc: Seq[String]) => loc forall Set(EYES, SKULL, FACE, HEAD, NECK, LEG_LEFT, LEG_RIGHT, LEGS,
+  val canBe = Set(EYES, SKULL, FACE, HEAD, NECK, LEG_LEFT, LEG_RIGHT, LEGS,
     ARM_LEFT, ARM_RIGHT, ARMS, CHEST, VITALS, ABDOMEN, GROIN, TORSO, HANDS, HAND_LEFT, HAND_RIGHT, FEET, FOOT_LEFT,
     FOOT_RIGHT, SKIN, BODY)
 }
@@ -1141,42 +1143,42 @@ object Posture {
 }
 
 object Charlist {
-  val rndUp = (x: Double) => math.ceil(x - 0.01).toInt
-  implicit val afflictionsFormat = Json.format[Afflictions]
-  implicit val conditionsFormat = Json.format[Conditions]
-  implicit val woundFormat = Json.format[Wound]
-  implicit val itemFormat = Json.format[Item]
-  implicit val drSetFormat = Json.format[DrSet]
-  implicit val armorElementFormat = Json.format[Armor]
-  implicit val blockDefenceFormat = Json.format[BlockDefence]
-  implicit val rangedShotsFormat = Json.format[RangedShots]
-  implicit val rangedRoFFormat = Json.format[RangedRoF]
-  implicit val rangedDamageFormat = Json.format[RangedDamage]
-  implicit val rangedAttackFormat = Json.format[RangedAttack]
-  implicit val meleeDamageFormat = Json.format[MeleeDamage]
-  implicit val meleeAttackFormat = Json.format[MeleeAttack]
-  implicit val weaponFormat = Json.format[Weapon]
-  implicit val hitLocationFormat = Json.format[HitLocationDR]
-  implicit val damageResistanceTotalFormat = Json.format[DamageResistance]
-  implicit val equipmentFormat = Json.format[Equipment]
-  implicit val bonusReactionFormat = Json.format[BonusReaction]
-  implicit val bonusAttributeCostFormat = Json.format[BonusAttributeCost]
-  implicit val bonusDRFormat = Json.format[BonusDR]
-  implicit val bonusDamageFormat = Json.format[BonusDamage]
-  implicit val bonusSkillFormat = Json.format[BonusSkill]
-  implicit val bonusAttributeFormat = Json.format[BonusAttribute]
-  implicit val techniqueFormat = Json.format[Technique]
-  implicit val skillFormat = Json.format[Skill]
-  implicit val traitModifierFormat = Json.format[TraitModifier]
-  implicit val traitFormat = Json.format[Trait]
-  implicit val reactionModFormat = Json.format[ReactionMod]
-  implicit val reactionFormat = Json.format[Reaction]
-  implicit val statIntFormat = Json.format[StatInt]
-  implicit val statDoubleFormat = Json.format[StatDouble]
-  implicit val statsCurrentFormat = Json.format[StatsCurrent]
-  implicit val statVarsFormat = Json.format[StatVars]
-  implicit val statsFormat = Json.format[Stats]
-  implicit val descriptionFormat = Json.format[Description]
-  implicit val characterPointsFormat = Json.format[CharacterPoints]
-  implicit val charlistFormat = Json.format[Charlist]
+  val rndUp: Double => Int = (x: Double) => math.ceil(x - 0.01).toInt
+  implicit val afflictionsFormat: OFormat[Afflictions] = Json.format[Afflictions]
+  implicit val conditionsFormat: OFormat[Conditions] = Json.format[Conditions]
+  implicit val woundFormat: OFormat[Wound] = Json.format[Wound]
+  implicit val itemFormat: OFormat[Item] = Json.format[Item]
+  implicit val drSetFormat: OFormat[DrSet] = Json.format[DrSet]
+  implicit val armorElementFormat: OFormat[Armor] = Json.format[Armor]
+  implicit val blockDefenceFormat: OFormat[BlockDefence] = Json.format[BlockDefence]
+  implicit val rangedShotsFormat: OFormat[RangedShots] = Json.format[RangedShots]
+  implicit val rangedRoFFormat: OFormat[RangedRoF] = Json.format[RangedRoF]
+  implicit val rangedDamageFormat: OFormat[RangedDamage] = Json.format[RangedDamage]
+  implicit val rangedAttackFormat: OFormat[RangedAttack] = Json.format[RangedAttack]
+  implicit val meleeDamageFormat: OFormat[MeleeDamage] = Json.format[MeleeDamage]
+  implicit val meleeAttackFormat: OFormat[MeleeAttack] = Json.format[MeleeAttack]
+  implicit val weaponFormat: OFormat[Weapon] = Json.format[Weapon]
+  implicit val hitLocationFormat: OFormat[HitLocationDR] = Json.format[HitLocationDR]
+  implicit val damageResistanceTotalFormat: OFormat[DamageResistance] = Json.format[DamageResistance]
+  implicit val equipmentFormat: OFormat[Equipment] = Json.format[Equipment]
+  implicit val bonusReactionFormat: OFormat[BonusReaction] = Json.format[BonusReaction]
+  implicit val bonusAttributeCostFormat: OFormat[BonusAttributeCost] = Json.format[BonusAttributeCost]
+  implicit val bonusDRFormat: OFormat[BonusDR] = Json.format[BonusDR]
+  implicit val bonusDamageFormat: OFormat[BonusDamage] = Json.format[BonusDamage]
+  implicit val bonusSkillFormat: OFormat[BonusSkill] = Json.format[BonusSkill]
+  implicit val bonusAttributeFormat: OFormat[BonusAttribute] = Json.format[BonusAttribute]
+  implicit val techniqueFormat: OFormat[Technique] = Json.format[Technique]
+  implicit val skillFormat: OFormat[Skill] = Json.format[Skill]
+  implicit val traitModifierFormat: OFormat[TraitModifier] = Json.format[TraitModifier]
+  implicit val traitFormat: OFormat[Trait] = Json.format[Trait]
+  implicit val reactionModFormat: OFormat[ReactionMod] = Json.format[ReactionMod]
+  implicit val reactionFormat: OFormat[Reaction] = Json.format[Reaction]
+  implicit val statIntFormat: OFormat[StatInt] = Json.format[StatInt]
+  implicit val statDoubleFormat: OFormat[StatDouble] = Json.format[StatDouble]
+  implicit val statsCurrentFormat: OFormat[StatsCurrent] = Json.format[StatsCurrent]
+  implicit val statVarsFormat: OFormat[StatVars] = Json.format[StatVars]
+  implicit val statsFormat: OFormat[Stats] = Json.format[Stats]
+  implicit val descriptionFormat: OFormat[Description] = Json.format[Description]
+  implicit val characterPointsFormat: OFormat[CharacterPoints] = Json.format[CharacterPoints]
+  implicit val charlistFormat: OFormat[Charlist] = Json.format[Charlist]
 }
