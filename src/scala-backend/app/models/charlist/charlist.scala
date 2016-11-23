@@ -59,29 +59,19 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
     val bonuses = traits flatMap (_.attrBonusValues) groupBy (_.attr) mapValues {
       seq => (0.0 /: seq) (_ + _.bonus)
     } withDefaultValue 0.0
-    stats.st.base = 10
-    stats.dx.base = 10
-    stats.iq.base = 10
-    stats.ht.base = 10
-    stats.will.base = 10
-    stats.per.base = 10
-    stats.st.bonus = bonuses(ST).toInt
-    stats.dx.bonus = bonuses(DX).toInt
-    stats.iq.bonus = bonuses(IQ).toInt
-    stats.ht.bonus = bonuses(HT).toInt
-    stats.will.bonus = bonuses(WILL).toInt
-    stats.per.bonus = bonuses(PER).toInt
-    stats.basicSpeed.bonus = bonuses(BASIC_SPEED)
-    stats.basicMove.bonus = bonuses(BASIC_MOVE).toInt
-    stats.hp.bonus = bonuses(HP).toInt
-    stats.fp.bonus = bonuses(FP).toInt
+    stats.st.calaulateVal(10, bonuses(ST).toInt)
+    stats.dx.calaulateVal(10, bonuses(DX).toInt)
+    stats.iq.calaulateVal(10, bonuses(IQ).toInt)
+    stats.ht.calaulateVal(10, bonuses(HT).toInt)
+    stats.will.calaulateVal(10, bonuses(WILL).toInt)
+    stats.per.calaulateVal(10, bonuses(PER).toInt)
+    stats.basicSpeed.calaulateVal((stats.dx.value + stats.ht.value) * .25, bonuses(BASIC_SPEED))
+    stats.basicMove.calaulateVal(stats.basicSpeed.value.toInt, bonuses(BASIC_MOVE).toInt)
+    stats.hp.calaulateVal(stats.st.value, bonuses(HP).toInt)
+    stats.fp.calaulateVal(stats.ht.value, bonuses(FP).toInt)
+    stats.liftSt.calaulateVal(stats.st.value, bonuses(LIFT).toInt)
+    stats.strikeSt.calaulateVal(stats.st.value, bonuses(STRIKE).toInt)
     statVars.sm = bonuses(SM).toInt
-    stats.liftSt.base = stats.st.value
-    stats.strikeSt.base = stats.st.value
-    stats.hp.base = stats.st.value
-    stats.fp.base = stats.ht.value
-    stats.basicSpeed.base = (stats.dx.value + stats.ht.value) * .25
-    stats.basicMove.base = stats.basicSpeed.value.toInt
     statVars.frightCheck = math.min(13, stats.will.value + bonuses(FC).toInt)
     statVars.vision = stats.per.value + bonuses(VISION).toInt
     statVars.hearing = stats.per.value + bonuses(HEARING).toInt
@@ -109,6 +99,7 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
     }
     for (t <- techniques) {
       def sFltr(s: Skill) = s.name == t.skill && (if (t.spc != "") s.spc == t.spc else true)
+
       val l = skills collectFirst { case s if sFltr(s) => s.lvl } getOrElse 0
       t.calculateLvl(l)
     }
@@ -300,21 +291,21 @@ sealed abstract class Stat[A <: AnyVal](implicit x: scala.math.Numeric[A]) {
 
   def value: A = delta + base + bonus
 
+  def calaulateVal(b: A, bns: A): Stat[A] = {
+    base = b
+    bonus = bns
+    if (lt(value, fromInt(0))) delta = fromInt(0) - base - bonus
+    this
+  }
+
   def calculateCp(cost: Int): Stat[A] = {
     cp = Charlist rndUp delta.toDouble * cost * math.max(.2, cpMod * .01)
     this
   }
 }
 
-case class StatInt(
-                    var delta: Int = 0,
-                    var base: Int = 0,
-                    var bonus: Int = 0,
-                    var cpMod: Int = 100,
-                    var cp: Int = 0)
-  extends Stat[Int] {
-  if (value < 1) delta = value - base - bonus + 1
-}
+case class StatInt(var delta: Int = 0, var base: Int = 0, var bonus: Int = 0, var cpMod: Int = 100, var cp: Int = 0)
+  extends Stat[Int]
 
 case class StatDouble(
                        var delta: Double = 0,
@@ -322,9 +313,7 @@ case class StatDouble(
                        var bonus: Double = 0,
                        var cpMod: Int = 100,
                        var cp: Int = 0)
-  extends Stat[Double] {
-  if (value < .25) delta = value - base - bonus + .25
-}
+  extends Stat[Double]
 
 case class Reaction(affected: String = "", modifiers: Seq[ReactionMod] = Seq())
 
@@ -412,7 +401,7 @@ case class Trait(
     (modifiers withFilter (_.on) flatMap (_.skillBonuses) collect fit).sum
   } else 0
   val drBonuses: Seq[BonusDR] = if (active) {
-    for (b <- modifiers withFilter(_.on) flatMap(_.drBonuses)) yield b.calculateVal(level)
+    for (b <- modifiers withFilter (_.on) flatMap (_.drBonuses)) yield b.calculateVal(level)
   } else Nil
   val attrCostMods: Seq[BonusAttributeCost] = modifiers withFilter (_.on) flatMap (_.attrCostMods)
   val reactBonuses: Seq[BonusReaction] = if (active) {
@@ -466,17 +455,18 @@ case class Skill(
                   categories: Seq[String] = Seq(),
                   notes: String = "",
                   var cp: Int = 1,
-                  relLvl: Int = 0,
+                  var relLvl: Int = 0,
                   var lvl: Int = 0)
   extends DamageBonusing {
   if (tl < 0) tl = 0 else if (tl > 12) tl = 12
   if (SkillBaseAttribute canBe attr) () else attr = SkillBaseAttribute.DX
   if (SkillDifficulty canBe diff) () else diff = SkillDifficulty.EASY
   skillString = name + (if (tl != 0) s"/TL$tl" else "") + (if (spc != "") s" ($spc)" else "")
+  if (relLvl < SkillDifficulty.values(diff)) relLvl = SkillDifficulty values diff
 
   def calculateLvl(attrVal: Int, enc: Int): Skill = {
     val l = relLvl - (SkillDifficulty values diff) + 1
-    cp = l * 4 - (if (l > 2) 8 else if (l > 1) 6 else if (l > 0) 3 else l * 4)
+    cp = l * 4 - (if (l > 2) 8 else if (l > 1) 6 else 3)
     lvl = attrVal + relLvl - (if (encumbr) enc else 0) + bonus
     this
   }
@@ -654,8 +644,10 @@ object BonusToAttribute {
   val HP = "hp"
   val FP = "fp"
   val SM = "sm"
+  val LIFT = "lifting st"
+  val STRIKE = "striking st"
   val canBe = Set(ST, DX, IQ, HT, WILL, FC, PER, VISION, HEARING, TASTE_SMELL, TOUCH, DODGE, PARRY, BLOCK, BASIC_SPEED,
-    BASIC_MOVE, HP, FP, SM)
+    BASIC_MOVE, HP, FP, SM, LIFT, STRIKE)
 }
 
 object NameCompare {

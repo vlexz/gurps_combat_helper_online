@@ -341,19 +341,19 @@
       "ref" : "",
       "notes" : "",
       "attrBonuses" : [ {
-        "attr" : "dodge", // valid strings: "st" "dx" "iq" "ht" "will" "fright check" "perception" "vision" "hearing" "taste smell" "touch" "dodge" "parry" "block" "speed" "move" "hp" "fp" "sm"
+        "attr" : "dodge", // valid strings: "st" "dx" "iq" "ht" "will" "fright check" "perception" "vision" "hearing" "taste smell" "touch" "dodge" "parry" "block" "speed" "move" "hp" "fp" "sm" "lifting st" "striking st"
         "perLvl" : false,
         "bonus" : 1
       }, {
-        "attr" : "parry", // valid strings: "st" "dx" "iq" "ht" "will" "fright check" "perception" "vision" "hearing" "taste smell" "touch" "dodge" "parry" "block" "speed" "move" "hp" "fp" "sm"
+        "attr" : "parry", // valid strings: "st" "dx" "iq" "ht" "will" "fright check" "perception" "vision" "hearing" "taste smell" "touch" "dodge" "parry" "block" "speed" "move" "hp" "fp" "sm" "lifting st" "striking st"
         "perLvl" : false,
         "bonus" : 1
       }, {
-        "attr" : "block", // valid strings: "st" "dx" "iq" "ht" "will" "fright check" "perception" "vision" "hearing" "taste smell" "touch" "dodge" "parry" "block" "speed" "move" "hp" "fp" "sm"
+        "attr" : "block", // valid strings: "st" "dx" "iq" "ht" "will" "fright check" "perception" "vision" "hearing" "taste smell" "touch" "dodge" "parry" "block" "speed" "move" "hp" "fp" "sm" "lifting st" "striking st"
         "perLvl" : false,
         "bonus" : 1
       }, {
-        "attr" : "fright checks", // valid strings: "st" "dx" "iq" "ht" "will" "fright check" "perception" "vision" "hearing" "taste smell" "touch" "dodge" "parry" "block" "speed" "move" "hp" "fp" "sm"
+        "attr" : "fright checks", // valid strings: "st" "dx" "iq" "ht" "will" "fright check" "perception" "vision" "hearing" "taste smell" "touch" "dodge" "parry" "block" "speed" "move" "hp" "fp" "sm" "lifting st" "striking st"
         "perLvl" : false,
         "bonus" : 2
       } ],
@@ -591,12 +591,12 @@
       "ref" : "",
       "notes" : "",
       "attrBonuses" : [ {
-        "attr" : "sm", // valid strings: "st" "dx" "iq" "ht" "will" "fright check" "perception" "vision" "hearing" "taste smell" "touch" "dodge" "parry" "block" "speed" "move" "hp" "fp" "sm"
+        "attr" : "sm", // valid strings: "st" "dx" "iq" "ht" "will" "fright check" "perception" "vision" "hearing" "taste smell" "touch" "dodge" "parry" "block" "speed" "move" "hp" "fp" "sm" "lifting st" "striking st"
         "perLvl" : false,
         "bonus" : 1
       }, {
         "attr" : "basic move",
-        "perLvl" : false, // valid strings: "st" "dx" "iq" "ht" "will" "fright check" "perception" "vision" "hearing" "taste smell" "touch" "dodge" "parry" "block" "speed" "move" "hp" "fp" "sm"
+        "perLvl" : false, // valid strings: "st" "dx" "iq" "ht" "will" "fright check" "perception" "vision" "hearing" "taste smell" "touch" "dodge" "parry" "block" "speed" "move" "hp" "fp" "sm" "lifting st" "striking st"
         "bonus" : 1
       } ],
       "skillBonuses" : [ {
