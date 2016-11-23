@@ -250,8 +250,8 @@ case class StatVars(
       case _ if x <= 6 => 3
       case _ if x <= 10 => 4
     }
-    cEnc = encLvl(combWt / bl)
-    tEnc = encLvl(travWt / bl)
+    cEnc = if (bl > 0) encLvl(combWt / bl) else 0
+    tEnc = if (bl > 0) encLvl(travWt / bl) else 0
     combMove = (bm * .2 * (5 - cEnc)).toInt
     travMove = (bm * .2 * (5 - tEnc)).toInt
     dodge = bd - cEnc
