@@ -3,7 +3,6 @@ package models.charlist
 import play.api.libs.json.{Json, OFormat}
 
 import scala.collection.breakOut
-import scalaz.Scalaz._
 
 /**
   * Case class for conversion between JSON input and database entries and for calculation and validation of
@@ -42,7 +41,7 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
       (for {
         b <- traits flatMap (_.drBonuses)
         l <- b.locations flatMap locMap
-      } yield (l, if (b.front) b.pVal else DrSet(), if (b.back) b.pVal else DrSet())) ++
+      } yield (l, if (b.front) b.protection else DrSet(), if (b.back) b.protection else DrSet())) ++
         (for {
           a <- equip.armor
           l <- a.locations flatMap locMap
@@ -50,7 +49,7 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
     } groupBy {
       case (location, _, _) => location
     } mapValues {
-      tupl3s => HitLocationDR((DrSet() /: tupl3s) (_ |+| _._2), (DrSet() /: tupl3s) (_ |+| _._3))
+      tupl3s => HitLocationDR((DrSet() /: tupl3s) (_ + _._2), (DrSet() /: tupl3s) (_ + _._3))
     } withDefaultValue HitLocationDR(DrSet(), DrSet())
     damageResistance = DamageResistance(drMap(SKULL), drMap(EYES), drMap(FACE), drMap(NECK), drMap(ARM_LEFT),
       drMap(ARM_RIGHT), drMap(HAND_LEFT), drMap(HAND_RIGHT), drMap(CHEST), drMap(VITALS), drMap(ABDOMEN), drMap(GROIN),
@@ -85,22 +84,24 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
   {
     import SkillBaseAttribute._
 
+    val attrVal = Map(
+      ST -> stats.st.value,
+      DX -> stats.dx.value,
+      IQ -> stats.iq.value,
+      HT -> stats.ht.value,
+      WILL -> stats.will.value,
+      PER -> stats.per.value)
     for (s <- skills) {
       s.bonus = (0 /: traits) (_ + _.skillBonusValue(s.name, s.spc))
-      val attrVal = s.attr match {
-        case ST => stats.st.value
-        case DX => stats.dx.value
-        case IQ => stats.iq.value
-        case HT => stats.ht.value
-        case WILL => stats.will.value
-        case PER => stats.per.value
-      }
-      s.calculateLvl(attrVal, statVars.cEnc)
+      s.calculateLvl(attrVal(s.attr), statVars.cEnc)
     }
+    val sklCache = collection.mutable.Map[(String, String), Int]()
     for (t <- techniques) {
-      def sFltr(s: Skill) = s.name == t.skill && (if (t.spc != "") s.spc == t.spc else true)
-
-      val l = skills collectFirst { case s if sFltr(s) => s.lvl } getOrElse 0
+      val l = sklCache getOrElseUpdate(
+        (t.skill, t.spc),
+        skills.collectFirst {
+          case Skill(t.skill, t.spc, _, _, _, _, _, _, _, _, _, _, _, _, _, _, lvl) => lvl
+        }.getOrElse(0))
       t.calculateLvl(l)
     }
 
@@ -112,8 +113,8 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
             yield {
               val bonusReaction =
                 ((for {(reputation, seq3) <- seq2 groupBy (_.reputation)}
-                  yield (seq3 :\ BonusReaction()) (if (reputation) _ |~| _ else _ |+| _)) :\ BonusReaction()) (_ |+| _)
-              ReactionMod(freq, bonusReaction.bVal, bonusReaction.notes)
+                  yield (seq3 :\ BonusReaction()) (if (reputation) _ +~ _ else _ + _)) :\ BonusReaction()) (_ + _)
+              ReactionMod(freq, bonusReaction.bonus, bonusReaction.notes)
             }) (breakOut))) (breakOut) // TODO: make freq-bonus sums
 
     val (thrD, thrM) = stats.strikeSt.value match {
@@ -129,16 +130,19 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
     val dStr = (d: Int, m: Int) => s"${d}d${if (m < 0) m else if (m > 0) "+" + m else ""}"
     statVars.thrDmg = dStr(thrD, thrM)
     statVars.swDmg = dStr(swD, swM)
-    for (a <- equip.weapons flatMap (_.attacksMelee)) {
-      val bns = skills collectFirst {
-        case s if s.name == a.skill && (if (a.spc != "") s.spc == a.spc else true) => s.relLvl
-      } match {
-        case Some(l) =>
-          ((0, 0) /: (skills ++ traits.withFilter(_.active).flatMap(_.modifiers))) (_ |+| _.dmgBVal(a.skill, a.spc, l))
-        case None => (0, 0)
-      }
-      a.damage.calculateDmg((thrD, thrM), (swD, swM), bns)
-      for (m <- a.followup ++ a.linked) m.calculateDmg((thrD, thrM), (swD, swM), (0, 0))
+    val bnsDmgCache = collection.mutable.Map[(String, String), DmgBns]()
+    for (MeleeAttack(_, _, _, dmg, flw, lnk, s, sp, _, _, _, _, _, _, _) <- equip.weapons flatMap (_.attacksMelee)) {
+      val bns = bnsDmgCache getOrElseUpdate(
+        (s, sp),
+        skills collectFirst {
+          case Skill(`s`, `sp`, _, _, _, _, _, _, _, _, _, _, _, _, _, relLvl, _) => relLvl
+        } match {
+          case Some(l) =>
+            (DmgBns() /: (skills ++ traits.withFilter(_.active).flatMap(_.modifiers))) (_ + _.dmgBVal(s, sp, l))
+          case None => DmgBns()
+        })
+      dmg.calculateDmg((thrD, thrM), (swD, swM), bns)
+      for (m <- flw ++ lnk) m.calculateDmg((thrD, thrM), (swD, swM), DmgBns())
     }
 
     val costMods = traits flatMap (_.attrCostMods) groupBy (_.attr) mapValues {
@@ -231,13 +235,13 @@ case class StatVars(
   var cEnc = 0
   var tEnc = 0
 
-  def calculate(combWt: Double, travWt: Double, bm: Int, bd: Int): StatVars = {
+  def calculate(combWt: Double, travWt: Double, bm: Int, bd: Int): this.type = {
     val encLvl = (x: Double) => x match {
-      case _ if x <= 1 => 0
-      case _ if x <= 2 => 1
-      case _ if x <= 3 => 2
-      case _ if x <= 6 => 3
-      case _ if x <= 10 => 4
+      case d if d < 1.01 => 0
+      case d if d < 2.01 => 1
+      case d if d < 3.01 => 2
+      case d if d < 6.01 => 3
+      case d if d < 10.01 => 4
       case _ => 5
     }
     cEnc = if (bl > 0) encLvl(combWt / bl) else if (combWt > 0) 5 else 0
@@ -245,7 +249,7 @@ case class StatVars(
     combMove = (bm * .2 * (5 - cEnc)).toInt
     travMove = (bm * .2 * (5 - tEnc)).toInt
     dodge = bd - cEnc
-    val encStr = "None" +: "Light" +: "Medium" +: "Heavy" +: "Extra-Heavy" +: "Overencumbered" +: Seq()
+    val encStr = "None" +: "Light" +: "Medium" +: "Heavy" +: "Extra-Heavy" +: "Overencumbered" +: Nil
     combatEncumbrance = encStr(cEnc)
     travelEncumbrance = encStr(tEnc)
     this
@@ -266,7 +270,7 @@ case class StatsCurrent(
   if (hpLost < 0) hpLost = 0
   if (fpLost < 0) fpLost = 0
 
-  def calculate(hp: Int, fp: Int, mov: Int, ddg: Int): StatsCurrent = {
+  def calculate(hp: Int, fp: Int, mov: Int, ddg: Int): this.type = {
     reeling = hp * (2.0 / 3.0) < hpLost
     tired = fp * (2.0 / 3.0) < fpLost
     collapsing = hp <= hpLost
@@ -290,14 +294,14 @@ sealed abstract class Stat[A <: AnyVal](implicit x: scala.math.Numeric[A]) {
 
   def value: A = delta + base + bonus
 
-  def calaulateVal(b: A, bns: A): Stat[A] = {
+  def calaulateVal(b: A, bns: A): this.type = {
     base = b
     bonus = bns
     if (lt(value, fromInt(0))) delta = fromInt(0) - base - bonus
     this
   }
 
-  def calculateCp(cost: Int): Stat[A] = {
+  def calculateCp(cost: Int): this.type = {
     cp = Charlist rndUp delta.toDouble * cost * math.max(.2, cpMod * .01)
     this
   }
@@ -314,32 +318,27 @@ case class StatDouble(
                        var cp: Int = 0)
   extends Stat[Double]
 
-case class Reaction(affected: String = "", modifiers: Seq[ReactionMod] = Seq())
+case class Reaction(affected: String = "", modifiers: Seq[ReactionMod] = Nil)
 
 case class ReactionMod(freq: Int = 16, mod: Int = 0, notes: String = "")
+
+case class DmgBns(perDie: Int = 0, plain: Int = 0) {
+  def +(that: DmgBns) = DmgBns(this.perDie + that.perDie, this.plain + that.plain)
+}
 
 /**
   * Parent uniting all case classes carrying a bonus to melee damage
   **/
-sealed abstract class DamageBonusing {
+sealed trait DamageBonusing {
   val dmgBonuses: Seq[BonusDamage]
   val on: Boolean = true
 
-  def dmgBVal(s: String, spc: String, lvl: Int): (Int, Int) = if (on) {
-    import NameCompare._
-    dmgBonuses.collect { case b if (b.skillCompare match {
-      case IS => s equalsIgnoreCase b.skill
-      case BEGINS => s regionMatches(true, 0, b.skill, 0, b.skill.length)
-      case CONTAINS => s contains b.skill
-    }) && (b.spcCompare match {
-      case ANY => true
-      case IS => spc equalsIgnoreCase b.spc
-      case BEGINS => spc regionMatches(true, 0, b.spc, 0, b.spc.length)
-      case CONTAINS => spc contains b.spc
-      case ISNT => spc != b.spc
-    }) && b.relSkill <= lvl => if (b.perDie) (b.bonus, 0) else (0, b.bonus)
-    }.fold(0, 0)(_ |+| _)
-  } else (0, 0)
+  def dmgBVal(s: => String, spc: => String, lvl: => Int): DmgBns =
+    if (on) (DmgBns() /: dmgBonuses.collect {
+      case b @ BonusDamage(_, _, _, _, rSkl, pDie, bns) if NameCompare.fit(s, spc, b) && rSkl <= lvl =>
+        if (pDie) DmgBns(perDie = bns) else DmgBns(plain = bns)
+    }) (_ + _)
+    else DmgBns()
 }
 
 case class Trait(
@@ -349,9 +348,9 @@ case class Trait(
                   var switch: String = TraitSwitch.ALWAYSON,
                   ref: String = "",
                   notes: String = "",
-                  prerequisites: Seq[String] = Seq(), // For future functionality
+                  prerequisites: Seq[String] = Nil, // For future functionality
                   var active: Boolean = true,
-                  modifiers: Seq[TraitModifier] = Seq(),
+                  modifiers: Seq[TraitModifier] = Nil,
                   cpBase: Int = 0,
                   var level: Int = 0,
                   cpPerLvl: Int = 0,
@@ -365,11 +364,11 @@ case class Trait(
   import TraitModifierAffects._
 
   private case class MCost(pts: Int = 0, pct: Int = 0, mlt: Double = 1) {
-    def |+|(that: (Int, Int, Double)): MCost = MCost(pts + that._1, pct + that._2, mlt * that._3)
+    def +(that: (Int, Int, Double)): MCost = MCost(pts + that._1, pct + that._2, mlt * that._3)
   }
 
   private val cpMods = modifiers filter (_.on) groupBy (_.affects) mapValues {
-    seq => (MCost() /: seq) (_ |+| _.costVal)
+    seq => (MCost() /: seq) (_ + _.costVal)
   } withDefaultValue MCost()
   private val MCost(bPts, bPct, bMlt) = cpMods(BASE)
   private val MCost(lPts, lPct, lMlt) = cpMods(LEVELS)
@@ -379,32 +378,22 @@ case class Trait(
     * lMlt + tPts) * math.max(.2, tPct * .01 + 1) * tMlt
 
   val attrBonusValues: Seq[BonusAttribute] = if (active) {
-    for (bonusAttribute <- modifiers withFilter (_.on) flatMap (_.attrBonuses))
-      yield bonusAttribute copy (bonus = bonusAttribute.bonus * (if (bonusAttribute.perLvl) level else 1))
+    for (b <- modifiers withFilter (_.on) flatMap (_.attrBonuses))
+      yield if (b.perLvl) b copy (bonus = b.bonus * level) else b
   } else Nil
-  val skillBonusValue: (String, String) => Int = (s: String, spc: String) => if (active) {
-    import NameCompare._
-    lazy val fit: PartialFunction[BonusSkill, Int] = {
-      case b if (b.skillCompare match {
-        case IS => s equalsIgnoreCase b.skill
-        case BEGINS => s regionMatches(true, 0, b.skill, 0, b.skill.length)
-        case CONTAINS => s contains b.skill
-      }) && (b.spcCompare match {
-        case ANY => true
-        case IS => spc equalsIgnoreCase b.spc
-        case BEGINS => spc regionMatches(true, 0, b.spc, 0, b.spc.length)
-        case CONTAINS => spc contains b.spc
-        case ISNT => !(spc equalsIgnoreCase b.spc)
-      }) => b.bonus * (if (b.perLvl) level else 1)
-    }
-    (modifiers withFilter (_.on) flatMap (_.skillBonuses) collect fit).sum
-  } else 0
+  val skillBonusValue: (String, String) => Int = (s: String, spc: String) =>
+    if (active) (modifiers withFilter (_.on) flatMap (_.skillBonuses) collect {
+      case b: BonusSkill if NameCompare.fit(s, spc, b) => if (b.perLvl) b.bonus * level else b.bonus
+    }).sum
+    else 0
   val drBonuses: Seq[BonusDR] = if (active) {
-    for (b <- modifiers withFilter (_.on) flatMap (_.drBonuses)) yield b.calculateVal(level)
+    for (b <- modifiers withFilter (_.on) flatMap (_.drBonuses))
+      yield if (b.perLvl) b copy (protection = b.protection * level) else b
   } else Nil
   val attrCostMods: Seq[BonusAttributeCost] = modifiers withFilter (_.on) flatMap (_.attrCostMods)
   val reactBonuses: Seq[BonusReaction] = if (active) {
-    for (b <- modifiers withFilter (_.on) flatMap (_.reactBonuses)) yield b.calculateVal(level)
+    for (b <- modifiers withFilter (_.on) flatMap (_.reactBonuses))
+      yield if (b.perLvl) b copy (bonus = b.bonus * level) else b
   } else Nil
 }
 
@@ -413,12 +402,12 @@ case class TraitModifier(
                           name: String = "",
                           ref: String = "",
                           notes: String = "",
-                          attrBonuses: Seq[BonusAttribute] = Seq(),
-                          skillBonuses: Seq[BonusSkill] = Seq(),
-                          dmgBonuses: Seq[BonusDamage] = Seq(),
-                          drBonuses: Seq[BonusDR] = Seq(),
-                          attrCostMods: Seq[BonusAttributeCost] = Seq(),
-                          reactBonuses: Seq[BonusReaction] = Seq(),
+                          attrBonuses: Seq[BonusAttribute] = Nil,
+                          skillBonuses: Seq[BonusSkill] = Nil,
+                          dmgBonuses: Seq[BonusDamage] = Nil,
+                          drBonuses: Seq[BonusDR] = Nil,
+                          attrCostMods: Seq[BonusAttributeCost] = Nil,
+                          reactBonuses: Seq[BonusReaction] = Nil,
                           var affects: String = TraitModifierAffects.TOTAL,
                           var costType: String = TraitModifierCostType.PERCENT,
                           var level: Int = 0,
@@ -445,13 +434,13 @@ case class Skill(
                   var skillString: String = "",
                   var attr: String = SkillBaseAttribute.DX,
                   var diff: String = SkillDifficulty.EASY,
-                  defaults: Seq[String] = Seq(), // For future functionality
-                  prerequisites: Seq[String] = Seq(), // For future functionality
-                  dmgBonuses: Seq[BonusDamage] = Seq(),
-                  reactBonuses: Seq[BonusReaction] = Seq(),
+                  defaults: Seq[String] = Nil, // For future functionality
+                  prerequisites: Seq[String] = Nil, // For future functionality
+                  dmgBonuses: Seq[BonusDamage] = Nil,
+                  reactBonuses: Seq[BonusReaction] = Nil,
                   encumbr: Boolean = false,
                   var bonus: Int = 0,
-                  categories: Seq[String] = Seq(),
+                  categories: Seq[String] = Nil,
                   notes: String = "",
                   var cp: Int = 1,
                   var relLvl: Int = 0,
@@ -462,13 +451,10 @@ case class Skill(
   if (SkillDifficulty canBe diff) () else diff = SkillDifficulty.EASY
   skillString = name + (if (tl != 0) s"/TL$tl" else "") + (if (spc != "") s" ($spc)" else "")
   if (relLvl < SkillDifficulty.values(diff)) relLvl = SkillDifficulty values diff
+  private val l = relLvl - (SkillDifficulty values diff) + 1
+  cp = l * 4 - (if (l > 2) 8 else if (l > 1) 6 else 3)
 
-  def calculateLvl(attrVal: Int, enc: Int): Skill = {
-    val l = relLvl - (SkillDifficulty values diff) + 1
-    cp = l * 4 - (if (l > 2) 8 else if (l > 1) 6 else 3)
-    lvl = attrVal + relLvl - (if (encumbr) enc else 0) + bonus
-    this
-  }
+  def calculateLvl(attrVal: Int, enc: Int): Unit = lvl = attrVal + relLvl - (if (encumbr) enc else 0) + bonus
 }
 
 case class Technique(
@@ -497,13 +483,21 @@ case class BonusAttribute(var attr: String = BonusToAttribute.ST, perLvl: Boolea
   if (BonusToAttribute canBe attr) () else attr = BonusToAttribute.ST
 }
 
+sealed trait SkillBased {
+  val skill: String
+  var skillCompare: String
+  val spc: String
+  var spcCompare: String
+}
+
 case class BonusSkill(
                        skill: String = "",
                        var skillCompare: String = NameCompare.IS,
                        spc: String = "",
                        var spcCompare: String = NameCompare.ANY,
                        perLvl: Boolean = false,
-                       bonus: Int = 0) {
+                       bonus: Int = 0)
+  extends SkillBased {
   if (NameCompare canBe skillCompare) () else skillCompare = NameCompare.IS
   if (NameCompare spcCanBe spcCompare) () else spcCompare = NameCompare.ANY
 }
@@ -515,7 +509,8 @@ case class BonusDamage(
                         var spcCompare: String = NameCompare.ANY,
                         relSkill: Int = 0,
                         perDie: Boolean = false,
-                        bonus: Int = 0) {
+                        bonus: Int = 0)
+  extends SkillBased {
   if (NameCompare canBe skillCompare) () else skillCompare = NameCompare.IS
   if (NameCompare spcCanBe spcCompare) () else spcCompare = NameCompare.ANY
 }
@@ -525,14 +520,8 @@ case class BonusDR(
                     perLvl: Boolean = false,
                     front: Boolean = true,
                     back: Boolean = true,
-                    var protection: DrSet = DrSet()) {
+                    protection: DrSet = DrSet()) {
   if (locations forall HitLocation.canBe) () else locations = Seq(HitLocation.SKIN)
-  var pVal: DrSet = protection
-
-  def calculateVal(lvl: Int): BonusDR = {
-    if (perLvl) pVal *= lvl
-    this
-  }
 }
 
 case class BonusAttributeCost(var attr: String = SkillBaseAttribute.ST, cost: Int = 0) {
@@ -547,18 +536,12 @@ case class BonusReaction(
                           bonus: Int = 0,
                           notes: String = "") {
   if (ReactionFrequency canBe freq) () else freq = 16
-  var bVal: Int = bonus
   private val noteSum = (n: String) => notes + " " + n trim()
 
-  def calculateVal(lvl: Int): BonusReaction = {
-    if (perLvl) bVal *= lvl
-    this
-  }
+  def +(that: BonusReaction): BonusReaction = this copy(bonus = this.bonus + that.bonus, notes = noteSum(that.notes))
 
-  def |+|(that: BonusReaction): BonusReaction = this copy(bonus = this.bVal + that.bVal, notes = noteSum(that.notes))
-
-  def |~|(that: BonusReaction): BonusReaction =
-    this copy(bonus = math.max(math.min(this.bVal + that.bVal, 4), -4), notes = noteSum(that.notes))
+  def +~(that: BonusReaction): BonusReaction =
+    this copy(bonus = math.max(math.min(this.bonus + that.bonus, 4), -4), notes = noteSum(that.notes))
 }
 
 object TraitSwitch {
@@ -608,6 +591,7 @@ object SkillDifficulty {
   val HARD = "H"
   val VERY_HARD = "VH"
   val WOW = "W"
+  // TODO: wildcard difficulty
   val values: Map[String, Int] = Map(EASY -> 0, AVERAGE -> -1, HARD -> -2, VERY_HARD -> -3, WOW -> -4)
   val canBe = Set(EASY, AVERAGE, HARD, VERY_HARD, WOW)
   val techniqueCanBe = Set(AVERAGE, HARD)
@@ -657,6 +641,18 @@ object NameCompare {
   val ISNT = "is not"
   val canBe = Set(IS, BEGINS, CONTAINS)
   val spcCanBe = Set(ANY, IS, BEGINS, CONTAINS, ISNT)
+  val fit: (String, String, SkillBased) => Boolean = (s, spc, b) =>
+    (b.skillCompare match {
+      case IS => s equalsIgnoreCase b.skill
+      case BEGINS => s regionMatches(true, 0, b.skill, 0, b.skill.length)
+      case CONTAINS => s contains b.skill
+    }) && (b.spcCompare match {
+      case ANY => true
+      case IS => spc equalsIgnoreCase b.spc
+      case BEGINS => spc regionMatches(true, 0, b.spc, 0, b.spc.length)
+      case CONTAINS => spc contains b.spc
+      case ISNT => !(spc equalsIgnoreCase b.spc)
+    })
 }
 
 object ReactionFrequency {
@@ -669,9 +665,9 @@ object ReactionFrequency {
 }
 
 case class Equipment(
-                      weapons: Seq[Weapon] = Seq(),
-                      armor: Seq[Armor] = Seq(),
-                      items: Seq[Item] = Seq(),
+                      weapons: Seq[Weapon] = Nil,
+                      armor: Seq[Armor] = Nil,
+                      items: Seq[Item] = Nil,
                       var totalDb: Int = 0,
                       var totalCost: Double = 0,
                       var totalCombWt: Double = 0,
@@ -692,7 +688,7 @@ case class Equipment(
 /**
   * Parent for all "equipment item" classes that simplifies total equipment cost and weight aggregation.
   **/
-sealed abstract class Possession {
+sealed trait Possession {
   var state: String
   val broken: Boolean
 
@@ -705,10 +701,10 @@ case class Weapon(
                    name: String = "",
                    var state: String = ItemState.STASH,
                    innate: Boolean = false,
-                   attacksMelee: Seq[MeleeAttack] = Seq(),
-                   attacksRanged: Seq[RangedAttack] = Seq(),
-                   blocks: Seq[BlockDefence] = Seq(),
-                   var grips: Seq[String] = Seq(),
+                   attacksMelee: Seq[MeleeAttack] = Nil,
+                   attacksRanged: Seq[RangedAttack] = Nil,
+                   blocks: Seq[BlockDefence] = Nil,
+                   var grips: Seq[String] = Nil,
                    offHand: Boolean = false,
                    var bulk: Int = 0,
                    var dr: Int = 0,
@@ -742,8 +738,8 @@ case class MeleeAttack(
                         available: Boolean = true,
                         grip: String = "",
                         damage: MeleeDamage = MeleeDamage(),
-                        followup: Seq[MeleeDamage] = Seq(),
-                        linked: Seq[MeleeDamage] = Seq(),
+                        followup: Seq[MeleeDamage] = Nil,
+                        linked: Seq[MeleeDamage] = Nil,
                         skill: String = "",
                         spc: String = "",
                         parry: Int = 0,
@@ -769,7 +765,7 @@ case class MeleeDamage(
   if (ArmorDivisor canBe armorDiv) () else armorDiv = 1
   if (DamageType canBe dmgType) () else dmgType = DamageType.CRUSHING
 
-  def calculateDmg(thr: => (Int, Int), sw: => (Int, Int), bonus: (Int, Int)): MeleeDamage = {
+  def calculateDmg(thr: => (Int, Int), sw: => (Int, Int), bonus: DmgBns): this.type = {
     import AttackType._
     val (mDice, mMod) = attackType match {
       case THRUSTING => thr
@@ -777,7 +773,7 @@ case class MeleeDamage(
       case WEAPON => (0, 0)
     }
     var dice = dmgDice + mDice
-    var mod = dmgMod + mMod + bonus._1 * dice + bonus._2
+    var mod = dmgMod + mMod + bonus.perDie * dice + bonus.plain
     if (mod > 0) {
       dice += (mod / 3.5).toInt
       mod = (mod % 3.5).toInt
@@ -805,8 +801,8 @@ case class RangedAttack(
                          available: Boolean = true,
                          grip: String = "",
                          damage: RangedDamage = RangedDamage(),
-                         followup: Seq[RangedDamage] = Seq[RangedDamage](),
-                         linked: Seq[RangedDamage] = Seq[RangedDamage](),
+                         followup: Seq[RangedDamage] = Nil,
+                         linked: Seq[RangedDamage] = Nil,
                          skill: String = "",
                          spc: String = "",
                          jet: Boolean = false,
@@ -985,19 +981,17 @@ object HitLocation {
   val FOOT_LEFT = "left foot"
   val SKIN = "skin"
   val BODY = "full body"
-  val locMap: (String => Seq[String]) = {
-    case HEAD => Seq(SKULL, FACE)
-    case LEGS => Seq(LEG_RIGHT, LEG_LEFT)
-    case ARMS => Seq(ARM_RIGHT, ARM_LEFT)
-    case TORSO => Seq(CHEST, ABDOMEN, VITALS)
-    case HANDS => Seq(HAND_RIGHT, HAND_LEFT)
-    case FEET => Seq(FOOT_RIGHT, FOOT_LEFT)
-    case SKIN => Seq(SKULL, FACE, NECK, ARM_LEFT, ARM_RIGHT, HAND_LEFT, HAND_RIGHT, CHEST, VITALS, ABDOMEN, GROIN,
-      LEG_LEFT, LEG_RIGHT, FOOT_RIGHT, FOOT_LEFT)
-    case BODY => Seq(SKULL, EYES, FACE, NECK, ARM_LEFT, ARM_RIGHT, HAND_RIGHT, HAND_LEFT, CHEST, VITALS, ABDOMEN,
-      GROIN, LEG_LEFT, LEG_RIGHT, FOOT_LEFT, FOOT_RIGHT)
-    case x: String => Seq(x)
-  }
+  val locMap: Map[String, Seq[String]] = Map(
+    HEAD -> Seq(SKULL, FACE),
+    LEGS -> Seq(LEG_RIGHT, LEG_LEFT),
+    ARMS -> Seq(ARM_RIGHT, ARM_LEFT),
+    TORSO -> Seq(CHEST, ABDOMEN, VITALS),
+    HANDS -> Seq(HAND_RIGHT, HAND_LEFT),
+    FEET -> Seq(FOOT_RIGHT, FOOT_LEFT),
+    SKIN -> Seq(SKULL, FACE, NECK, ARM_LEFT, ARM_RIGHT, HAND_LEFT, HAND_RIGHT, CHEST, VITALS, ABDOMEN, GROIN,
+      LEG_LEFT, LEG_RIGHT, FOOT_RIGHT, FOOT_LEFT),
+    BODY -> Seq(SKULL, EYES, FACE, NECK, ARM_LEFT, ARM_RIGHT, HAND_RIGHT, HAND_LEFT, CHEST, VITALS, ABDOMEN,
+      GROIN, LEG_LEFT, LEG_RIGHT, FOOT_LEFT, FOOT_RIGHT)) withDefault { x => Seq(x) }
   val woundCanBe = Set(EYES, SKULL, FACE, NECK, LEG_LEFT, LEG_RIGHT, ARM_LEFT, ARM_RIGHT, CHEST, VITALS, ABDOMEN, GROIN,
     HAND_LEFT, HAND_RIGHT, FOOT_LEFT, FOOT_RIGHT)
   val canBe = Set(EYES, SKULL, FACE, HEAD, NECK, LEG_LEFT, LEG_RIGHT, LEGS,
@@ -1068,7 +1062,7 @@ case class DrSet(var dr: Int = 0, var ep: Int = 0, var epi: Int = 0) {
   if (ep < 0) ep = 0
   if (epi < 0) epi = 0
 
-  def |+|(that: DrSet): DrSet = DrSet(this.dr + that.dr, this.ep + that.ep, this.epi + that.epi)
+  def +(that: DrSet): DrSet = DrSet(this.dr + that.dr, this.ep + that.ep, this.epi + that.epi)
 
   def *(x: Int): DrSet = DrSet(this.dr * x, this.ep * x, this.epi * x)
 }
