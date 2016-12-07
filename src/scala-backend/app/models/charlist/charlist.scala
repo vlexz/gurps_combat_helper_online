@@ -547,8 +547,9 @@ case class BonusReaction(
 object TraitSwitch {
   val ALWAYSON = "Always on"
   val SWITCHABLE = "Switchable"
+  val CONTROL = "Roll"
   val ATTACK = "Attack"
-  val canBe = Set(ALWAYSON, SWITCHABLE, ATTACK)
+  val canBe = Set(ALWAYSON, SWITCHABLE, CONTROL, ATTACK)
 }
 
 object TraitType {

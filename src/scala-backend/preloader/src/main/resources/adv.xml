@@ -136,7 +136,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Acrophobia (Heights)</name>
+		<name switchability="Roll">Acrophobia (Heights)</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -274,7 +274,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Affliction</name>
+		<name switchability="Attack">Affliction</name>
 		<type>Physical, Exotic</type>
 		<levels>1</levels>
 		<points_per_level>10</points_per_level>
@@ -284,7 +284,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Agoraphobia (Open Spaces)</name>
+		<name switchability="Roll">Agoraphobia (Open Spaces)</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -294,7 +294,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Aichmophobia/TL5- (Sharp Things)</name>
+		<name switchability="Roll">Aichmophobia/TL5- (Sharp Things)</name>
 		<type>Mental</type>
 		<base_points>-15</base_points>
 		<cr>12</cr>
@@ -304,7 +304,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Aichmophobia/TL6+ (Sharp Things)</name>
+		<name switchability="Roll">Aichmophobia/TL6+ (Sharp Things)</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -314,7 +314,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Ailurophobia (Cats)</name>
+		<name switchability="Roll">Ailurophobia (Cats)</name>
 		<type>Mental</type>
 		<base_points>-5</base_points>
 		<cr>12</cr>
@@ -357,7 +357,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Ally (@Who@)</name>
+		<name switchability="Roll">Ally (@Who@)</name>
 		<type>Social</type>
 		<modifier version="1" enabled="no">
 			<name>Point total</name>
@@ -662,7 +662,7 @@
 		<type>Physical</type>
 		<modifier version="1" enabled="no">
 			<name>Universal</name>
-			<cost type="percentage">25</cost>
+            <cost type="percentage">25</cost>
 			<affects>total</affects>
 		</modifier>
 		<modifier version="1" enabled="no">
@@ -682,7 +682,11 @@
 		</modifier>
 		<modifier version="1" enabled="no">
 			<name>Attractive</name>
-			<cost type="points">4</cost>
+            <reaction_bonus>
+                <affected>Everyone</affected>
+                <amount>1</amount>
+            </reaction_bonus>
+            <cost type="points">4</cost>
 			<affects>total</affects>
 		</modifier>
 		<modifier version="1" enabled="no">
@@ -692,52 +696,124 @@
 		</modifier>
 		<modifier version="1" enabled="no">
 			<name>Horrific</name>
-			<cost type="points">-24</cost>
+            <reaction_bonus>
+                <affected>Everyone</affected>
+                <amount>-6</amount>
+            </reaction_bonus>
+            <cost type="points">-24</cost>
 			<affects>total</affects>
 		</modifier>
 		<modifier version="1" enabled="no">
 			<name>Monstrous</name>
-			<cost type="points">-20</cost>
+            <reaction_bonus>
+                <affected>Everyone</affected>
+                <amount>-5</amount>
+            </reaction_bonus>
+            <cost type="points">-20</cost>
 			<affects>total</affects>
 		</modifier>
 		<modifier version="1" enabled="no">
 			<name>Hideous</name>
-			<cost type="points">-16</cost>
+            <reaction_bonus>
+                <affected>Everyone</affected>
+                <amount>-4</amount>
+            </reaction_bonus>
+            <cost type="points">-16</cost>
 			<affects>total</affects>
 		</modifier>
 		<modifier version="1" enabled="no">
 			<name>Ugly</name>
-			<cost type="points">-8</cost>
+            <reaction_bonus>
+                <affected>Everyone</affected>
+                <amount>-2</amount>
+            </reaction_bonus>
+            <cost type="points">-8</cost>
 			<affects>total</affects>
 		</modifier>
 		<modifier version="1" enabled="no">
 			<name>Unattractive</name>
-			<cost type="points">-4</cost>
+            <reaction_bonus>
+                <affected>Everyone</affected>
+                <amount>-1</amount>
+            </reaction_bonus>
+            <cost type="points">-4</cost>
 			<affects>total</affects>
 		</modifier>
 		<modifier version="1" enabled="no">
 			<name>Handsome</name>
-			<cost type="points">12</cost>
+            <reaction_bonus>
+                <affected>Everyone</affected>
+                <amount>2</amount>
+            </reaction_bonus>
+            <reaction_bonus>
+                <affected>Those attracted to males</affected>
+                <amount>2</amount>
+            </reaction_bonus>
+            <cost type="points">12</cost>
 			<affects>total</affects>
 		</modifier>
 		<modifier version="1" enabled="no">
 			<name>Beautiful</name>
-			<cost type="points">12</cost>
+            <reaction_bonus>
+                <affected>Everyone</affected>
+                <amount>2</amount>
+            </reaction_bonus>
+            <reaction_bonus>
+                <affected>Those attracted to females</affected>
+                <amount>2</amount>
+            </reaction_bonus>
+            <cost type="points">12</cost>
 			<affects>total</affects>
 		</modifier>
 		<modifier version="1" enabled="no">
 			<name>Very Handsome</name>
-			<cost type="points">16</cost>
+            <reaction_bonus>
+                <affected>Everyone</affected>
+                <amount>2</amount>
+            </reaction_bonus>
+            <reaction_bonus>
+                <affected>Those attracted to males</affected>
+                <amount>4</amount>
+            </reaction_bonus>
+            <reaction_bonus>
+                <affected>Males with reasons to dislike</affected>
+                <amount>-4</amount>
+            </reaction_bonus>
+            <cost type="points">16</cost>
 			<affects>total</affects>
 		</modifier>
 		<modifier version="1" enabled="no">
 			<name>Very Beautiful</name>
-			<cost type="points">16</cost>
+            <reaction_bonus>
+                <affected>Everyone</affected>
+                <amount>2</amount>
+            </reaction_bonus>
+            <reaction_bonus>
+                <affected>Those attracted to females</affected>
+                <amount>4</amount>
+            </reaction_bonus>
+            <reaction_bonus>
+                <affected>Females with reasons to dislike</affected>
+                <amount>-4</amount>
+            </reaction_bonus>
+            <cost type="points">16</cost>
 			<affects>total</affects>
 		</modifier>
 		<modifier version="1" enabled="no">
 			<name>Transcendent</name>
-			<cost type="points">20</cost>
+            <reaction_bonus>
+                <affected>Everyone</affected>
+                <amount>2</amount>
+            </reaction_bonus>
+            <reaction_bonus>
+                <affected>Those attracted to @gender@</affected>
+                <amount>4</amount>
+            </reaction_bonus>
+            <reaction_bonus>
+                <affected>@gender@ with reasons to dislike</affected>
+                <amount>-4</amount>
+            </reaction_bonus>
+            <cost type="points">20</cost>
 			<affects>total</affects>
 		</modifier>
 		<reference>B21</reference>
@@ -746,7 +822,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Arachnophobia (Spiders)</name>
+		<name switchability="Roll">Arachnophobia (Spiders)</name>
 		<type>Mental</type>
 		<base_points>-5</base_points>
 		<cr>12</cr>
@@ -828,7 +904,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Autophobia (Being Alone)</name>
+		<name switchability="Roll">Autophobia (Being Alone)</name>
 		<type>Mental</type>
 		<base_points>-15</base_points>
 		<cr>12</cr>
@@ -923,7 +999,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Bad Temper</name>
+		<name switchability="Roll">Bad Temper</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -933,7 +1009,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Berserk</name>
+		<name switchability="Roll">Berserk</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -957,7 +1033,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Binding</name>
+		<name switchability="Attack">Binding</name>
 		<type>Physical, Exotic</type>
 		<levels>1</levels>
 		<points_per_level>2</points_per_level>
@@ -1049,7 +1125,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Bloodlust</name>
+		<name switchability="Roll">Bloodlust</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -1101,7 +1177,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Brontophobia (Loud Noises)</name>
+		<name switchability="Roll">Brontophobia (Loud Noises)</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -1111,7 +1187,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Bully</name>
+		<name switchability="Roll">Bully</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -1138,7 +1214,21 @@
 			<specialization compare="is anything"></specialization>
 			<amount>-3</amount>
 		</skill_bonus>
-	</advantage>
+        <skill_bonus>
+            <name compare="is">interrogation</name>
+            <specialization compare="is anything"></specialization>
+            <amount>1</amount>
+        </skill_bonus>
+        <skill_bonus>
+            <name compare="is">intimidation</name>
+            <specialization compare="is anything"></specialization>
+            <amount>1</amount>
+        </skill_bonus>
+        <reaction_bonus>
+            <affected>Those with Empathy or past victims</affected>
+            <amount>-1</amount>
+        </reaction_bonus>
+    </advantage>
 	<advantage version="2">
 		<name>Cannot Float</name>
 		<type>Physical</type>
@@ -1212,7 +1302,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Chameleon</name>
+		<name switchability="Switchable">Chameleon</name>
 		<type>Physical, Exotic</type>
 		<levels>1</levels>
 		<points_per_level>5</points_per_level>
@@ -1298,9 +1388,13 @@
 			<specialization compare="is anything"></specialization>
 			<amount per_level="yes">1</amount>
 		</skill_bonus>
+        <reaction_bonus>
+            <affected>Everyone</affected>
+            <amount per_level="yes">1</amount>
+        </reaction_bonus>
 	</advantage>
 	<advantage version="2">
-		<name>Charitable</name>
+		<name switchability="Roll">Charitable</name>
 		<type>Mental</type>
 		<base_points>-15</base_points>
 		<cr>12</cr>
@@ -1321,7 +1415,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Chronic Depression</name>
+		<name switchability="Roll">Chronic Depression</name>
 		<type>Mental</type>
 		<base_points>-15</base_points>
 		<cr>12</cr>
@@ -1331,7 +1425,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Chronic Pain</name>
+		<name switchability="Roll">Chronic Pain</name>
 		<type>Physical</type>
 		<modifier version="1" enabled="no">
 			<name>1 Hour</name>
@@ -1505,7 +1599,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Claustrophobia (Enclosed Spaces)</name>
+		<name switchability="Roll">Claustrophobia (Enclosed Spaces)</name>
 		<type>Mental</type>
 		<base_points>-15</base_points>
 		<cr>12</cr>
@@ -2043,7 +2137,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Coitophobia (Sex)</name>
+		<name switchability="Roll">Coitophobia (Sex)</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -2201,7 +2295,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Compulsive Carousing</name>
+		<name switchability="Roll">Compulsive Carousing</name>
 		<type>Mental</type>
 		<base_points>-5</base_points>
 		<cr>12</cr>
@@ -2211,7 +2305,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Compulsive Gambling</name>
+		<name switchability="Roll">Compulsive Gambling</name>
 		<type>Mental</type>
 		<base_points>-5</base_points>
 		<cr>12</cr>
@@ -2221,7 +2315,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Compulsive Generosity</name>
+		<name switchability="Roll">Compulsive Generosity</name>
 		<type>Mental</type>
 		<base_points>-5</base_points>
 		<cr adj="minor cost of living increase">12</cr>
@@ -2237,7 +2331,7 @@
 		</prereq_list>
 	</advantage>
 	<advantage version="2">
-		<name>Compulsive Lying</name>
+		<name switchability="Roll">Compulsive Lying</name>
 		<type>Mental</type>
 		<base_points>-15</base_points>
 		<cr>12</cr>
@@ -2247,7 +2341,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Compulsive Spending</name>
+		<name switchability="Roll">Compulsive Spending</name>
 		<type>Mental</type>
 		<base_points>-5</base_points>
 		<cr adj="major cost of living increase">12</cr>
@@ -2263,7 +2357,7 @@
 		</prereq_list>
 	</advantage>
 	<advantage version="2">
-		<name>Compulsive Vowing</name>
+		<name switchability="Roll">Compulsive Vowing</name>
 		<type>Mental</type>
 		<base_points>-5</base_points>
 		<cr>12</cr>
@@ -2273,7 +2367,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Confused</name>
+		<name switchability="Roll">Confused</name>
 		<type>Physical</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -2292,7 +2386,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Constriction Attack</name>
+		<name switchability="Attack">Constriction Attack</name>
 		<type>Physical, Exotic</type>
 		<base_points>15</base_points>
 		<modifier version="1" enabled="no">
@@ -2307,7 +2401,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Contact (@Who@)</name>
+		<name switchability="Roll">Contact (@Who@)</name>
 		<type>Social</type>
 		<modifier version="1" enabled="no">
 			<name>Effective skill</name>
@@ -2389,7 +2483,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Cowardice</name>
+		<name switchability="Roll">Cowardice</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr adj="fright check penalty">12</cr>
@@ -2432,7 +2526,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Curious</name>
+		<name switchability="Roll">Curious</name>
 		<type>Mental</type>
 		<base_points>-5</base_points>
 		<cr>12</cr>
@@ -2459,7 +2553,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Cynophobia (Dogs)</name>
+		<name switchability="Roll">Cynophobia (Dogs)</name>
 		<type>Mental</type>
 		<base_points>-5</base_points>
 		<cr>12</cr>
@@ -2629,7 +2723,7 @@
 		</dr_bonus>
 	</advantage>
 	<advantage version="2">
-		<name>Danger Sense</name>
+		<name switchability="Roll">Danger Sense</name>
 		<type>Mental</type>
 		<base_points>15</base_points>
 		<reference>B47</reference>
@@ -2861,7 +2955,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Demophobia (Crowds)</name>
+		<name switchability="Roll">Demophobia (Crowds)</name>
 		<type>Mental</type>
 		<base_points>-15</base_points>
 		<cr>12</cr>
@@ -2871,7 +2965,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Dependant (@Who@)</name>
+		<name switchability="Roll">Dependant (@Who@)</name>
 		<type>Social</type>
 		<modifier version="1" enabled="no">
 			<name>Point total</name>
@@ -3306,7 +3400,41 @@
 				<notes compare="is anything"></notes>
 			</advantage_prereq>
 		</prereq_list>
-	</advantage>
+        <skill_bonus>
+            <name compare="is">Diplomacy</name>
+            <specialization compare="is anything"></specialization>
+            <amount>-2</amount>
+        </skill_bonus>
+        <skill_bonus>
+            <name compare="is">Fast-Talk</name>
+            <specialization compare="is anything"></specialization>
+            <amount>-2</amount>
+        </skill_bonus>
+        <skill_bonus>
+            <name compare="is">Performance</name>
+            <specialization compare="is anything"></specialization>
+            <amount>-2</amount>
+        </skill_bonus>
+        <skill_bonus>
+            <name compare="is">Public Speaking</name>
+            <specialization compare="is anything"></specialization>
+            <amount>-2</amount>
+        </skill_bonus>
+        <skill_bonus>
+            <name compare="is">Sex Appeal</name>
+            <specialization compare="is anything"></specialization>
+            <amount>-2</amount>
+        </skill_bonus>
+        <skill_bonus>
+            <name compare="is">Singing</name>
+            <specialization compare="is anything"></specialization>
+            <amount>-2</amount>
+        </skill_bonus>
+        <reaction_bonus>
+            <affected>Those who can hear</affected>
+            <amount>-2</amount>
+        </reaction_bonus>
+    </advantage>
 	<advantage version="2">
 		<name>Divine Curse (@Curse@)</name>
 		<type>Mental, Supernatural</type>
@@ -3587,7 +3715,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Duty (@Duty@)</name>
+		<name switchability="Roll">Duty (@Duty@)</name>
 		<type>Social</type>
 		<modifier version="1" enabled="no">
 			<name>FR: 6</name>
@@ -3783,7 +3911,7 @@
 		</skill_bonus>
 	</advantage>
 	<advantage version="2">
-		<name>Enemy (@Who@)</name>
+		<name switchability="Roll">Enemy (@Who@)</name>
 		<type>Social</type>
 		<modifier version="1" enabled="no">
 			<name>Weak Individual</name>
@@ -4246,7 +4374,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Entomophobia (Insects)</name>
+		<name switchability="Roll">Entomophobia (Insects)</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -4553,14 +4681,18 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Fashion Sense</name>
+		<name switchability="Switchable">Fashion Sense</name>
 		<type>Mental</type>
 		<base_points>5</base_points>
 		<reference>B21</reference>
 		<categories>
 			<category>Advantage</category>
 		</categories>
-	</advantage>
+        <reaction_bonus>
+            <affected>Everyone</affected>
+            <amount>1</amount>
+        </reaction_bonus>
+    </advantage>
 	<advantage version="2">
 		<name>Fat</name>
 		<type>Physical</type>
@@ -4675,7 +4807,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Flashbacks (Crippling, 3D minutes)</name>
+		<name switchability="Roll">Flashbacks (Crippling, 3D minutes)</name>
 		<type>Physical</type>
 		<base_points>-20</base_points>
 		<reference>B136</reference>
@@ -4684,7 +4816,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Flashbacks (Mild, -2, 2D seconds)</name>
+		<name switchability="Roll">Flashbacks (Mild, -2, 2D seconds)</name>
 		<type>Physical</type>
 		<base_points>-5</base_points>
 		<reference>B136</reference>
@@ -4693,7 +4825,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Flashbacks (Severe, -5, 1D minutes)</name>
+		<name switchability="Roll">Flashbacks (Severe, -5, 1D minutes)</name>
 		<type>Physical</type>
 		<base_points>-10</base_points>
 		<reference>B136</reference>
@@ -4997,7 +5129,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Gluttony</name>
+		<name switchability="Roll">Gluttony</name>
 		<type>Mental</type>
 		<base_points>-5</base_points>
 		<cr>12</cr>
@@ -5007,7 +5139,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Greed</name>
+		<name switchability="Roll">Greed</name>
 		<type>Mental</type>
 		<base_points>-15</base_points>
 		<cr>12</cr>
@@ -5042,7 +5174,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Gullibility</name>
+		<name switchability="Roll">Gullibility</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -5399,7 +5531,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Heliophobia (Sun)</name>
+		<name switchability="Roll">Heliophobia (Sun)</name>
 		<type>Mental</type>
 		<base_points>-15</base_points>
 		<cr>12</cr>
@@ -5421,7 +5553,7 @@
 		</prereq_list>
 	</advantage>
 	<advantage version="2">
-		<name>Hemophobia (Blood)</name>
+		<name switchability="Roll">Hemophobia (Blood)</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -5440,7 +5572,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Herpetophobia (Reptiles)</name>
+		<name switchability="Roll">Herpetophobia (Reptiles)</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -5562,7 +5694,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Honesty</name>
+		<name switchability="Roll">Honesty</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -5572,7 +5704,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Hoplophobia (Weapons)</name>
+		<name switchability="Roll">Hoplophobia (Weapons)</name>
 		<type>Mental</type>
 		<base_points>-20</base_points>
 		<cr>12</cr>
@@ -5626,6 +5758,10 @@
 			<specialization compare="is anything"></specialization>
 			<amount>-3</amount>
 		</skill_bonus>
+        <reaction_bonus>
+            <affected>Everyone</affected>
+            <amount>-1</amount>
+        </reaction_bonus>
 	</advantage>
 	<advantage version="2">
 		<name>Hyperspectral Vision</name>
@@ -5722,7 +5858,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Impulsiveness</name>
+		<name switchability="Roll">Impulsiveness</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -5962,7 +6098,7 @@
 		</attribute_bonus>
 	</advantage>
 	<advantage version="2">
-		<name>Incurious</name>
+		<name switchability="Roll">Incurious</name>
 		<type>Mental</type>
 		<base_points>-5</base_points>
 		<cr>12</cr>
@@ -5972,7 +6108,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Indecisive</name>
+		<name switchability="Roll">Indecisive</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -6125,7 +6261,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Innate Attack (Burn)</name>
+		<name switchability="Attack">Innate Attack (Burn)</name>
 		<type>Physical, Exotic</type>
 		<levels>1</levels>
 		<points_per_level>5</points_per_level>
@@ -6361,7 +6497,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Innate Attack (Corrosion)</name>
+		<name switchability="Attack">Innate Attack (Corrosion)</name>
 		<type>Physical, Exotic</type>
 		<levels>1</levels>
 		<points_per_level>10</points_per_level>
@@ -6597,7 +6733,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Innate Attack (Crush)</name>
+		<name switchability="Attack">Innate Attack (Crush)</name>
 		<type>Physical, Exotic</type>
 		<levels>1</levels>
 		<points_per_level>5</points_per_level>
@@ -6750,7 +6886,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Innate Attack (Cut)</name>
+		<name switchability="Attack">Innate Attack (Cut)</name>
 		<type>Physical, Exotic</type>
 		<levels>1</levels>
 		<points_per_level>7</points_per_level>
@@ -6904,7 +7040,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Innate Attack (Fatigue)</name>
+		<name switchability="Attack">Innate Attack (Fatigue)</name>
 		<type>Physical, Exotic</type>
 		<levels>1</levels>
 		<points_per_level>10</points_per_level>
@@ -7169,7 +7305,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Innate Attack (Huge Pierce)</name>
+		<name switchability="Attack">Innate Attack (Huge Pierce)</name>
 		<type>Physical, Exotic</type>
 		<levels>1</levels>
 		<points_per_level>8</points_per_level>
@@ -7316,7 +7452,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Innate Attack (Impaling)</name>
+		<name switchability="Attack">Innate Attack (Impaling)</name>
 		<type>Physical, Exotic</type>
 		<levels>1</levels>
 		<points_per_level>8</points_per_level>
@@ -7469,7 +7605,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Innate Attack (Large Pierce)</name>
+		<name switchability="Attack">Innate Attack (Large Pierce)</name>
 		<type>Physical, Exotic</type>
 		<levels>1</levels>
 		<points_per_level>6</points_per_level>
@@ -7617,7 +7753,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Innate Attack (Piercing)</name>
+		<name switchability="Attack">Innate Attack (Piercing)</name>
 		<type>Physical, Exotic</type>
 		<levels>1</levels>
 		<points_per_level>5</points_per_level>
@@ -7765,7 +7901,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Innate Attack (Small Pierce)</name>
+		<name switchability="Attack">Innate Attack (Small Pierce)</name>
 		<type>Physical, Exotic</type>
 		<levels>1</levels>
 		<points_per_level>3</points_per_level>
@@ -7913,7 +8049,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Innate Attack (Toxic)</name>
+		<name switchability="Attack">Innate Attack (Toxic)</name>
 		<type>Physical, Exotic</type>
 		<levels>1</levels>
 		<points_per_level>4</points_per_level>
@@ -8206,7 +8342,7 @@
 		</prereq_list>
 	</advantage>
 	<advantage version="2">
-		<name>Insomniac (Mild)</name>
+		<name switchability="Roll">Insomniac (Mild)</name>
 		<type>Physical</type>
 		<base_points>-10</base_points>
 		<reference>B140</reference>
@@ -8216,7 +8352,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Insomniac (Severe)</name>
+		<name switchability="Roll">Insomniac (Severe)</name>
 		<type>Physical</type>
 		<base_points>-15</base_points>
 		<reference>B140</reference>
@@ -8226,7 +8362,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Insubstantiality</name>
+		<name switchability="Switchable">Insubstantiality</name>
 		<type>Mental/Physical, Exotic</type>
 		<base_points>80</base_points>
 		<modifier version="1" enabled="no">
@@ -8703,7 +8839,7 @@
 		</skill_bonus>
 	</advantage>
 	<advantage version="2">
-		<name>Kleptomania</name>
+		<name switchability="Roll">Kleptomania</name>
 		<type>Mental</type>
 		<base_points>-15</base_points>
 		<cr>12</cr>
@@ -8906,7 +9042,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Lecherousness</name>
+		<name switchability="Roll">Lecherousness</name>
 		<type>Mental</type>
 		<base_points>-15</base_points>
 		<cr>12</cr>
@@ -9060,7 +9196,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Loner</name>
+		<name switchability="Roll">Loner</name>
 		<type>Mental</type>
 		<base_points>-5</base_points>
 		<cr adj="reaction penalty">12</cr>
@@ -9393,7 +9529,7 @@
 		</prereq_list>
 	</advantage>
 	<advantage version="2">
-		<name>Lunacy</name>
+		<name switchability="Roll">Lunacy</name>
 		<type>Physical</type>
 		<base_points>-10</base_points>
 		<reference>B143</reference>
@@ -9751,7 +9887,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Manaphobia (Magic, Common)</name>
+		<name switchability="Roll">Manaphobia (Magic, Common)</name>
 		<type>Mental</type>
 		<base_points>-15</base_points>
 		<cr>12</cr>
@@ -9761,7 +9897,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Manaphobia (Magic, Uncommon)</name>
+		<name switchability="Roll">Manaphobia (Magic, Uncommon)</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -9771,7 +9907,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Manaphobia (Magic, Unknown)</name>
+		<name switchability="Roll">Manaphobia (Magic, Unknown)</name>
 		<type>Mental</type>
 		<base_points>-5</base_points>
 		<cr>12</cr>
@@ -10241,7 +10377,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Miserliness</name>
+		<name switchability="Roll">Miserliness</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -10412,7 +10548,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Mysophobia (Dirt)</name>
+		<name switchability="Roll">Mysophobia (Dirt)</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -10422,7 +10558,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Necrophobia (Death)</name>
+		<name switchability="Roll">Necrophobia (Death)</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -10774,7 +10910,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Nightmares</name>
+		<name switchability="Roll">Nightmares</name>
 		<type>Mental</type>
 		<base_points>-5</base_points>
 		<cr>12</cr>
@@ -11066,7 +11202,7 @@
 		</skill_bonus>
 	</advantage>
 	<advantage version="2">
-		<name>Obscure (@Sense@)</name>
+		<name switchability="Switchable">Obscure (@Sense@)</name>
 		<type>Physical, Exotic</type>
 		<levels>1</levels>
 		<points_per_level>2</points_per_level>
@@ -11232,7 +11368,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Overconfidence</name>
+		<name switchability="Roll">Overconfidence</name>
 		<type>Mental</type>
 		<base_points>-5</base_points>
 		<cr>12</cr>
@@ -11361,7 +11497,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Patron</name>
+		<name switchability="Roll">Patron</name>
 		<type>Social</type>
 		<modifier version="1" enabled="no">
 			<name>@Who: Individual with 150% of PC's starting points@</name>
@@ -11732,6 +11868,10 @@
 			<affects>total</affects>
 			<reference>B148</reference>
 		</modifier>
+        <reaction_bonus>
+            <affected>Everyone</affected>
+            <amount>-2</amount>
+        </reaction_bonus>
 		<reference>B148</reference>
 		<categories>
 			<category>Disadvantage</category>
@@ -12006,7 +12146,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Psionophobia (Psionics, Common)</name>
+		<name switchability="Roll">Psionophobia (Psionics, Common)</name>
 		<type>Mental</type>
 		<base_points>-15</base_points>
 		<cr>12</cr>
@@ -12016,7 +12156,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Psionophobia (Psionics, Uncommon)</name>
+		<name switchability="Roll">Psionophobia (Psionics, Uncommon)</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -12026,7 +12166,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Psionophobia (Psionics, Unknown)</name>
+		<name switchability="Roll">Psionophobia (Psionics, Unknown)</name>
 		<type>Mental</type>
 		<base_points>-5</base_points>
 		<cr>12</cr>
@@ -12137,7 +12277,7 @@
 		</prereq_list>
 	</advantage>
 	<advantage version="2">
-		<name>Pyromania</name>
+		<name switchability="Roll">Pyromania</name>
 		<type>Mental</type>
 		<base_points>-5</base_points>
 		<cr>12</cr>
@@ -12147,7 +12287,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Pyrophobia (Fire)</name>
+		<name switchability="Roll">Pyrophobia (Fire)</name>
 		<type>Mental</type>
 		<base_points>-5</base_points>
 		<cr>12</cr>
@@ -12565,19 +12705,45 @@
 			<name>Recognized all the time</name>
 			<cost type="multiplier">1</cost>
 			<reference>B28</reference>
+            <reaction_bonus>
+                <affected reputation="yes">@class of people@</affected>
+                <frequency>16</frequency>
+                <amount per_level="yes">-1</amount>
+            </reaction_bonus>
 		</modifier>
-		<modifier version="1" enabled="no">
+        <modifier version="1" enabled="no">
+            <name>Recognized most of the time</name>
+            <cost type="multiplier">0.67</cost>
+            <reference>B28</reference>
+            <notes>13-</notes>
+            <reaction_bonus>
+                <affected reputation="yes">@class of people@</affected>
+                <frequency>13</frequency>
+                <amount per_level="yes">-1</amount>
+            </reaction_bonus>
+        </modifier>
+        <modifier version="1" enabled="no">
 			<name>Recognized sometimes</name>
 			<cost type="multiplier">0.5</cost>
 			<reference>B28</reference>
 			<notes>10-</notes>
-		</modifier>
+            <reaction_bonus>
+                <affected reputation="yes">@class of people@</affected>
+                <frequency>10</frequency>
+                <amount per_level="yes">-1</amount>
+            </reaction_bonus>
+        </modifier>
 		<modifier version="1" enabled="no">
 			<name>Recognized occasionally</name>
 			<cost type="multiplier">0.33</cost>
 			<reference>B28</reference>
 			<notes>7-</notes>
-		</modifier>
+            <reaction_bonus>
+                <affected reputation="yes">@class of people@</affected>
+                <frequency>7</frequency>
+                <amount per_level="yes">-1</amount>
+            </reaction_bonus>
+        </modifier>
 		<reference>B26</reference>
 		<categories>
 			<category>Disadvantage</category>
@@ -12616,19 +12782,45 @@
 			<name>Recognized all the time</name>
 			<cost type="multiplier">1</cost>
 			<reference>B28</reference>
-		</modifier>
-		<modifier version="1" enabled="no">
+            <reaction_bonus>
+                <affected reputation="yes">@class of people@</affected>
+                <frequency>16</frequency>
+                <amount per_level="yes">1</amount>
+            </reaction_bonus>
+        </modifier>
+        <modifier version="1" enabled="no">
+            <name>Recognized most of the time</name>
+            <cost type="multiplier">0.67</cost>
+            <reference>B28</reference>
+            <notes>13-</notes>
+            <reaction_bonus>
+                <affected reputation="yes">@class of people@</affected>
+                <frequency>13</frequency>
+                <amount per_level="yes">1</amount>
+            </reaction_bonus>
+        </modifier>
+        <modifier version="1" enabled="no">
 			<name>Recognized sometimes</name>
 			<cost type="multiplier">0.5</cost>
 			<reference>B28</reference>
 			<notes>10-</notes>
-		</modifier>
+            <reaction_bonus>
+                <affected reputation="yes">@class of people@</affected>
+                <frequency>10</frequency>
+                <amount per_level="yes">1</amount>
+            </reaction_bonus>
+        </modifier>
 		<modifier version="1" enabled="no">
 			<name>Recognized occasionally</name>
 			<cost type="multiplier">0.33</cost>
 			<reference>B28</reference>
 			<notes>7-</notes>
-		</modifier>
+            <reaction_bonus>
+                <affected reputation="yes">@class of people@</affected>
+                <frequency>7</frequency>
+                <amount per_level="yes">1</amount>
+            </reaction_bonus>
+        </modifier>
 		<reference>B26</reference>
 		<categories>
 			<category>Advantage</category>
@@ -12775,7 +12967,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Sadism</name>
+		<name switchability="Roll">Sadism</name>
 		<type>Mental</type>
 		<base_points>-15</base_points>
 		<cr>12</cr>
@@ -12783,6 +12975,10 @@
 		<categories>
 			<category>Disadvantage</category>
 		</categories>
+        <reaction_bonus>
+            <affected>Those who are aware of sadism</affected>
+            <amount>-3</amount>
+        </reaction_bonus>
 	</advantage>
 	<advantage version="2">
 		<name>Sanitized Metabolism</name>
@@ -12912,7 +13108,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Scotophobia (Darkness)</name>
+		<name switchability="Roll">Scotophobia (Darkness)</name>
 		<type>Mental</type>
 		<base_points>-15</base_points>
 		<cr>12</cr>
@@ -13067,7 +13263,7 @@
 		</prereq_list>
 	</advantage>
 	<advantage version="2">
-		<name>Selfish</name>
+		<name switchability="Roll">Selfish</name>
 		<type>Mental</type>
 		<base_points>-5</base_points>
 		<cr>12</cr>
@@ -13077,7 +13273,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Selfless</name>
+		<name switchability="Roll">Selfless</name>
 		<type>Mental</type>
 		<base_points>-5</base_points>
 		<cr>12</cr>
@@ -13193,7 +13389,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Shadow Form</name>
+		<name switchability="Switchable">Shadow Form</name>
 		<type>Physical, Exotic</type>
 		<base_points>50</base_points>
 		<modifier version="1" enabled="no">
@@ -13257,7 +13453,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Shapeshifting</name>
+		<name switchability="Switchable">Shapeshifting</name>
 		<type>Physical, Exotic</type>
 		<modifier version="1" enabled="no">
 			<name>Cannot Memorize Forms</name>
@@ -13314,7 +13510,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Short Attention Span</name>
+		<name switchability="Roll">Short Attention Span</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -13835,7 +14031,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Sleepwalker</name>
+		<name switchability="Roll">Sleepwalker</name>
 		<type>Mental</type>
 		<base_points>-5</base_points>
 		<cr>12</cr>
@@ -14065,6 +14261,10 @@
 		<categories>
 			<category>Disadvantage</category>
 		</categories>
+        <reaction_bonus>
+            <affected>Everyone</affected>
+            <amount>-1</amount>
+        </reaction_bonus>
 	</advantage>
 	<advantage version="2">
 		<name>Social Regard</name>
@@ -14076,6 +14276,10 @@
 		<categories>
 			<category>Advantage</category>
 		</categories>
+        <reaction_bonus>
+            <affected>Everyone</affected>
+            <amount per_level="yes">1</amount>
+        </reaction_bonus>
 	</advantage>
 	<advantage version="2">
 		<name>Social Stigma (Criminal Record)</name>
@@ -14086,7 +14290,15 @@
 		<categories>
 			<category>Disadvantage</category>
 		</categories>
-	</advantage>
+        <reaction_bonus>
+            <affected>Everyone</affected>
+            <amount>-1</amount>
+        </reaction_bonus>
+        <reaction_bonus>
+            <affected>Cops &amp; Judges</affected>
+            <amount>-1</amount>
+        </reaction_bonus>
+    </advantage>
 	<advantage version="2">
 		<name>Social Stigma (Disowned, Non-heir)</name>
 		<type>Social</type>
@@ -14096,7 +14308,11 @@
 		<categories>
 			<category>Disadvantage</category>
 		</categories>
-	</advantage>
+        <reaction_bonus>
+            <affected>Everyone</affected>
+            <amount>-1</amount>
+        </reaction_bonus>
+    </advantage>
 	<advantage version="2">
 		<name>Social Stigma (Disowned, Outcast)</name>
 		<type>Social</type>
@@ -14106,7 +14322,11 @@
 		<categories>
 			<category>Disadvantage</category>
 		</categories>
-	</advantage>
+        <reaction_bonus>
+            <affected>Everyone</affected>
+            <amount>-2</amount>
+        </reaction_bonus>
+    </advantage>
 	<advantage version="2">
 		<name>Social Stigma (Excommunicated)</name>
 		<type>Social</type>
@@ -14116,7 +14336,11 @@
 		<categories>
 			<category>Disadvantage</category>
 		</categories>
-	</advantage>
+        <reaction_bonus>
+            <affected>Followers of @faith@</affected>
+            <amount>-3</amount>
+        </reaction_bonus>
+    </advantage>
 	<advantage version="2">
 		<name>Social Stigma (Excommunicated)</name>
 		<type>Social</type>
@@ -14126,7 +14350,11 @@
 		<categories>
 			<category>Disadvantage</category>
 		</categories>
-	</advantage>
+        <reaction_bonus>
+            <affected>Followers of @faith@</affected>
+            <amount>-3</amount>
+        </reaction_bonus>
+    </advantage>
 	<advantage version="2">
 		<name>Social Stigma (Ignorant; @Skill@)</name>
 		<type>Social</type>
@@ -14141,7 +14369,11 @@
 			<specialization compare="is anything"></specialization>
 			<amount>-1</amount>
 		</skill_bonus>
-	</advantage>
+        <reaction_bonus>
+            <affected>Everyone</affected>
+            <amount>-1</amount>
+        </reaction_bonus>
+    </advantage>
 	<advantage version="2">
 		<name>Social Stigma (Minor)</name>
 		<type>Social</type>
@@ -14151,9 +14383,13 @@
 		<categories>
 			<category>Disadvantage</category>
 		</categories>
-	</advantage>
+        <reaction_bonus>
+            <affected>Everyone</affected>
+            <amount>-2</amount>
+        </reaction_bonus>
+    </advantage>
 	<advantage version="2">
-		<name>Social Stigma (Minority Group)</name>
+		<name>Social Stigma (@minority@)</name>
 		<type>Social</type>
 		<base_points>-10</base_points>
 		<reference>B155</reference>
@@ -14161,7 +14397,15 @@
 		<categories>
 			<category>Disadvantage</category>
 		</categories>
-	</advantage>
+        <reaction_bonus>
+            <affected>Everyone</affected>
+            <amount>-2</amount>
+        </reaction_bonus>
+        <reaction_bonus>
+            <affected>@minority@</affected>
+            <amount>4</amount>
+        </reaction_bonus>
+    </advantage>
 	<advantage version="2">
 		<name>Social Stigma (Monster)</name>
 		<type>Social</type>
@@ -14174,9 +14418,13 @@
 		<skill_bonus>
 			<name compare="is">intimidation</name>
 			<specialization compare="is anything"></specialization>
-			<amount>1</amount>
+			<amount>3</amount>
 		</skill_bonus>
-	</advantage>
+        <reaction_bonus>
+            <affected>Everyone</affected>
+            <amount>-3</amount>
+        </reaction_bonus>
+    </advantage>
 	<advantage version="2">
 		<name>Social Stigma (Second-Class Citizen)</name>
 		<type>Social</type>
@@ -14186,7 +14434,11 @@
 		<categories>
 			<category>Disadvantage</category>
 		</categories>
-	</advantage>
+        <reaction_bonus>
+            <affected>Everyone except Second-Class Citizens</affected>
+            <amount>-1</amount>
+        </reaction_bonus>
+    </advantage>
 	<advantage version="2">
 		<name>Social Stigma (Subjugated)</name>
 		<type>Social</type>
@@ -14196,7 +14448,11 @@
 		<categories>
 			<category>Disadvantage</category>
 		</categories>
-	</advantage>
+        <reaction_bonus>
+            <affected>Everyone except Second-Class Citizens</affected>
+            <amount>-1</amount>
+        </reaction_bonus>
+    </advantage>
 	<advantage version="2">
 		<name>Social Stigma (Uneducated)</name>
 		<type>Social</type>
@@ -14206,7 +14462,11 @@
 		<categories>
 			<category>Disadvantage</category>
 		</categories>
-	</advantage>
+        <reaction_bonus>
+            <affected>More sophisticated folk</affected>
+            <amount>-1</amount>
+        </reaction_bonus>
+    </advantage>
 	<advantage version="2">
 		<name>Social Stigma (Valuable Property)</name>
 		<type>Social</type>
@@ -14457,7 +14717,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Split Personality</name>
+		<name switchability="Roll">Split Personality</name>
 		<type>Mental</type>
 		<base_points>-15</base_points>
 		<cr>12</cr>
@@ -14467,7 +14727,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Squeamish</name>
+		<name switchability="Roll">Squeamish</name>
 		<type>Physical</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -14528,7 +14788,11 @@
 		<categories>
 			<category>Disadvantage</category>
 		</categories>
-	</advantage>
+        <reaction_bonus>
+            <affected>Everyone</affected>
+            <amount>-1</amount>
+        </reaction_bonus>
+    </advantage>
 	<advantage version="2">
 		<name>Status</name>
 		<type>Social</type>
@@ -14539,9 +14803,13 @@
 		<categories>
 			<category>Advantage</category>
 		</categories>
-	</advantage>
+        <reaction_bonus>
+            <affected>Everyone</affected>
+            <amount>1</amount>
+        </reaction_bonus>
+    </advantage>
 	<advantage version="2">
-		<name>Stress Atavism</name>
+		<name switchability="Roll">Stress Atavism</name>
 		<type>Mental, Exotic</type>
 		<cr>12</cr>
 		<modifier version="1" enabled="no">
@@ -14612,7 +14880,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Striker, Crushing (@Body Part@)</name>
+		<name switchability="Attack">Striker, Crushing (@Body Part@)</name>
 		<type>Physical, Exotic</type>
 		<base_points>5</base_points>
 		<melee_weapon>
@@ -14636,7 +14904,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Striker, Cutting (@Body Part@)</name>
+		<name switchability="Attack">Striker, Cutting (@Body Part@)</name>
 		<type>Physical, Exotic</type>
 		<base_points>7</base_points>
 		<melee_weapon>
@@ -14660,7 +14928,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Striker, Impaling (@Body Part@)</name>
+		<name switchability="Attack">Striker, Impaling (@Body Part@)</name>
 		<type>Physical, Exotic</type>
 		<base_points>8</base_points>
 		<melee_weapon>
@@ -14684,7 +14952,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Striker, Large Piercing (@Body Part@)</name>
+		<name switchability="Attack">Striker, Large Piercing (@Body Part@)</name>
 		<type>Physical, Exotic</type>
 		<base_points>6</base_points>
 		<melee_weapon>
@@ -14708,7 +14976,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Striker, Piercing (@Body Part@)</name>
+		<name switchability="Attack">Striker, Piercing (@Body Part@)</name>
 		<type>Physical, Exotic</type>
 		<base_points>5</base_points>
 		<melee_weapon>
@@ -15067,6 +15335,10 @@
 			<cost type="percentage">0</cost>
 			<affects>total</affects>
 			<notes>@Reaction Bonus@</notes>
+            <reaction_bonus>
+                <affected>@professional group@</affected>
+                <amount per_level="yes">1</amount>
+            </reaction_bonus>
 		</modifier>
 		<modifier version="1" enabled="no">
 			<name>Alternate Benefit</name>
@@ -15169,7 +15441,7 @@
 			<specialization compare="is anything"></specialization>
 			<amount per_level="yes">1</amount>
 		</skill_bonus>
-	</advantage>
+    </advantage>
 	<advantage version="2">
 		<name>Talent (@Medium@)</name>
 		<type>Mental</type>
@@ -15180,6 +15452,10 @@
 			<cost type="percentage">0</cost>
 			<affects>total</affects>
 			<notes>@Reaction Bonus@</notes>
+            <reaction_bonus>
+                <affected>@professional group@</affected>
+                <amount per_level="yes">1</amount>
+            </reaction_bonus>
 		</modifier>
 		<modifier version="1" enabled="no">
 			<name>Alternate Benefit</name>
@@ -15268,6 +15544,10 @@
 			<cost type="percentage">0</cost>
 			<affects>total</affects>
 			<notes>@Reaction Bonus@</notes>
+            <reaction_bonus>
+                <affected>@professional group@</affected>
+                <amount per_level="yes">1</amount>
+            </reaction_bonus>
 		</modifier>
 		<modifier version="1" enabled="no">
 			<name>Alternate Benefit</name>
@@ -15326,6 +15606,10 @@
 			<cost type="percentage">0</cost>
 			<affects>total</affects>
 			<notes>Ordinary animals</notes>
+            <reaction_bonus>
+                <affected>Ordinary animals</affected>
+                <amount per_level="yes">1</amount>
+            </reaction_bonus>
 		</modifier>
 		<modifier version="1" enabled="no">
 			<name>Alternative Cost</name>
@@ -15378,6 +15662,10 @@
 			<cost type="percentage">0</cost>
 			<affects>total</affects>
 			<notes>Any employer</notes>
+            <reaction_bonus>
+                <affected>Any employer</affected>
+                <amount per_level="yes">1</amount>
+            </reaction_bonus>
 		</modifier>
 		<reference>B90</reference>
 		<categories>
@@ -15440,6 +15728,10 @@
 			<cost type="percentage">0</cost>
 			<affects>total</affects>
 			<notes>Business partners</notes>
+            <reaction_bonus>
+                <affected>Business partners</affected>
+                <amount per_level="yes">1</amount>
+            </reaction_bonus>
 		</modifier>
 		<reference>B90</reference>
 		<categories>
@@ -15497,6 +15789,10 @@
 			<cost type="percentage">0</cost>
 			<affects>total</affects>
 			<notes>Buyers and Critics</notes>
+            <reaction_bonus>
+                <affected>Buyers and Critics</affected>
+                <amount per_level="yes">1</amount>
+            </reaction_bonus>
 		</modifier>
 		<reference>B90,PU3:10</reference>
 		<categories>
@@ -15539,6 +15835,10 @@
 			<cost type="percentage">0</cost>
 			<affects>total</affects>
 			<notes>Gardeners and Sentient plants</notes>
+            <reaction_bonus>
+                <affected>Gardeners and Sentient plants</affected>
+                <amount per_level="yes">1</amount>
+            </reaction_bonus>
 		</modifier>
 		<modifier version="1" enabled="no">
 			<name>Alternate Benefit</name>
@@ -15587,6 +15887,10 @@
 			<cost type="percentage">0</cost>
 			<affects>total</affects>
 			<notes>Patients</notes>
+            <reaction_bonus>
+                <affected>Patients</affected>
+                <amount per_level="yes">1</amount>
+            </reaction_bonus>
 		</modifier>
 		<modifier version="1" enabled="no">
 			<name>Alternate Benefit</name>
@@ -15682,6 +15986,10 @@
 			<cost type="percentage">0</cost>
 			<affects>total</affects>
 			<notes>Patients</notes>
+            <reaction_bonus>
+                <affected>Patients</affected>
+                <amount per_level="yes">1</amount>
+            </reaction_bonus>
 		</modifier>
 		<modifier version="1" enabled="no">
 			<name>Alternate Benefit</name>
@@ -15773,6 +16081,10 @@
 			<cost type="percentage">0</cost>
 			<affects>total</affects>
 			<notes>Engineers and scientists</notes>
+            <reaction_bonus>
+                <affected>Engineers and scientists</affected>
+                <amount per_level="yes">1</amount>
+            </reaction_bonus>
 		</modifier>
 		<modifier version="1" enabled="no">
 			<name>Alternate Benefit</name>
@@ -15841,6 +16153,10 @@
 			<cost type="percentage">0</cost>
 			<affects>total</affects>
 			<notes>Audiences and Critics</notes>
+            <reaction_bonus>
+                <affected>Audiences and Critics</affected>
+                <amount per_level="yes">1</amount>
+            </reaction_bonus>
 		</modifier>
 		<modifier version="1" enabled="no">
 			<name>Alternate Benefit</name>
@@ -15889,6 +16205,10 @@
 			<cost type="percentage">0</cost>
 			<affects>total</affects>
 			<notes>Explorers and nature lovers</notes>
+            <reaction_bonus>
+                <affected>Explorers and nature lovers</affected>
+                <amount per_level="yes">1</amount>
+            </reaction_bonus>
 		</modifier>
 		<modifier version="1" enabled="no">
 			<name>Alternate Benefit</name>
@@ -15952,6 +16272,10 @@
 			<cost type="percentage">0</cost>
 			<affects>total</affects>
 			<notes>Con artists, politicians, salesmen, etc. &#8211; but only if you aren&#8217;t trying to manipulate them.</notes>
+            <reaction_bonus>
+                <affected>Con artists, politicians, salesmen</affected>
+                <amount per_level="yes">1</amount>
+            </reaction_bonus>
 		</modifier>
 		<modifier version="1" enabled="no">
 			<name>Alternate Benefit</name>
@@ -16056,7 +16380,7 @@
 		</skill_bonus>
 	</advantage>
 	<advantage version="2">
-		<name>Technophobia/TL4- (Machinery)</name>
+		<name switchability="Roll">Technophobia/TL4- (Machinery)</name>
 		<type>Mental</type>
 		<base_points>-5</base_points>
 		<cr>12</cr>
@@ -16066,7 +16390,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Technophobia/TL5+ (Machinery)</name>
+		<name switchability="Roll">Technophobia/TL5+ (Machinery)</name>
 		<type>Mental</type>
 		<base_points>-15</base_points>
 		<cr>12</cr>
@@ -16466,7 +16790,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Teratophobia (Monsters)</name>
+		<name switchability="Roll">Teratophobia (Monsters)</name>
 		<type>Mental</type>
 		<base_points>-15</base_points>
 		<cr>12</cr>
@@ -16523,7 +16847,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Terror</name>
+		<name switchability="Switchable">Terror</name>
 		<type>Mental, Supernatural</type>
 		<levels>1</levels>
 		<base_points>30</base_points>
@@ -16552,7 +16876,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Thalassophobia (Oceans)</name>
+		<name switchability="Roll">Thalassophobia (Oceans)</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr>12</cr>
@@ -16618,7 +16942,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Trickster</name>
+		<name switchability="Roll">Trickster</name>
 		<type>Mental</type>
 		<base_points>-15</base_points>
 		<cr>12</cr>
@@ -16650,7 +16974,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Truthfulness</name>
+		<name switchability="Roll">Truthfulness</name>
 		<type>Mental</type>
 		<base_points>-5</base_points>
 		<cr>12</cr>
@@ -16757,7 +17081,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Uncontrollable Appetite (@Craving@)</name>
+		<name switchability="Roll">Uncontrollable Appetite (@Craving@)</name>
 		<type>Mental, Supernatural</type>
 		<base_points>-15</base_points>
 		<cr>12</cr>
@@ -17702,6 +18026,18 @@
 	<advantage version="2">
 		<name>Weapon Master (@Specialty@)</name>
 		<type>Mental</type>
+		<weapon_bonus>
+			<name compare="is">@Skill@</name>
+            <specialization compare="is anything"></specialization>
+            <level>1</level>
+            <amount per_die="yes">1</amount>
+		</weapon_bonus>
+        <weapon_bonus>
+            <name compare="is">@Skill@</name>
+            <specialization compare="is anything">@Specialization@</specialization>
+            <level>2</level>
+            <amount per_die="yes">1</amount>
+        </weapon_bonus>
 		<modifier version="1" enabled="no">
 			<name>One weapon</name>
 			<cost type="points">20</cost>
@@ -17741,6 +18077,18 @@
 		<name>Weapon Master (All weapons)</name>
 		<type>Mental</type>
 		<base_points>45</base_points>
+        <weapon_bonus>
+            <name compare="is">@Skill@</name>
+            <specialization compare="is anything"></specialization>
+            <level>1</level>
+            <amount per_die="yes">1</amount>
+        </weapon_bonus>
+        <weapon_bonus>
+            <name compare="is">@Skill@</name>
+            <specialization compare="is anything">@Specialization@</specialization>
+            <level>2</level>
+            <amount per_die="yes">1</amount>
+        </weapon_bonus>
 		<reference>B99</reference>
 		<categories>
 			<category>Advantage</category>
@@ -17821,7 +18169,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Xenophilia</name>
+		<name switchability="Roll">Xenophilia</name>
 		<type>Mental</type>
 		<base_points>-10</base_points>
 		<cr adj="fright check bonus">12</cr>
@@ -17831,7 +18179,7 @@
 		</categories>
 	</advantage>
 	<advantage version="2">
-		<name>Xenophobia (Strange and Unknown Things)</name>
+		<name switchability="Roll">Xenophobia (Strange and Unknown Things)</name>
 		<type>Mental</type>
 		<base_points>-15</base_points>
 		<cr>12</cr>
