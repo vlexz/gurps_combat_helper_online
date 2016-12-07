@@ -46,7 +46,7 @@ export class TraitListComponent implements OnInit {
     this.change.emit({});
   }
 
-  traitChanged() {
+  traitChanged(ev: any, trait: Trait) {
     this.change.emit({});
   }
 

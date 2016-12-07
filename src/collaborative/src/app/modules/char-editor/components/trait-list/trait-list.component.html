@@ -11,7 +11,7 @@
       <input type="text" [(ngModel)]="trait.name" (change)="traitChanged($event)"/>
     </td>
     <td>
-      <input class="cost" type="number" [(ngModel)]="trait.cp" (change)="traitChanged($event)"/>
+      <input class="cost" type="number" [(ngModel)]="trait.cpBase" (change)="traitChanged()"/>
     </td>
     <td><a (click)="removeTrait(i)">Remove</a></td>
   </tr>

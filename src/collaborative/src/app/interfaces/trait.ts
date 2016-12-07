@@ -3,6 +3,7 @@ export class Trait {
   public category: string;
   public name: string;
   public cp: number;
+  public cpBase: number;
 
   static fromJson(json: Object) {
     let ret = new Trait;

@@ -6,6 +6,6 @@ table
     th 
   tr(*ngFor='let trait of filtered; let i = index')
     td: input(type='text', [(ngModel)]='trait.name', (change)='traitChanged($event)')
-    td: input.cost(type='number', [(ngModel)]='trait.cp', (change)='traitChanged($event)')  
+    td: input.cost(type='number', [(ngModel)]='trait.cpBase', (change)='traitChanged()')  
     td: a((click)='removeTrait(i)') Remove
   tr: td(colspan=3): a((click)='addTrait()') Add {{category}}
