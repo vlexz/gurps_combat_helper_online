@@ -106,19 +106,19 @@ export class CharacterService {
 
   defaultTrait(): Observable<Trait> {
     console.log('get default trait from scala api');
-    return this.http.get(this.apiEndPoint + 'chars/trait')
+    return this.http.get(this.apiEndPoint + 'char/trait')
     .map(res => Trait.fromJson(res.json()));
   }
 
   defaultSkill(): Observable<Skill> {
     console.log('get default skill from scala api');
-    return this.http.get(this.apiEndPoint + 'chars/skill')
+    return this.http.get(this.apiEndPoint + 'char/skill')
     .map(res => Skill.fromJson(res.json()));
   }
 
   defaultTechnique(): Observable<Technique> {
     console.log('get default technique from scala api');
-    return this.http.get(this.apiEndPoint + 'chars/teq')
+    return this.http.get(this.apiEndPoint + 'char/teq')
     .map(res => Technique.fromJson(res.json()));
   }
 

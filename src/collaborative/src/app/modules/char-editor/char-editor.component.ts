@@ -35,70 +35,12 @@ export class CharEditorComponent implements OnInit {
     document.getElementById('portrait_file').click();
   }
 
-  // processUpload() {
-  //   console.log('Upload portrait');
-  //   this.ensureCharacterExists()
-  //   .then(saved => {
-  //     this.chars.uploadPortrait(this.current._id, document.getElementById('portrait_file'))
-  //     .subscribe(() => this.timestamp = new Date().getTime());
-  //   });
-  // }
-
   mainInfoChanged(ev: any) {
     this.current.updateMainInfo(ev.srcElement.name, ev.srcElement.value)
     .then(() => {
       this.toolbar.updateCharList();
     });
   }
-
-  // traitChanged() {
-  //   this.ensureCharacterExists()
-  //   .then(saved => {
-  //     if (!saved) {
-  //       this.chars.updateTraits(this.current._id, this.current.traits)
-  //       .subscribe(this.setchar);
-  //     }
-  //   });
-  // }
-
-  // skillChanged() {
-  //   this.ensureCharacterExists()
-  //   .then(saved => {
-  //     if (!saved) {
-  //       this.chars.updateSkills(this.current._id, this.current.skills)
-  //       .subscribe(this.setchar);
-  //     }
-  //   });
-  // }
-
-  // techniqueChanged() {
-  //   this.ensureCharacterExists()
-  //   .then(saved => {
-  //     if (!saved) {
-  //       this.chars.updateTechniques(this.current._id, this.current.techniques)
-  //       .subscribe(this.setchar);
-  //     }
-  //   });
-  // }
-
-  // setCharacter(char: Character) {
-  //   this.current = char;
-  //   this.timestamp = new Date().getTime();
-  // }
-
-  // loadCharacter(id: string) {
-  //   if (id === 'new') {
-  //     this.loadDefaultChracter();
-  //   } else {
-  //     this.chars.load(id)
-  //     .subscribe(this.setchar);
-  //   }
-  // }
-
-  // loadDefaultChracter() {
-  //   this.chars.defaultCharacter()
-  //   .subscribe(this.setchar);
-  // }
 
   ngOnInit() {
     this.route.params.forEach((params: Params) => {

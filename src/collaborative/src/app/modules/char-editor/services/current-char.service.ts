@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { CharacterService } from 'shared/services/character.service';
 import { Character } from 'interfaces/character';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class CurrentCharService {
@@ -11,7 +12,8 @@ export class CurrentCharService {
   private setchar: any;
 
   constructor(
-    private chars: CharacterService
+    private chars: CharacterService,
+    private router: Router
   ) {
     this.setchar = this.setCharacter.bind(this);
    }
