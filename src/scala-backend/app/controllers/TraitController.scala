@@ -32,8 +32,8 @@ class TraitController @Inject()(traitDao: TraitDao) extends Controller {
       ACCESS_CONTROL_ALLOW_HEADERS -> requestHeaders)
   }
 
-  def get(name: String): Action[AnyContent] = Action.async {
-    traitDao find name map { t: JsValue => Ok(t) } recoverWith throwMsg
+  def get(id: String): Action[AnyContent] = Action.async {
+    traitDao find id map { t: JsValue => Ok(t) } recoverWith throwMsg
   }
 
   def list = Action.async {
