@@ -1,0 +1,41 @@
+.to_top {
+  vertical-align: top;
+}
+
+table.mainvars {
+  width: 100%;
+}
+
+table.mainvars td {  
+  vertical-align: top;
+}
+
+.container {
+  display: inline-block;
+  vertical-align: top;
+}
+
+app-skill-list {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.file {
+  display: none;
+}
+
+input.cost {
+  width: 45px;
+}
+
+nav {
+  display: inline-block;
+}
+
+router-outlet {
+  display: inline-block;
+}
+
+a[routerLink] {
+  display: block;
+}

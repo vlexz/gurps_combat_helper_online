@@ -1,0 +1,21 @@
+
+<h3>{{category}}s</h3>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Cost</th>
+    <th> </th>
+  </tr>
+  <tr *ngFor="let trait of filtered; let i = index">
+    <td>
+      <input type="text" [(ngModel)]="trait.name" (change)="traitChanged($event)"/>
+    </td>
+    <td>
+      <input class="cost" type="number" [(ngModel)]="trait.cpBase" (change)="traitChanged()"/>
+    </td>
+    <td><a (click)="removeTrait(i)">Remove</a></td>
+  </tr>
+  <tr>
+    <td colspan="3"><a (click)="addTrait()">Add {{category}}</a></td>
+  </tr>
+</table>

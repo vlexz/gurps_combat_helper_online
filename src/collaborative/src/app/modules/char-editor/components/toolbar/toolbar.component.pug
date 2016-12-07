@@ -1,0 +1,8 @@
+ul
+  li
+    div
+      a((click)='showCharacters()') Characters
+      div.dropdown
+        app-char-list([visible]='showCharlist', (characterSelected)='_selected($event)') 
+  li: a((click)='_create()') Create
+  li: a((click)='_clone()') Clone

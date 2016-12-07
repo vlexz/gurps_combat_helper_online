@@ -1,0 +1,12 @@
+
+<ul>
+  <li>
+    <div><a (click)="showCharacters()">Characters</a>
+      <div class="dropdown">
+        <app-char-list [visible]="showCharlist" (characterSelected)="_selected($event)"> </app-char-list>
+      </div>
+    </div>
+  </li>
+  <li><a (click)="_create()">Create</a></li>
+  <li><a (click)="_clone()">Clone</a></li>
+</ul>

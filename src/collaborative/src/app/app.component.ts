@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-// import { CharEditorComponent } from './components/char-editor/char-editor.component';
+
 
 @Component({
   selector: 'app-root',

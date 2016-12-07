@@ -1,5 +1,7 @@
 
 import { Trait } from './trait';
+import { Skill } from './skill';
+import { Technique } from './technique';
 
 export class Stat {
   base: number;
@@ -30,27 +32,42 @@ class Stats {
   basicMove: Stat;
 }
 
-class Skill {
-  skillString: string;
-  attr: string;
-  diff: string;
-  relLvl: number;
-  bonus: number;
-  lvl: number; // calculated
-  cp: number; // calculated
-}
+
 
 export class Character {
   _id: string;
   stats: Stats;
   traits: Trait[];
   skills: Skill[];
+  techniques: Technique[];
 
-  get advatages(): Trait[] {
-    return this.traits.filter(t => t.cp >= 0);
+  static fromJson(json: Object) {
+    let char = new Character;
+    Object.assign(char, json);
+    return char;
+  }
+
+  get advantages(): Trait[] {
+    return this.traits.filter(t => t.category === 'Advantage');
+  }
+
+  removeTrait(type: string, index: number) {
+    let i = -1;
+    this.traits = this.traits.filter(t => {
+      if (t.category === type) {
+        ++i;
+      }
+      if (i === index) {
+        i = NaN;
+        return false;
+      }
+      return true;
+    });
   }
 
   get disadvantages(): Trait[] {
-    return this.traits.filter(t => t.cp < 0);
+    return this.traits.filter(t => t.category === 'Disadvantage');
   }
+
+
 }

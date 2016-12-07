@@ -1,0 +1,96 @@
+mixin statblock(caption, name, stat, readonly)
+  tr
+    td: b=caption
+    td
+      if (!readonly)
+        if(stat)
+          app-stat-block([statName]="\'" + name + "\'", [stat]= 'current.char.stats.' + name, (statChanged)='current.updateStats($event)')
+        else
+          input.cost(type='number', [(ngModel)]='current.char.' + name, (change)='current.updateCp($event)')
+      else
+        if stat 
+          span= '{{current.char.stats.' + name + '}}'
+        else
+          span= '{{current.char.' + name + '}}'
+    if(stat)    
+      td= '{{current.char.stats.' + name + '.cp}}' 
+
+
+
+mixin mainInfo 
+  table
+    tr
+    td Name 
+      input(type="text", name='name', [(ngModel)]='current.char.name', (change)='mainInfoChanged($event)')
+    td Player
+      input(type="text", name='player', [(ngModel)]='current.char.player', (change)='mainInfoChanged($event)')
+
+mixin mainVariables
+  table.mainvars
+    tr
+      td
+        img([src]='current.portrait', (click)='uploadPortrait()')
+        input.file(type='file', (change)='current.uploadPortrait($event.srcElement.files)', id='portrait_file')
+      td
+        table.top     
+          +statblock('ST:', 'st', true, false)
+          +statblock('DX:', 'dx', true, false)
+          +statblock('IQ:', 'iq', true, false)
+          +statblock('HT:', 'ht', true, false)
+          +statblock('Will:', 'will', true, false)
+          +statblock('Per:', 'per', true, false)
+      td
+        table.top 
+          +statblock('Lift ST:', 'liftSt', true, false)
+          +statblock('Strike ST:', 'strikeSt', true, false)
+          +statblock('BM:', 'basicMove', true, false)
+          +statblock('BS:', 'basicSpeed', true, false)
+          +statblock('FP:', 'fp', true, false)
+          +statblock('HP:', 'hp', true, false)
+      td
+        table.top
+          +statblock('Fright Check:', 'statVars.frightCheck', false, true)
+          +statblock('Vision:', 'statVars.vision', false, true)
+          +statblock('Hearing:', 'statVars.hearing', false, true)
+          +statblock('Taste/Smell:', 'statVars.tasteSmell', false, true)
+          +statblock('Touch:', 'statVars.touch', false, true)
+          +statblock('Basic Lift:', 'statVars.bl', false, true)
+      td
+        table.top
+          +statblock('Size:', 'statVars.sm', false, true)
+          +statblock('Dodge:', 'statVars.dodge', false, true)
+          +statblock('Thrust:', 'statVars.thrDmg', false, true)
+          +statblock('Swing:', 'statVars.swDmg', false, true)
+          +statblock('Combat Enc.:', 'statVars.combatEncumbrance', false, true)
+          +statblock('Travel Enc.:', 'statVars.travelEncumbrance', false, true)          
+      td
+        table.top
+          +statblock('Combat Move:', 'statVars.combMove', false, true)
+          +statblock('Travel Move:', 'statVars.travMove', false, true)
+          //- +statblock('Thrust:', 'statVars.thrDmg', false, true)
+          //- +statblock('Swing:', 'statVars.swDmg', false, true)
+          //- +statblock('Combat Enc.:', 'statVars.combatEncumbrance', false, true)
+          //- +statblock('Travel Enc.:', 'statVars.travelEncumbrance', false, true)   
+      td
+        table.top
+          +statblock('Point Total:', 'cp.cp', false, false)
+          +statblock('Stats:', 'cp.stats', false, true)
+          +statblock('Advantages:', 'cp.adv', false, true)
+          +statblock('Disadvantages:', 'cp.dis', false, true)
+          +statblock('Skills:', 'cp.skills', false, true)
+          +statblock('Unspent:', 'cp.unspent', false, true)
+
+char-editor-toolbar
+div(*ngIf='current.char')  
+  div: +mainInfo
+  div: +mainVariables  
+div([hidden]='!current.char')
+  nav
+    a(routerLink='advdis') Adv/Dis 
+    a(routerLink='skills') Skills 
+  .container
+    router-outlet
+
+      
+  
+
