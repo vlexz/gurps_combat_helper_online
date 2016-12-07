@@ -1,0 +1,15 @@
+#!/bin/bash -x
+activator clean
+activator dist
+activator preloader/clean
+activator preloader/package
+mkdir ggmtools-0.1/
+mkdir ggmtools-0.1/preloader/
+mkdir ggmtools-0.1/bin/
+cp preloader/target/scala-2.11/preloader_2.11-0.1-SNAPSHOT.jar ggmtools-0.1/preloader/preloader_2.11-0.1-SNAPSHOT.jar
+cp preloader/target/streams/compile/dependencyClasspath/\$global/streams/export ggmtools-0.1/preloader/export
+cp bin/preload ggmtools-0.1/bin/preload
+cd target/universal/
+zip -m ggmtools-0.1.zip ../../ggmtools-0.1/preloader/preloader_2.11-0.1-SNAPSHOT.jar ../../ggmtools-0.1/preloader/export ../../ggmtools-0.1/bin/preload
+cd ../../
+rm -r ggmtools-0.1/

@@ -1,15 +1,15 @@
 package daos
 
 import com.google.inject.{ImplementedBy, Inject, Singleton}
-import models.simplecharlist.Charlist
-import models.simplecharlist.CharlistFields._
+import models.charlist.CharlistFields._
+import models.charlist.{Charlist, CharlistFields}
 import org.mongodb.scala.model.Filters
 import org.mongodb.scala.result.UpdateResult
 import org.mongodb.scala.{Completed, Document, MongoCollection}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.{JsObject, JsValue, Json}
-import services.Mongo
 import scala.concurrent.Future
+import services.Mongo
 
 /**
   * Created by crimson on 9/23/16.
@@ -31,18 +31,15 @@ trait CharlistDao {
 
 @Singleton
 class MongoCharlistDao @Inject()(mongo: Mongo) extends CharlistDao {
-  private val charlists: MongoCollection[Document] = mongo.db.getCollection("characters")
-  private val toDoc: Charlist => Document = x => Document(Json.toJson(x).toString)
-  private val documentToJsonHeader: Document => JsObject =
-    doc => Json.obj(
-      ID -> doc.get(ID).get.asString.getValue,
-      TIMESTAMP -> doc.get(TIMESTAMP).get.asString.getValue,
-      PLAYER -> doc.get(PLAYER).get.asString.getValue,
-      NAME -> doc.get(NAME).get.asString.getValue)
+  private val charlists: MongoCollection[Document] = mongo.db getCollection "characters"
+  private val toDoc: Charlist => Document = x => Document(Json toJson x toString())
+  private val docHeaderToJson: Document => JsObject = doc => Json obj (CharlistFields.list map {
+    s => s -> (Json toJsFieldJsValueWrapper (doc get s).get.asString.getValue)
+  }: _*)
 
   override def save(charlist: Charlist): Future[Completed] = charlists insertOne toDoc(charlist) head()
 
-  override def find(): Future[Seq[JsObject]] = charlists find() map documentToJsonHeader toFuture()
+  override def find(): Future[Seq[JsObject]] = charlists find() map docHeaderToJson toFuture()
 
   override def find(id: String): Future[JsValue] = charlists find Filters.equal(ID, id) head() map (Json parse _.toJson)
 
@@ -53,6 +50,6 @@ class MongoCharlistDao @Inject()(mongo: Mongo) extends CharlistDao {
 
   override def delete(id: String): Future[Seq[JsObject]] = {
     charlists deleteOne Filters.equal(ID, id) head()
-    charlists find() map documentToJsonHeader toFuture()
+    charlists find() map docHeaderToJson toFuture()
   }
 }
