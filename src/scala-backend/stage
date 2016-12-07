@@ -5,5 +5,13 @@ activator preloader/clean
 activator preloader/package
 mkdir target/universal/stage/preloader/
 cp preloader/target/scala-2.11/preloader_2.11-0.1-SNAPSHOT.jar target/universal/stage/preloader/preloader_2.11-0.1-SNAPSHOT.jar
-cp preloader/target/streams/compile/dependencyClasspath/\$global/streams/export target/universal/stage/preloader/export
+cp preloader/target/streams/compile/dependencyClasspath/\$global/streams/export target/universal/stage/preloader/old_export
 cp bin/preload target/universal/stage/bin/preload
+
+mkdir target/universal/stage/preloader/deps
+for dep in `cat target/universal/stage/preloader/old_export | sed -e "s/:/\n/g"`
+do
+  echo `basename $dep`
+  cp -R $dep target/universal/stage/preloader/deps/
+  echo -n "deps/`basename $dep`:" >> target/universal/stage/preloader/export
+done
