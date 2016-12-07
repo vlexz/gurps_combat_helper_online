@@ -329,7 +329,7 @@
   "traits" : [ {
     "name" : "Combat Reflexes",
     "types" : [ "Mental", "Mundane" ], // valid strings: "Mental" "Physical" "Social" "Mundane" "Exotic" "Supernatural"
-    "category" : "Advantage", // valid strings: "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
+    "category" : "Advantage", // valid strings: "Race" "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
     "switch" : "Always on", // valid strings: "Always on" "Switchable" "Attack" "Roll"
     "ref" : "B43",
     "notes" : "",
@@ -381,7 +381,7 @@
   }, {
     "name" : "Sorcery",
     "types" : [ "Mental", "Supernatural" ], // valid strings: "Mental" "Physical" "Social" "Mundane" "Exotic" "Supernatural"
-    "category" : "Advantage", // valid strings: "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
+    "category" : "Advantage", // valid strings: "Race" "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
     "switch" : "Always on", // valid strings: "Always on" "Switchable" "Attack" "Roll"
     "ref" : "",
     "notes" : "",
@@ -395,7 +395,7 @@
   }, {
     "name" : "Hot Pilot",
     "types" : [ "Mental", "Mundane" ], // valid strings: "Mental" "Physical" "Social" "Mundane" "Exotic" "Supernatural"
-    "category" : "Advantage", // valid strings: "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
+    "category" : "Advantage", // valid strings: "Race" "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
     "switch" : "Always on", // valid strings: "Always on" "Switchable" "Attack" "Roll"
     "ref" : "B89",
     "notes" : "",
@@ -445,7 +445,7 @@
   }, {
     "name" : "Positive Reputation: Airshipmen",
     "types" : [ "Social", "Mundane" ], // valid strings: "Mental" "Physical" "Social" "Mundane" "Exotic" "Supernatural"
-    "category" : "Advantage", // valid strings: "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
+    "category" : "Advantage", // valid strings: "Race" "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
     "switch" : "Always on", // valid strings: "Always on" "Switchable" "Attack" "Roll"
     "ref" : "B26",
     "notes" : "",
@@ -496,7 +496,7 @@
   }, {
     "name" : "Weapon Master (Shield)",
     "types" : [ "Mental", "Mundane" ], // valid strings: "Mental" "Physical" "Social" "Mundane" "Exotic" "Supernatural"
-    "category" : "Advantage", // valid strings: "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
+    "category" : "Advantage", // valid strings: "Race" "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
     "switch" : "Always on", // valid strings: "Always on" "Switchable" "Attack" "Roll"
     "ref" : "B99",
     "notes" : "",
@@ -540,7 +540,7 @@
   }, {
     "name" : "Skull",
     "types" : [ "Physical" ], // valid strings: "Mental" "Physical" "Social" "Mundane" "Exotic" "Supernatural"
-    "category" : "Advantage", // valid strings: "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
+    "category" : "Advantage", // valid strings: "Race" "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
     "switch" : "Always on", // valid strings: "Always on" "Switchable" "Attack" "Roll"
     "ref" : "",
     "notes" : "",
@@ -579,7 +579,7 @@
   }, {
     "name" : "Gigantism",
     "types" : [ "Physical", "Mundane" ], // valid strings: "Mental" "Physical" "Social" "Mundane" "Exotic" "Supernatural"
-    "category" : "Advantage", // valid strings: "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
+    "category" : "Advantage", // valid strings: "Race" "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
     "switch" : "Always on", // valid strings: "Always on" "Switchable" "Attack" "Roll"
     "ref" : "B20",
     "notes" : "",

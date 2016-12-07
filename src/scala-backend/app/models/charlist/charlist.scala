@@ -22,8 +22,8 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
                     var damageResistance: DamageResistance = DamageResistance(),
                     var reactions: Seq[Reaction] = Nil,
                     traits: Seq[Trait] = Seq(
-                      Trait(name = "Skull", modifiers = Seq(TraitModifier(drBonuses = Seq(
-                        BonusDR(Seq(HitLocation.SKULL), protection = DrSet(2))))))),
+                      Trait(name = "Human", category = TraitCategory.RACE, modifiers = Seq(TraitModifier(
+                        drBonuses = Seq(BonusDR(Seq(HitLocation.SKULL), protection = DrSet(2))))))),
                     skills: Seq[Skill] = Nil,
                     techniques: Seq[Technique] = Nil,
                     equip: Equipment = Equipment(),
@@ -563,12 +563,13 @@ object TraitType {
 }
 
 object TraitCategory {
+  val RACE = "Race"
   val ADVANTAGE = "Advantage"
   val DISADVANTAGE = "Disadvantage"
   val PERK = "Perk"
   val QUIRK = "Quirk"
   val LANGUAGE = "Language"
-  val canBe = Set(ADVANTAGE, DISADVANTAGE, PERK, QUIRK, LANGUAGE)
+  val canBe = Set(RACE, ADVANTAGE, DISADVANTAGE, PERK, QUIRK, LANGUAGE)
 }
 
 object TraitModifierAffects {
