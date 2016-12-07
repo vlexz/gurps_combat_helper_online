@@ -807,7 +807,7 @@
             </reaction_bonus>
             <reaction_bonus>
                 <affected>Those attracted to @gender@</affected>
-                <amount>4</amount>
+                <amount>6</amount>
             </reaction_bonus>
             <reaction_bonus>
                 <affected>@gender@ with reasons to dislike</affected>
