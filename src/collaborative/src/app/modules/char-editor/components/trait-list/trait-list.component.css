@@ -3,6 +3,12 @@ h3{
   margin-top: 5px;
 }
 
-input.cost {
-  width: 45px;
+
+.search_block{
+  position: relative;
+}
+
+.search_results {
+  position: absolute;
+  background: lightgray;
 }

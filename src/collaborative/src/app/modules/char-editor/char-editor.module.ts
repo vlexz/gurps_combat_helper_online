@@ -18,6 +18,7 @@ import { StatBlockComponent } from './components/stat-block/stat-block.component
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { AdvDisPartComponent } from './components/adv-dis-part/adv-dis-part.component';
 import { SkillTeqPartComponent } from './components/skill-teq-part/skill-teq-part.component';
+import { TraitEditorComponent } from './components/trait-editor/trait-editor.component';
 
 @NgModule({
   imports: [
@@ -36,7 +37,8 @@ import { SkillTeqPartComponent } from './components/skill-teq-part/skill-teq-par
     StatBlockComponent,
     ToolbarComponent,
     AdvDisPartComponent,
-    SkillTeqPartComponent
+    SkillTeqPartComponent,
+    TraitEditorComponent
   ],
   providers: [
     CurrentCharService

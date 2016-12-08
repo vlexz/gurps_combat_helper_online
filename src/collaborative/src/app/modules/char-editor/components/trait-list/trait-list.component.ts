@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CharacterService } from '../../../../shared/services/character.service';
-import { Trait } from '../../../../interfaces/trait';
+import { Trait, TraitDescriptor } from '../../../../interfaces/trait';
+import { TraitsService } from 'shared/services/traits.service';
 
 @Component({
   selector: 'app-trait-list',
@@ -17,9 +18,14 @@ export class TraitListComponent implements OnInit {
 
   defaultTrait: Trait;
 
+  search_results: TraitDescriptor[];
+
+  _search_term: string;
+
 
   constructor(
-    private chars: CharacterService
+    private chars: CharacterService,
+    private traitsrv: TraitsService
   ) { }
 
   addTrait() {
@@ -46,12 +52,41 @@ export class TraitListComponent implements OnInit {
     this.change.emit({});
   }
 
+  get searchTerm() {
+    return this._search_term;
+  }
+
+  set searchTerm(term: string) {
+    this._search_term = term;
+    this.traitsrv.search(this.category, term)
+    .subscribe(results => this.search_results = results);
+  }
+
+  searchTrait(ev: any) {
+    this.traitsrv.search(this.category, ev.srcElement.value)
+    .subscribe(results => this.search_results = results);
+  }
+
+  addFromSearch(idx: number) {
+    this.traitsrv.getTrait(this.search_results[idx].id)
+    .subscribe(trait => {
+      this.traits.push(trait);
+      this.change.emit();
+      this.cancelSearch();
+    });
+  }
+
+  cancelSearch() {
+    this.search_results = null;
+    this._search_term = '';
+  }
+
   traitChanged(ev: any, trait: Trait) {
     this.change.emit({});
   }
 
   ngOnInit() {
-    this.chars.defaultTrait().subscribe(trait => {
+    this.traitsrv.default.subscribe(trait => {
       trait.category = this.category;
       this.defaultTrait = trait;
     });

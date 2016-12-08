@@ -5,18 +5,18 @@
     <table>
       <tr></tr>
       <td>Name 
-        <input type="text" name="name" [(ngModel)]="current.char.name" (change)="mainInfoChanged($event)"/>
+        <input type="text" name="name" [(ngModel)]="current.char.name" (change)="mainInfoChanged($event)">
       </td>
       <td>Player
-        <input type="text" name="player" [(ngModel)]="current.char.player" (change)="mainInfoChanged($event)"/>
+        <input type="text" name="player" [(ngModel)]="current.char.player" (change)="mainInfoChanged($event)">
       </td>
     </table>
   </div>
   <div>
     <table class="mainvars">
       <tr>
-        <td><img [src]="current.portrait" (click)="uploadPortrait()"/>
-          <input class="file" type="file" (change)="current.uploadPortrait($event.srcElement.files)" id="portrait_file"/>
+        <td><img [src]="current.portrait" (click)="uploadPortrait()">
+          <input class="file" type="file" (change)="current.uploadPortrait($event.srcElement.files)" id="portrait_file">
         </td>
         <td>
           <table class="top">    
@@ -197,7 +197,7 @@
             <tr>
               <td><b>Point Total:</b></td>
               <td>
-                <input class="cost" type="number" [(ngModel)]="current.char.cp.cp" (change)="current.updateCp($event)"/>
+                <input class="cost" type="number" [(ngModel)]="current.char.cp.cp" (change)="current.updateCp($event)">
               </td>
             </tr>
             <tr>

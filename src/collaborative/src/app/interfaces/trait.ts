@@ -22,5 +22,9 @@ export class Trait {
     }
     return trait;
   }
+}
 
+export class TraitDescriptor {
+  public id: string;
+  public name: string;
 }

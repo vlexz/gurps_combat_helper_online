@@ -8,4 +8,16 @@ table
     td: input(type='text', [(ngModel)]='trait.name', (change)='traitChanged($event)')
     td: input.cost(type='number', [(ngModel)]='trait.cpBase', (change)='traitChanged()')  
     td: a((click)='removeTrait(i)') Remove
-  tr: td(colspan=3): a((click)='addTrait()') Add {{category}}
+  //- tr: td(colspan=3): a((click)='addTrait()') Add {{category}}
+  tr
+    td(colspan=3)
+      .search_block
+        input(type='text', [(ngModel)]='searchTerm', placeholder='Search')
+        span or
+        a((click)='addTrait()') Add New
+        .search_results(*ngIf='search_results')
+          table
+            tr(*ngFor='let res of search_results; let i = index')
+              td {{res.name}}
+              td: a((click)='addFromSearch(i)') Add
+            tr: td: a((click)='cancelSearch()') Cancel Search
