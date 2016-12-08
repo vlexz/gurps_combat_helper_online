@@ -30,8 +30,9 @@ trait TraitDao {
 class MongoTraitDao @Inject()(mongo: Mongo) extends TraitDao {
   private val traits: MongoCollection[Document] = mongo.db getCollection "traits"
   private val toDoc: Trait => Document = x => Document(Json toJson x toString())
-  private val docIdToJson: Document => JsObject =
-    doc => Json obj (doc get "_id").get.asObjectId.getValue.toString -> (doc get "name").get.asString.getValue
+  private val docIdToJson: Document => JsObject = doc =>
+    (Json obj "id" -> (doc get "_id").get.asObjectId.getValue.toString) ++
+      (Json obj "name" -> (doc get "name").get.asString.getValue)
 
   override def save(cTrait: Trait): Future[Completed] = traits insertOne toDoc(cTrait) head()
 
