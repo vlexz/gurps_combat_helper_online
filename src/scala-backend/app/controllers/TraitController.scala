@@ -49,7 +49,9 @@ class TraitController @Inject()(traitDao: TraitDao) extends Controller {
   }
 
   def lookup(category: String, term: String): Action[AnyContent] = Action.async {
-    traitDao find(category, term) map { s: Seq[JsObject] => Ok(Json toJson s) } recoverWith throwMsg
+    traitDao find(category.toLowerCase.capitalize, term) map {
+      s: Seq[JsObject] => Ok(Json toJson s)
+    } recoverWith throwMsg
   }
 
   def list: Action[AnyContent] = Action.async {
