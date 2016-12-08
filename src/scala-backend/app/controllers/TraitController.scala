@@ -4,8 +4,9 @@ import com.google.inject.Inject
 import daos.TraitDao
 import models.charlist.Trait
 import models.charlist.Charlist.traitFormat
+import org.mongodb.scala.Completed
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json._
 import play.api.mvc.{Action, AnyContent, Controller, Result}
 
 import scala.concurrent.Future
@@ -14,14 +15,17 @@ import scala.concurrent.Future
   * Created by crimson on 11/16/16.
   */
 class TraitController @Inject()(traitDao: TraitDao) extends Controller {
-  val throwMsg: PartialFunction[Throwable, Future[Result]] = {
+  private val invalidMsg = { e: JsError =>
+    Future(BadRequest(Json toJson (e.errors map { case (a, b) => Json obj a.toString -> b.mkString("; ") })))
+  }
+  private val throwMsg: PartialFunction[Throwable, Future[Result]] = {
     case e: IllegalStateException => Future(NotFound(Json obj "Empty database return." -> e.toString))
     case t: Throwable => Future(InternalServerError(t.toString))
   }
 
   def options(p: String, name: String): Action[AnyContent] = Action { implicit request =>
     val methods = p match {
-      case "base" => "GET"
+      case "base" => "GET, POST"
       case "list" => "GET"
       case "elem" => "GET"
     }
@@ -30,6 +34,14 @@ class TraitController @Inject()(traitDao: TraitDao) extends Controller {
       ALLOW -> methods,
       ACCESS_CONTROL_ALLOW_METHODS -> methods,
       ACCESS_CONTROL_ALLOW_HEADERS -> requestHeaders)
+  }
+
+  def add(): Action[JsValue] = Action.async(parse.json) { implicit request =>
+    request.body.validate[Trait] match {
+      case e: JsError => invalidMsg(e)
+      case s: JsSuccess[Trait] =>
+        traitDao save s.get map { _: Completed => Accepted(Json toJson s.get) } recoverWith throwMsg
+    }
   }
 
   def get(id: String): Action[AnyContent] = Action.async {

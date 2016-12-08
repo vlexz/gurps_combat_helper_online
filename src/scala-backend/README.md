@@ -12,7 +12,10 @@
 <p>/api/char/:id/pic
 <br>GET — returns charlist portrait if it exists
 <br>PUT — stores uploaded image as charlist portrair, overwriting any existing one</p>
-<p>/api/[trait|skill|teq|weap|armor|item] GET — returns a charlist component template</p>
+<p>/api/[skill|teq|weap|armor|item] GET — returns a charlist component template</p>
+<p>/api/trait
+<br>POST — validates the trait in request and saves it to the database under new id, returns recalculated trait
+<br>GET — returns default blank trait</p>
 <p>/api/traits GET — returns the list of basic traits, [id : name]</p>
 <p>/api/traits/search/:category?term=string GET — returns the list of basic traits of the category with 'string' in name, [id : name]</p> 
 <p>/api/trait/:id GET — returns a trait by id from the list of basic traits</p>

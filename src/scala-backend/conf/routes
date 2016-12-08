@@ -10,6 +10,7 @@
 
 # Traits storage
 OPTIONS        /api/trait                          controllers.TraitController.options(p = "base", id)
+POST           /api/trait                          controllers.TraitController.add()
 GET            /api/trait                          controllers.TraitController.create
 OPTIONS        /api/traits                         controllers.TraitController.options(p = "list", id)
 GET            /api/traits                         controllers.TraitController.list
