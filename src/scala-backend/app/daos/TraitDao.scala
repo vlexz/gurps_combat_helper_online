@@ -22,6 +22,8 @@ trait TraitDao {
   def find(): Future[Seq[JsObject]]
 
   def find(id: String): Future[JsValue]
+
+  def find(category: String, term: String): Future[Seq[JsObject]]
 }
 
 @Singleton
@@ -36,5 +38,10 @@ class MongoTraitDao @Inject()(mongo: Mongo) extends TraitDao {
   override def find(): Future[Seq[JsObject]] = traits find() map docIdToJson toFuture()
 
   override def find(id: String): Future[JsValue] =
-    traits find Filters.equal("_id", new ObjectId(id)) head() map (Json parse _.toJson())
+    traits find Filters.eq("_id", new ObjectId(id)) head() map (Json parse _.toJson())
+
+  override def find(category: String, term: String): Future[Seq[JsObject]] =
+    traits find Filters.eq("category", category) withFilter {
+      _.get("name").get.asString.getValue.toLowerCase.contains(term.toLowerCase)
+    } map docIdToJson toFuture()
 }

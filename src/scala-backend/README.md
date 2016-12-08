@@ -13,6 +13,7 @@
 <br>GET — returns charlist portrait if it exists
 <br>PUT — stores uploaded image as charlist portrair, overwriting any existing one</p>
 <p>/api/[trait|skill|teq|weap|armor|item] GET — returns a charlist component template</p>
-<p>/api/traits GET — returns the list of basic traits, [name : id]</p>
+<p>/api/traits GET — returns the list of basic traits, [id : name]</p>
+<p>/api/traits/search/:category?term=string GET — returns the list of basic traits of the category with 'string' in name, [id : name]</p> 
 <p>/api/trait/:id GET — returns a trait by id from the list of basic traits</p>
 <p>You can see a sample Charlist structure in <code>example.json</code>.</p>

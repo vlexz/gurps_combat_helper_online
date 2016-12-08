@@ -19,7 +19,7 @@ class TraitController @Inject()(traitDao: TraitDao) extends Controller {
     case t: Throwable => Future(InternalServerError(t.toString))
   }
 
-  def options(p: String, name: String = ""): Action[AnyContent] = Action { implicit request =>
+  def options(p: String, name: String): Action[AnyContent] = Action { implicit request =>
     val methods = p match {
       case "base" => "GET"
       case "list" => "GET"
@@ -36,7 +36,11 @@ class TraitController @Inject()(traitDao: TraitDao) extends Controller {
     traitDao find id map { t: JsValue => Ok(t) } recoverWith throwMsg
   }
 
-  def list = Action.async {
+  def lookup(category: String, term: String): Action[AnyContent] = Action.async {
+    traitDao find(category, term) map { s: Seq[JsObject] => Ok(Json toJson s) } recoverWith throwMsg
+  }
+
+  def list: Action[AnyContent] = Action.async {
     traitDao find() map { s: Seq[JsObject] => Ok(Json toJson s) } recoverWith throwMsg
   }
 

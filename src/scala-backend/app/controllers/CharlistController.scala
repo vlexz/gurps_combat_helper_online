@@ -21,16 +21,16 @@ import scala.util.Random
   * Created by crimson on 9/23/16.
   */
 class CharlistController @Inject()(charlistDao: CharlistDao, configuration: Configuration) extends Controller {
-  val invalidMsg = { e: JsError =>
+  private val invalidMsg = { e: JsError =>
     Future(BadRequest(Json toJson (e.errors map { case (a, b) => Json obj a.toString -> b.mkString("; ") })))
   }
-  val throwMsg: PartialFunction[Throwable, Future[Result]] = {
+  private val throwMsg: PartialFunction[Throwable, Future[Result]] = {
     case e: IllegalStateException => Future(NotFound(Json obj "Empty database return." -> e.toString))
     case t: Throwable => Future(InternalServerError(t.toString))
   }
-  val picFile = { id: String => new File(s"${configuration.underlying getString "files.picfolder"}$id.png") }
+  private val picFile = { id: String => new File(s"${configuration.underlying getString "files.picfolder"}$id.png") }
 
-  def options(p: String, id: String = ""): Action[AnyContent] = Action { implicit request =>
+  def options(p: String, id: String): Action[AnyContent] = Action { implicit request =>
     val methods = p match {
       case "base" => "GET, POST"
       case "list" => "GET"
