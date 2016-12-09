@@ -14,13 +14,15 @@ export class TraitListComponent implements OnInit {
   @Input() traits: Trait[];
   @Input() category: string;
 
-  @Output() change: EventEmitter<Object> = new EventEmitter;
+  @Output() traitChange: EventEmitter<Object> = new EventEmitter;
 
   defaultTrait: Trait;
 
   search_results: TraitDescriptor[];
 
   _search_term: string;
+
+  edited_trait: Trait = null;
 
 
   constructor(
@@ -29,8 +31,10 @@ export class TraitListComponent implements OnInit {
   ) { }
 
   addTrait() {
-    this.traits.push(this.defaultTrait.clone());
-    this.change.emit({});
+    let newTrait = this.defaultTrait.clone();
+    this.traits.push(newTrait);
+    this.edited_trait = newTrait;
+    this.traitChange.emit({});
   }
 
   get filtered() {
@@ -49,7 +53,7 @@ export class TraitListComponent implements OnInit {
       return false;
     });
     this.traits.splice(toRemove, 1);
-    this.change.emit({});
+    this.traitChange.emit({});
   }
 
   get searchTerm() {
@@ -71,7 +75,7 @@ export class TraitListComponent implements OnInit {
     this.traitsrv.getTrait(this.search_results[idx].id)
     .subscribe(trait => {
       this.traits.push(trait);
-      this.change.emit();
+      this.traitChange.emit();
       this.cancelSearch();
     });
   }
@@ -81,8 +85,23 @@ export class TraitListComponent implements OnInit {
     this._search_term = '';
   }
 
+  editTrait(trait: Trait) {
+    this.edited_trait = trait;
+  }
+
+  editCanceled() {
+    this.edited_trait = null;
+  }
+
+  editFinished() {
+    console.log('Edit finished');
+    this.edited_trait = null;
+    this.traitChange.emit({});
+  }
+
   traitChanged(ev: any, trait: Trait) {
-    this.change.emit({});
+    console.log('Trait changed');
+    this.traitChange.emit({});
   }
 
   ngOnInit() {

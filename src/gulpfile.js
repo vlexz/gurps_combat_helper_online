@@ -175,6 +175,15 @@ gulp.task('start:scala', function(cb) {
     cmd.on('close', cb)
 })
 
+gulp.task('start:pug' ,function(cb){    
+    let cmd = spawn('pug', ['watch', 'app', '--pretty', '--doctype', 'html'], {
+        cwd: 'collaborative/src/'
+    })
+    cmd.stdout.on('data', data => process.stdout.write(data));
+    cmd.stderr.on('data', data => process.stderr.write(data));
+    cmd.on('close', cb)
+});
+
 gulp.task('start:dev', series(
     'build:scala',
     'start:scala'

@@ -1,16 +1,17 @@
 h3 {{category}}s
+trait-editor(*ngIf='edited_trait', (editDone)='editFinished()', (editCancel)='editCanceled()', [trait]='edited_trait')
 table
   tr
     th Name
     th Cost
     th 
   tr(*ngFor='let trait of filtered; let i = index')
-    td: input(type='text', [(ngModel)]='trait.name', (change)='traitChanged($event)')
-    td: input.cost(type='number', [(ngModel)]='trait.cpBase', (change)='traitChanged()')  
-    td: a((click)='removeTrait(i)') Remove
-  //- tr: td(colspan=3): a((click)='addTrait()') Add {{category}}
+    td: .name {{trait.name}}
+    td: .cost {{trait.cp}}
+    td: a((click)='editTrait(trait)') Edit
+    td: a((click)='removeTrait(i)') Remove  
   tr
-    td(colspan=3)
+    td(colspan=4)
       .search_block
         input(type='text', [(ngModel)]='searchTerm', placeholder='Search')
         span or
@@ -18,6 +19,5 @@ table
         .search_results(*ngIf='search_results')
           table
             tr(*ngFor='let res of search_results; let i = index')
-              td {{res.name}}
-              td: a((click)='addFromSearch(i)') Add
+              td: a((click)='addFromSearch(i)') {{res.name}}
             tr: td: a((click)='cancelSearch()') Cancel Search

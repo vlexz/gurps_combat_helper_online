@@ -1,5 +1,6 @@
 
 <h3>{{category}}s</h3>
+<trait-editor *ngIf="edited_trait" (editDone)="editFinished()" (editCancel)="editCanceled()" [trait]="edited_trait"></trait-editor>
 <table>
   <tr>
     <th>Name</th>
@@ -8,22 +9,22 @@
   </tr>
   <tr *ngFor="let trait of filtered; let i = index">
     <td>
-      <input type="text" [(ngModel)]="trait.name" (change)="traitChanged($event)">
+      <div class="name">{{trait.name}}</div>
     </td>
     <td>
-      <input class="cost" type="number" [(ngModel)]="trait.cpBase" (change)="traitChanged()">
+      <div class="cost">{{trait.cp}}</div>
     </td>
-    <td><a (click)="removeTrait(i)">Remove</a></td>
+    <td><a (click)="editTrait(trait)">Edit</a></td>
+    <td><a (click)="removeTrait(i)">Remove  </a></td>
   </tr>
   <tr>
-    <td colspan="3">
+    <td colspan="4">
       <div class="search_block">
         <input type="text" [(ngModel)]="searchTerm" placeholder="Search"><span>or</span><a (click)="addTrait()">Add New</a>
         <div class="search_results" *ngIf="search_results">
           <table>
             <tr *ngFor="let res of search_results; let i = index">
-              <td>{{res.name}}</td>
-              <td><a (click)="addFromSearch(i)">Add</a></td>
+              <td><a (click)="addFromSearch(i)">{{res.name}}</a></td>
             </tr>
             <tr>
               <td><a (click)="cancelSearch()">Cancel Search</a></td>

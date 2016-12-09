@@ -1,0 +1,29 @@
+.cover
+.container()
+  .dialog
+    .title 
+      h3 Edit {{trait.category}}
+    .content
+      div Name: 
+        input(type='text', [(ngModel)] = 'trait.name')
+      div Cost: {{trait.cp}}
+        a((click)='switchCostExp()')
+          span(*ngIf='costExpand') Collapse
+          span(*ngIf='!costExpand') Expand
+        div(*ngIf='costExpand')
+          label Base Cost: 
+            input.cost(type='number', [(ngModel)] = 'trait.cpBase')
+          label Cost per level:
+            input.cost(type='number', [(ngModel)] = 'trait.cpPerLvl')
+          label Level: 
+            input.cost(type='number', [(ngModel)] = 'trait.level')  
+      div Avaliable modifiers          
+      table
+        tr(*ngFor='let mod of trait.modifiers; let i = index')
+          td: input(type='checkbox', [(ngModel)]='mod.on')
+          td {{mod.name}}
+    .footer 
+      .button-holder
+        button((click)='cancel()') Cancel
+        button((click)='done()') Done
+      
