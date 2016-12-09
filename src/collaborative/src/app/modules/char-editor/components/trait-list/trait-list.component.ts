@@ -62,8 +62,12 @@ export class TraitListComponent implements OnInit {
 
   set searchTerm(term: string) {
     this._search_term = term;
-    this.traitsrv.search(this.category, term)
-    .subscribe(results => this.search_results = results);
+    if (this._search_term.length > 2) {
+      this.traitsrv.search(this.category, term)
+      .subscribe(results => this.search_results = results);
+    } else {
+      this.search_results = null;
+    }
   }
 
   searchTrait(ev: any) {
