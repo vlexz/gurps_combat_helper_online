@@ -11,7 +11,7 @@ class SkillsParser(filePath: String) extends Parser[Skill](filePath) {
   val seq: Seq[Skill] = for (skl <- (XML load (getClass getResourceAsStream filePath)) \ "skill") yield Skill(
     name = (skl \ "name").text,
     spc = (skl \ "specialization").text,
-    tl = (skl \ "tech_level").size, // TODO: 1 => null?
+    tl = (skl \ "tech_level").size, // TODO: absent field if to edit?
     attr = (skl \ "difficulty").text.take(2),
     diff = (skl \ "difficulty").text.drop(3),
     dmgBonuses = for (b <- skl \ "weapon_bonus") yield BonusDamage(
@@ -30,7 +30,7 @@ class SkillsParser(filePath: String) extends Parser[Skill](filePath) {
       bonus = this parseInt (b \ "amount").text,
       notes = (b \ "notes").text), // TODO: no reacts in library
     encumbr = (this parseInt (skl \ "encumbrance_penalty_multiplier").text) > 0,
-    categories = (skl \ "categories" \ "category") map (_.toString),
+    categories = (skl \ "categories" \ "category") map (_.text),
     notes = (skl \ "notes").text) // TODO: missing prerequisites and defaults parsers
   override val tjs: Writes[Skill] = models.charlist.Charlist.skillFormat
 }
