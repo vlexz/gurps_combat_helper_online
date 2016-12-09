@@ -1,4 +1,13 @@
+
+.container {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  justify-content: space-around;
+}
+
 app-trait-list {
-  display: inline-block;
-  margin-right: 50px;
+  display: block;
+  flex-grow: 1;
+  max-width: 500px;
 }

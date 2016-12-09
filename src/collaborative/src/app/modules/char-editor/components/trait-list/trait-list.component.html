@@ -8,13 +8,13 @@
     <th> </th>
   </tr>
   <tr *ngFor="let trait of filtered; let i = index">
-    <td>
+    <td class="name">
       <div class="name">{{trait.name}}</div>
     </td>
     <td>
       <div class="cost">{{trait.cp}}</div>
     </td>
-    <td><a (click)="editTrait(trait)">Edit</a></td>
+    <td><a (click)="editTrait(i)">Edit</a></td>
     <td><a (click)="removeTrait(i)">Remove  </a></td>
   </tr>
   <tr>
@@ -23,11 +23,11 @@
         <input type="text" [(ngModel)]="searchTerm" placeholder="Search"><span>or</span><a (click)="addTrait()">Add New</a>
         <div class="search_results" *ngIf="search_results">
           <table>
-            <tr *ngFor="let res of search_results; let i = index">
-              <td><a (click)="addFromSearch(i)">{{res.name}}</a></td>
-            </tr>
             <tr>
               <td><a (click)="cancelSearch()">Cancel Search</a></td>
+            </tr>
+            <tr *ngFor="let res of search_results; let i = index">
+              <td><a (click)="addFromSearch(i)">{{res.name}}</a></td>
             </tr>
           </table>
         </div>

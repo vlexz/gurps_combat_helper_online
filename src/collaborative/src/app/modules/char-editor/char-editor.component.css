@@ -13,6 +13,7 @@ table.mainvars td {
 .container {
   display: inline-block;
   vertical-align: top;
+  width: 1100px;
 }
 
 app-skill-list {
@@ -30,6 +31,7 @@ input.cost {
 
 nav {
   display: inline-block;
+  width: 80px;
 }
 
 router-outlet {

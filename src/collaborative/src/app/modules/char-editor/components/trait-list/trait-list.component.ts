@@ -11,7 +11,7 @@ import { TraitsService } from 'shared/services/traits.service';
 })
 export class TraitListComponent implements OnInit {
 
-  @Input() traits: Trait[];
+  _traits: Trait[];
   @Input() category: string;
 
   @Output() traitChange: EventEmitter<Object> = new EventEmitter;
@@ -23,6 +23,7 @@ export class TraitListComponent implements OnInit {
   _search_term: string;
 
   edited_trait: Trait = null;
+  edited_trait_idx: number;
 
 
   constructor(
@@ -30,20 +31,28 @@ export class TraitListComponent implements OnInit {
     private traitsrv: TraitsService
   ) { }
 
+  @Input() set traits(traits: Trait[]) {
+    console.log('Set traits into list');
+    this._traits = traits;
+    if (this.edited_trait_idx) {
+      this.edited_trait = this.filtered[this.edited_trait_idx];
+    }
+  }
+
   addTrait() {
     let newTrait = this.defaultTrait.clone();
-    this.traits.push(newTrait);
-    this.edited_trait = newTrait;
+    this.edited_trait_idx = this.filtered.length;
+    this._traits.push(newTrait);
     this.traitChange.emit({});
   }
 
   get filtered() {
-    return this.traits.filter(t => t.category === this.category);
+    return this._traits.filter(t => t.category === this.category);
   }
 
   removeTrait(index: number) {
     let i = -1;
-    let toRemove = this.traits.findIndex(t => {
+    let toRemove = this._traits.findIndex(t => {
       if (t.category === this.category) {
         ++i;
       }
@@ -52,7 +61,7 @@ export class TraitListComponent implements OnInit {
       }
       return false;
     });
-    this.traits.splice(toRemove, 1);
+    this._traits.splice(toRemove, 1);
     this.traitChange.emit({});
   }
 
@@ -78,7 +87,7 @@ export class TraitListComponent implements OnInit {
   addFromSearch(idx: number) {
     this.traitsrv.getTrait(this.search_results[idx].id)
     .subscribe(trait => {
-      this.traits.push(trait);
+      this._traits.push(trait);
       this.traitChange.emit();
       this.cancelSearch();
     });
@@ -89,16 +98,19 @@ export class TraitListComponent implements OnInit {
     this._search_term = '';
   }
 
-  editTrait(trait: Trait) {
-    this.edited_trait = trait;
+  editTrait(idx: number) {
+    this.edited_trait_idx = idx;
+    this.edited_trait = this.filtered[idx];
   }
 
   editCanceled() {
+    this.edited_trait_idx = null;
     this.edited_trait = null;
   }
 
   editFinished() {
     console.log('Edit finished');
+    this.edited_trait_idx = null;
     this.edited_trait = null;
     this.traitChange.emit({});
   }
