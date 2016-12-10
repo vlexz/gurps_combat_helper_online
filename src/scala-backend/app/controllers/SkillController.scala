@@ -56,4 +56,5 @@ class SkillController @Inject()(skillDao: SkillDao) extends Controller {
   }
 
   def get(id: String) = Action async (skillDao find id map { t: JsValue => Ok(t) } recoverWith throwMsg)
+  // TODO: flag for ready-to-use
 }
