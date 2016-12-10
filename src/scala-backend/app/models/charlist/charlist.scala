@@ -31,7 +31,7 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
                     wounds: Seq[Wound] = Nil,
                     conditions: Conditions = Conditions(),
                     var api: String = "") {
-  api = "0.3.2"
+  api = "0.3.3"
 
   {
     import BonusToAttribute._
@@ -346,6 +346,7 @@ sealed trait DamageBonusing {
 
 case class Trait(// TODO: traitString
                  name: String = "",
+                 var traitString: String = "",
                  var types: Seq[String] = Seq(TraitType.PHYSICAL),
                  var category: String = TraitCategory.ADVANTAGE,
                  var switch: String = TraitSwitch.ALWAYSON,
@@ -369,6 +370,9 @@ case class Trait(// TODO: traitString
     }
   }
   if (level < 0) level = 0
+  private val actNames = modifiers withFilter { m => m.on && m.name != "" } map (_.name) mkString "; "
+  traitString =
+    name + (if (actNames == "") "" else s" ($actNames)") + (if (level > 0 || cpPerLvl != 0) s" $level" else "")
 
   import TraitModifierAffects._
 
