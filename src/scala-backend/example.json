@@ -337,6 +337,8 @@
     "active" : true,
     "modifiers" : [ {
       "on" : true,
+      "cat" : "base", // valid strings: "base" "modifier" "variant"
+      "variants" : "",
       "name" : "Default",
       "ref" : "",
       "notes" : "",
@@ -403,6 +405,8 @@
     "active" : true,
     "modifiers" : [ {
       "on" : true,
+      "cat" : "base", // valid strings: "base" "modifier" "variant"
+      "variants" : "",
       "name" : "Talent",
       "ref" : "",
       "notes" : "",
@@ -453,6 +457,8 @@
     "active" : true,
     "modifiers" : [ {
       "on" : true,
+      "cat" : "variant", // valid strings: "base" "modifier" "variant"
+      "variants" : "group size",
       "name" : "Group size: Large",
       "ref" : "",
       "notes" : "",
@@ -468,6 +474,8 @@
       "cost" : 0.5
     }, {
       "on" : true,
+      "cat" : "variant", // valid strings: "base" "modifier" "variant"
+      "variants" : "frequency",
       "name" : "Frequency of recognition: Sometimes",
       "ref" : "",
       "notes" : "",
@@ -503,7 +511,10 @@
     "prerequisites" : [ ], // for future functionality
     "active" : true,
     "modifiers" : [ {
+      "on" : true,
       "name" : "One specific weapon",
+      "cat" : "variant", // valid strings: "base" "modifier" "variant"
+      "variants" : "",
       "ref" : "",
       "notes" : "",
       "attrBonuses" : [ ],
@@ -548,6 +559,8 @@
     "active" : true,
     "modifiers" : [ {
       "on" : true,
+      "cat" : "base", // valid strings: "base" "modifier" "variant"
+      "variants" : "",
       "name" : "Default",
       "ref" : "",
       "notes" : "",
@@ -587,6 +600,8 @@
     "active" : true,
     "modifiers" : [ {
       "on" : true,
+      "cat" : "base", // valid strings: "base" "modifier" "variant"
+      "variants" : "",
       "name" : "Default",
       "ref" : "",
       "notes" : "",
