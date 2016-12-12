@@ -127,6 +127,16 @@ export class CurrentCharService {
     });
   }
 
+  updateArmor() {
+    this.ensureCharacterExists()
+    .then(saved => {
+      if (!saved) {
+        this.chars.updateArmor(this.current._id, this.current.equip.armor)
+        .subscribe(this.setchar);
+      }
+    });
+  }
+
   setCharacter(char: Character) {
     console.log(char);
     this.current = char;

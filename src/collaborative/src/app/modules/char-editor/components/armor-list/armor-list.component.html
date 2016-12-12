@@ -1,0 +1,35 @@
+
+<div class="container" *ngIf="_armors">
+  <armor-editor *ngIf="currentArmor" [armor]="currentArmor" (editDone)="editDone()"></armor-editor>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>TL</th>
+      <th>Locations</th>
+      <th>DR</th>
+      <th>EP</th>
+      <th>EPI</th>
+      <th>Cost</th>
+      <th>Weight</th>
+      <th></th>
+      <th></th>
+    </tr>
+    <tr *ngFor="let armor of _armors; let i = index">
+      <td>{{armor.name}}</td>
+      <td>{{armor.tl}}</td>
+      <td>{{armor.locations.join(', ')}}</td>
+      <td>{{armor.protection.dr}}</td>
+      <td>{{armor.protection.ep}}</td>
+      <td>{{armor.protection.epi}}</td>
+      <td>{{armor.cost}}</td>
+      <td>{{armor.wt}}</td>
+      <td><a (click)="edit(i)">Edit</a></td>
+      <td><a (click)="remove(i)">Remove</a></td>
+    </tr>
+    <tr>
+      <td colspan="8">
+        <search-block (add_new)="add()"></search-block>
+      </td>
+    </tr>
+  </table>
+</div>

@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 
 import { Http, Response } from '@angular/http';
-import { Character } from '../../interfaces/character';
-import { Skill } from '../../interfaces/skill';
-import { Trait } from '../../interfaces/trait';
-import { Technique } from '../../interfaces/technique';
+import { Character } from 'interfaces/character';
+import { Skill } from 'interfaces/skill';
+import { Trait } from 'interfaces/trait';
+import { Technique } from 'interfaces/technique';
+import { Armor } from 'interfaces/armor';
 import { CharacterDescriptor } from '../../interfaces/char_descriptor';
 
 import { Observable }     from 'rxjs/Observable';
@@ -64,6 +65,11 @@ export class CharacterService {
 
   updateTechniques(id: string, techniques: Technique[]): Observable<Character> {
     return this.http.patch(this.apiEndPoint + `char/${id}`, {techniques})
+    .map(res => Character.fromJson(res.json() || {}));
+  }
+
+  updateArmor(id: string, armor: Armor[]): Observable<Character> {
+    return this.http.patch(this.apiEndPoint + `char/${id}`, {equip: {armor}})
     .map(res => Character.fromJson(res.json() || {}));
   }
 

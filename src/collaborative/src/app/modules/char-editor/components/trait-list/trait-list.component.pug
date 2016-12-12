@@ -6,19 +6,17 @@ table
     th Cost
     th 
   tr(*ngFor='let trait of filtered; let i = index')
-    td.name: .name {{trait.name}}
+    td.name: .name {{trait.traitString}}
     td: .cost {{trait.cp}}
     td: a((click)='editTrait(i)') Edit
     td: a((click)='removeTrait(i)') Remove  
   tr
     td(colspan=4)
-      .search_block
-        input(type='text', [(ngModel)]='searchTerm', placeholder='Search')
-        span or
-        a((click)='addTrait()') Add New
-        .search_results(*ngIf='search_results')
-          table
-            tr: td: a((click)='cancelSearch()') Cancel Search
-            tr(*ngFor='let res of search_results; let i = index')
-              td: a((click)='addFromSearch(i)') {{res.name}}
+      search-block(
+        [search_results]='search_results',
+        (add_new)='addTrait()',
+        (add_from_search)='addFromSearch($event)',
+        (search_term)='searchTrait($event)',
+        (cancel_search)='cancelSearch()'
+      )
             

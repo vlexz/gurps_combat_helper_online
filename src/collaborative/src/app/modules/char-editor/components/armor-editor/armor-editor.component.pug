@@ -1,0 +1,38 @@
+.cover
+.container(*ngIf='armor')
+  .dialog
+    .title 
+      h3 Edit Armor
+    .content
+      .name
+        input(type='text', [(ngModel)]='armor.name')      
+      .protection Protection:        
+        label DR:
+          input.cost(type='number', [(ngModel)]='armor.protection.dr')
+        label EP:
+          input.cost(type='number', [(ngModel)]='armor.protection.ep')
+        label EPI:
+          input.cost(type='number', [(ngModel)]='armor.protection.epi')
+      div
+        input(type='checkbox', [(ngModel)]='armor.front')
+        label Protects from front
+      div
+        input(type='checkbox', [(ngModel)]='armor.back')
+        label Protects from back
+      .locations Locations
+        ul
+          li(*ngFor='let loc of armor.locations; let i = index')
+            a((click)='removeLocation(i)') {{loc}}
+          li          
+            a((click)='showLocations()') Add
+        .location_list(*ngIf='_showLocations')
+          ul
+            li(*ngFor='let loc of tables.armorLocations; let i = index')
+              a((click)='addLocation(loc)') {{loc}}
+      div: label Cost 
+        input(type='number', [(ngModel)]='armor.cost')
+      div: label Weight 
+        input(type='number', [(ngModel)]='armor.wt')
+    .footer 
+      .button-holder        
+        button((click)='done()') Done

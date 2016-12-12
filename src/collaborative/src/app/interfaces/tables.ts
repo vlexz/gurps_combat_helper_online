@@ -20,4 +20,32 @@ export class ConstantTables {
     {val: 'A', name: 'Average'},
     {val: 'H', name: 'Hard'},
   ];
+
+  public armorLocations: string[] = [
+    'eyes',
+    'skull',
+    'face',
+    'head',
+    'neck',
+    'right leg',
+    'left leg',
+    'legs',
+    'right arm',
+    'left arm',
+    'arms',
+    'chest',
+    'vitals',
+    'abdomen',
+    'groin',
+    'torso',
+    'hands',
+    'left hand',
+    'right hand',
+    'feet',
+    'right foot',
+    'left foot',
+    'skin',
+    'full body'
+  ];
+
 }

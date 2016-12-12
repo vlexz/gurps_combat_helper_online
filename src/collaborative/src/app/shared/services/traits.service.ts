@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import { Trait, TraitDescriptor } from 'interfaces/trait';
+import { Trait, TraitDescriptor, LibraryTrait } from 'interfaces/trait';
 import { Observable } from 'rxjs/Observable';
 import { environment } from '../../../environments/environment';
 
@@ -18,9 +18,9 @@ export class TraitsService {
     .map( resp  => Trait.fromJson(resp.json()));
   }
 
-  getTrait(id: string): Observable<Trait> {
+  getTrait(id: string): Observable<LibraryTrait> {
     return this.http.get(this.apiEndPoint + `trait/${id}`)
-    .map( resp  => Trait.fromJson(resp.json()));
+    .map( resp  => LibraryTrait.fromJson(resp.json()));
   }
 
   search(category: string, term: string): Observable<TraitDescriptor[]> {

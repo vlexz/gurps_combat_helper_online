@@ -19,6 +19,10 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { AdvDisPartComponent } from './components/adv-dis-part/adv-dis-part.component';
 import { SkillTeqPartComponent } from './components/skill-teq-part/skill-teq-part.component';
 import { TraitEditorComponent } from './components/trait-editor/trait-editor.component';
+import { ArmorVisualComponent } from './components/armor-visual/armor-visual.component';
+import { ArmorPartComponent } from './components/armor-part/armor-part.component';
+import { ArmorListComponent } from './components/armor-list/armor-list.component';
+import { ArmorEditorComponent } from './components/armor-editor/armor-editor.component';
 
 @NgModule({
   imports: [
@@ -38,7 +42,11 @@ import { TraitEditorComponent } from './components/trait-editor/trait-editor.com
     ToolbarComponent,
     AdvDisPartComponent,
     SkillTeqPartComponent,
-    TraitEditorComponent
+    TraitEditorComponent,
+    ArmorVisualComponent,
+    ArmorPartComponent,
+    ArmorListComponent,
+    ArmorEditorComponent
   ],
   providers: [
     CurrentCharService

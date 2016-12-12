@@ -1,0 +1,30 @@
+.container(*ngIf='_armors')
+  armor-editor(*ngIf='currentArmor', [armor]='currentArmor', (editDone)='editDone()')
+  table
+    tr
+      th Name
+      th TL
+      th Locations
+      th DR
+      th EP
+      th EPI
+      th Cost
+      th Weight
+      th
+      th
+    tr(*ngFor='let armor of _armors; let i = index')
+      td {{armor.name}}
+      td {{armor.tl}}
+      td {{armor.locations.join(', ')}}
+      td {{armor.protection.dr}}
+      td {{armor.protection.ep}}
+      td {{armor.protection.epi}}
+      td {{armor.cost}}
+      td {{armor.wt}}
+      td: a((click)='edit(i)') Edit
+      td: a((click)='remove(i)') Remove
+    tr
+      td(colspan=8)
+        search-block(
+          (add_new)='add()'
+        )

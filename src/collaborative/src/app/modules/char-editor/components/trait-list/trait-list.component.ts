@@ -20,7 +20,6 @@ export class TraitListComponent implements OnInit {
 
   search_results: TraitDescriptor[];
 
-  _search_term: string;
 
   edited_trait: Trait = null;
   edited_trait_idx: number;
@@ -65,37 +64,42 @@ export class TraitListComponent implements OnInit {
     this.traitChange.emit({});
   }
 
-  get searchTerm() {
-    return this._search_term;
-  }
+  // get searchTerm() {
+  //   return this._search_term;
+  // }
 
-  set searchTerm(term: string) {
-    this._search_term = term;
-    if (this._search_term.length > 2) {
-      this.traitsrv.search(this.category, term)
-      .subscribe(results => this.search_results = results);
-    } else {
-      this.search_results = null;
-    }
-  }
+  // set searchTerm(term: string) {
+  //   this._search_term = term;
+  //   if (this._search_term.length > 2) {
+  //     this.traitsrv.search(this.category, term)
+  //     .subscribe(results => this.search_results = results);
+  //   } else {
+  //     this.search_results = null;
+  //   }
+  // }
 
-  searchTrait(ev: any) {
-    this.traitsrv.search(this.category, ev.srcElement.value)
+  searchTrait(term: string) {
+    this.traitsrv.search(this.category, term)
     .subscribe(results => this.search_results = results);
   }
 
   addFromSearch(idx: number) {
     this.traitsrv.getTrait(this.search_results[idx].id)
     .subscribe(trait => {
-      this._traits.push(trait);
-      this.traitChange.emit();
+      this._traits.push(trait.trait);
+      if (!trait.ready) {
+        this.edited_trait_idx = this._traits.length - 1;
+        this.edited_trait = this._traits[this.edited_trait_idx];
+      } else {
+        this.traitChange.emit();
+      }
       this.cancelSearch();
     });
   }
 
   cancelSearch() {
     this.search_results = null;
-    this._search_term = '';
+    // this._search_term = '';
   }
 
   editTrait(idx: number) {

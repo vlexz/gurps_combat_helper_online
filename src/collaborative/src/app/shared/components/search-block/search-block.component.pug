@@ -1,0 +1,9 @@
+.search_block
+  input(type='text', [(ngModel)]='searchTerm', placeholder='Search')
+  span or
+  a((click)='addNew()') Add New
+  .search_results(*ngIf='search_results')
+    table
+      tr: td: a((click)='cancelSearch()') Cancel Search
+      tr(*ngFor='let res of search_results; let i = index')
+        td: a((click)='addFromSearch(i)') {{res.name}}

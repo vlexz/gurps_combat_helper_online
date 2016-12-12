@@ -1,0 +1,59 @@
+
+<div class="cover"></div>
+<div class="container" *ngIf="armor">
+  <div class="dialog">
+    <div class="title"> 
+      <h3>Edit Armor</h3>
+    </div>
+    <div class="content">
+      <div class="name">
+        <input type="text" [(ngModel)]="armor.name">
+      </div>
+      <div class="protection">Protection:        
+        <label>DR:
+          <input class="cost" type="number" [(ngModel)]="armor.protection.dr">
+        </label>
+        <label>EP:
+          <input class="cost" type="number" [(ngModel)]="armor.protection.ep">
+        </label>
+        <label>EPI:
+          <input class="cost" type="number" [(ngModel)]="armor.protection.epi">
+        </label>
+      </div>
+      <div>
+        <input type="checkbox" [(ngModel)]="armor.front">
+        <label>Protects from front</label>
+      </div>
+      <div>
+        <input type="checkbox" [(ngModel)]="armor.back">
+        <label>Protects from back</label>
+      </div>
+      <div class="locations">Locations
+        <ul>
+          <li *ngFor="let loc of armor.locations; let i = index"><a (click)="removeLocation(i)">{{loc}}</a></li>
+          <li>         <a (click)="showLocations()">Add</a></li>
+        </ul>
+        <div class="location_list" *ngIf="_showLocations">
+          <ul>
+            <li *ngFor="let loc of tables.armorLocations; let i = index"><a (click)="addLocation(loc)">{{loc}}</a></li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <label>Cost 
+          <input type="number" [(ngModel)]="armor.cost">
+        </label>
+      </div>
+      <div>
+        <label>Weight 
+          <input type="number" [(ngModel)]="armor.wt">
+        </label>
+      </div>
+    </div>
+    <div class="footer"> 
+      <div class="button-holder">       
+        <button (click)="done()">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
