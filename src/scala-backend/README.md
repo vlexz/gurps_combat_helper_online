@@ -26,7 +26,7 @@ recalculated charlist
 <br>GET — returns default blank skill</p>
 <p>/api/skills GET — returns the list of basic skills, [id, name, specialization]</p>
 <p>/api/skills/search/?term=string GET — returns a list of basic skills with 'string' in name or specialization: [id, 
-name, specialization]</p>
+skillString]</p>
 <p>/api/skill/:id GET — returns a skill by id from the list of basic skills</p>
 <p>/api/[teq|weap|armor|item] GET — returns a charlist component template</p>
 <p>You can see a sample Charlist structure in <code>example.json</code>.</p>

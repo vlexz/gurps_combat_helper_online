@@ -1,8 +1,8 @@
 package daos
 
 import com.google.inject.{ImplementedBy, Inject, Singleton}
-import models.charlist.Charlist.skillFormat
-import models.charlist.Skill
+import models.charlist.Charlist.flaggedSkillFormat
+import models.charlist.FlaggedSkill
 import org.bson.types.ObjectId
 import org.mongodb.scala.model.Filters
 import org.mongodb.scala.{Completed, Document, MongoCollection}
@@ -17,7 +17,7 @@ import scala.concurrent.Future
   */
 @ImplementedBy(classOf[MongoSkillDao])
 trait SkillDao {
-  def save(skill: Skill): Future[Completed]
+  def save(fSkill: FlaggedSkill): Future[Completed]
 
   def find(): Future[Seq[JsObject]]
 
@@ -29,13 +29,12 @@ trait SkillDao {
 @Singleton
 class MongoSkillDao @Inject()(mongo: Mongo) extends SkillDao {
   private val skills: MongoCollection[Document] = mongo.db getCollection "skills"
-  private val toDoc: Skill => Document = x => Document(Json toJson x toString())
+  private val toDoc: FlaggedSkill => Document = x => Document(Json toJson x toString())
   private val docIdToJson: Document => JsObject = doc =>
     (Json obj "id" -> (doc get "_id").get.asObjectId.getValue.toString) ++
-      (Json obj "name" -> (doc get "name").get.asString.getValue) ++
-      (Json obj "specialization" -> (doc get "spc").get.asString.getValue)
+      (Json obj "name" -> (doc get "skill").get.asDocument.get("skillString").asString.getValue)
 
-  override def save(skill: Skill): Future[Completed] = skills insertOne toDoc(skill) head()
+  override def save(fSkill: FlaggedSkill): Future[Completed] = skills insertOne toDoc(fSkill) head()
 
   override def find(): Future[Seq[JsObject]] = skills find() map docIdToJson toFuture()
 
@@ -44,7 +43,7 @@ class MongoSkillDao @Inject()(mongo: Mongo) extends SkillDao {
 
   override def find(category: String, term: String): Future[Seq[JsObject]] =
     skills find() withFilter { s =>
-      s.get("name").get.asString.getValue.toLowerCase.contains(term.toLowerCase) ||
-        s.get("spc").get.asString.getValue.toLowerCase.contains(term.toLowerCase)
+      s.get("skill").get.asDocument.get("name").asString.getValue.toLowerCase.contains(term.toLowerCase) ||
+        s.get("skill").get.asDocument.get("spc").asString.getValue.toLowerCase.contains(term.toLowerCase)
     } map docIdToJson toFuture()
 }

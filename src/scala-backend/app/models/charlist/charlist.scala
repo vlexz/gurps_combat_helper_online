@@ -176,7 +176,7 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
 /**
   * Charlist sub namespace for json header field name strings.
   **/
-object CharlistFields {
+package object CharlistFields {
   val ID = "_id"
   val TIMESTAMP = "timestamp"
   val PLAYER = "player"
@@ -334,7 +334,7 @@ sealed trait DamageBonusing {
 
   def on: Boolean = true
 
-  def on_=(b: Boolean) = ()
+  def on_=(b: Boolean): Unit = ()
 
   def dmgBVal(s: => String, spc: => String, lvl: => Int): DmgBns =
     if (on) (DmgBns() /: dmgBonuses.collect {
@@ -344,21 +344,21 @@ sealed trait DamageBonusing {
     else DmgBns()
 }
 
-case class Trait(// TODO: traitString
-                 name: String = "",
-                 var traitString: String = "",
-                 var types: Seq[String] = Seq(TraitType.PHYSICAL),
-                 var category: String = TraitCategory.ADVANTAGE,
-                 var switch: String = TraitSwitch.ALWAYSON,
-                 ref: String = "",
-                 notes: String = "",
-                 prerequisites: Seq[String] = Nil, // For future functionality
-                 var active: Boolean = true,
-                 modifiers: Seq[TraitModifier] = Nil,
-                 cpBase: Int = 0,
-                 var level: Int = 0,
-                 cpPerLvl: Int = 0,
-                 var cp: Int = 0) {
+case class Trait(
+                  name: String = "",
+                  var traitString: String = "",
+                  var types: Seq[String] = Seq(TraitType.PHYSICAL),
+                  var category: String = TraitCategory.ADVANTAGE,
+                  var switch: String = TraitSwitch.ALWAYSON,
+                  ref: String = "",
+                  notes: String = "",
+                  prerequisites: Seq[String] = Nil, // For future functionality
+                  var active: Boolean = true,
+                  modifiers: Seq[TraitModifier] = Nil,
+                  cpBase: Int = 0,
+                  var level: Int = 0,
+                  cpPerLvl: Int = 0,
+                  var cp: Int = 0) {
   if (types forall TraitType.canBe) () else types = Seq(TraitType.PHYSICAL)
   if (TraitCategory canBe category) () else category = TraitCategory.ADVANTAGE
   if (TraitSwitch canBe switch) () else switch = TraitSwitch.ALWAYSON
@@ -409,6 +409,8 @@ case class Trait(// TODO: traitString
       yield if (b.perLvl) b copy (bonus = b.bonus * level) else b
   } else Nil
 }
+
+case class FlaggedTrait(traitt: Trait, ready: Boolean)
 
 case class TraitModifier(
                           override var on: Boolean = true,
@@ -473,6 +475,8 @@ case class Skill(
 
   def calculateLvl(attrVal: Int, enc: Int): Unit = lvl = attrVal + relLvl - (if (encumbr) enc else 0) + bonus
 }
+
+case class FlaggedSkill(skill: Skill, ready: Boolean)
 
 case class Technique(
                       name: String = "",
@@ -561,7 +565,7 @@ case class BonusReaction(
     this copy(bonus = math.max(math.min(this.bonus + that.bonus, 4), -4), notes = noteSum(that.notes))
 }
 
-object TraitSwitch {
+package object TraitSwitch {
   val ALWAYSON = "Always on"
   val SWITCHABLE = "Switchable"
   val CONTROL = "Roll"
@@ -569,7 +573,7 @@ object TraitSwitch {
   val canBe = Set(ALWAYSON, SWITCHABLE, CONTROL, ATTACK)
 }
 
-object TraitType {
+package object TraitType {
   val MENTAL = "Mental"
   val PHYSICAL = "Physical"
   val SOCIAL = "Social"
@@ -579,7 +583,7 @@ object TraitType {
   val canBe = Set(MENTAL, PHYSICAL, SOCIAL, MUNDANE, EXOTIC, SUPER)
 }
 
-object TraitCategory {
+package object TraitCategory {
   val RACE = "Race"
   val ADVANTAGE = "Advantage"
   val DISADVANTAGE = "Disadvantage"
@@ -589,21 +593,21 @@ object TraitCategory {
   val canBe = Set(RACE, ADVANTAGE, DISADVANTAGE, PERK, QUIRK, LANGUAGE)
 }
 
-object TraitModifierCategory {
+package object TraitModifierCategory {
   val DEFAULT = "base"
   val MODIFIER = "modifier"
   val VARIANT = "variant"
   val canBe = Set(DEFAULT, MODIFIER, VARIANT)
 }
 
-object TraitModifierAffects {
+package object TraitModifierAffects {
   val TOTAL = "total"
   val BASE = "base"
   val LEVELS = "levels only"
   val canBe = Set(TOTAL, BASE, LEVELS)
 }
 
-object TraitModifierCostType {
+package object TraitModifierCostType {
   val PERCENT = "percentage"
   val LEVEL = "percentage per level"
   val POINTS = "points"
@@ -611,7 +615,7 @@ object TraitModifierCostType {
   val canBe = Set(PERCENT, LEVEL, POINTS, MULTIPLIER)
 }
 
-object SkillDifficulty {
+package object SkillDifficulty {
   val EASY = "E"
   val AVERAGE = "A"
   val HARD = "H"
@@ -623,7 +627,7 @@ object SkillDifficulty {
   val techniqueCanBe = Set(AVERAGE, HARD)
 }
 
-object SkillBaseAttribute {
+package object SkillBaseAttribute {
   val ST = "ST"
   val IQ = "IQ"
   val DX = "DX"
@@ -633,7 +637,7 @@ object SkillBaseAttribute {
   val canBe = Set(ST, IQ, DX, HT, WILL, PER)
 }
 
-object BonusToAttribute {
+package object BonusToAttribute {
   val ST = "st"
   val DX = "dx"
   val IQ = "iq"
@@ -659,7 +663,7 @@ object BonusToAttribute {
     BASIC_MOVE, HP, FP, SM, LIFT, STRIKE)
 }
 
-object NameCompare {
+package object NameCompare {
   val ANY = "is anything"
   val IS = "is"
   val BEGINS = "starts with"
@@ -681,7 +685,7 @@ object NameCompare {
     })
 }
 
-object ReactionFrequency {
+package object ReactionFrequency {
   val ALLWAYS = 16
   val OFTEN = 13
   val SOMETIMES = 10
@@ -815,7 +819,7 @@ case class MeleeDamage(
   }
 }
 
-object AttackType {
+package object AttackType {
   val THRUSTING = "thr"
   val SWINGING = "sw"
   val WEAPON = ""
@@ -873,11 +877,11 @@ case class RangedDamage(
   }
 }
 
-object ArmorDivisor {
+package object ArmorDivisor {
   val canBe = Set(0.1, 0.2, 0.5, 1, 2, 3, 5, 10, 100)
 }
 
-object DamageType {
+package object DamageType {
   val CRUSHING = "cr"
   val CRUSHING_EXPLOSION = "cr ex"
   val CUTTING = "cut"
@@ -974,7 +978,7 @@ case class Armor(
   override def totalWt: Double = wt
 }
 
-object DrType {
+package object DrType {
   val HARD = "hard"
   val SOFT = "soft"
   val FIELD = "force field"
@@ -982,7 +986,7 @@ object DrType {
   val canBe = Set(HARD, SOFT, FIELD, SKIN)
 }
 
-object HitLocation {
+package object HitLocation {
   val EYES = "eyes"
   val SKULL = "skull"
   val FACE = "face"
@@ -1054,7 +1058,7 @@ case class Item(
   totalCost = cost * n
 }
 
-object ItemState {
+package object ItemState {
   val READY = "Ready"
   val EQUIPPED = "Equipped"
   val COMBAT = "Combat"
@@ -1142,7 +1146,7 @@ case class Afflictions(
                         coma: Boolean = false,
                         heartAttack: Boolean = false)
 
-object Posture {
+package object Posture {
   val STANDING = "Standing"
   val CROUCHING = "Crouching"
   val SITTING = "Sitting"
@@ -1180,8 +1184,10 @@ object Charlist {
   implicit val bonusAttributeFormat: OFormat[BonusAttribute] = Json.format[BonusAttribute]
   implicit val techniqueFormat: OFormat[Technique] = Json.format[Technique]
   implicit val skillFormat: OFormat[Skill] = Json.format[Skill]
+  implicit val flaggedSkillFormat: OFormat[FlaggedSkill] = Json.format[FlaggedSkill]
   implicit val traitModifierFormat: OFormat[TraitModifier] = Json.format[TraitModifier]
   implicit val traitFormat: OFormat[Trait] = Json.format[Trait]
+  implicit val flaggedTraitFormat: OFormat[FlaggedTrait] = Json.format[FlaggedTrait]
   implicit val reactionModFormat: OFormat[ReactionMod] = Json.format[ReactionMod]
   implicit val reactionFormat: OFormat[Reaction] = Json.format[Reaction]
   implicit val statIntFormat: OFormat[StatInt] = Json.format[StatInt]
