@@ -32,8 +32,7 @@ class MongoSkillDao @Inject()(mongo: Mongo) extends SkillDao {
   private val toDoc: FlaggedSkill => Document = x => Document(Json toJson x toString())
   private val docIdToJson: Document => JsObject = doc =>
     (Json obj "id" -> (doc get "_id").get.asObjectId.getValue.toString) ++
-      (Json obj "name" -> (doc get "skill").get.asDocument.get("name").asString.getValue) ++
-      (Json obj "specialization" -> (doc get "skill").get.asDocument.get("spc").asString.getValue)
+      (Json obj "name" -> (doc get "skill").get.asDocument.get("skillString").asString.getValue)
 
   override def save(fSkill: FlaggedSkill): Future[Completed] = skills insertOne toDoc(fSkill) head()
 
