@@ -13,6 +13,10 @@ object Preloader extends App {
   private def parse[A](p: Parser[A]): Seq[Document] = p.seq map { x => Document(Json.toJson(x)(p.tjs).toString) }
 
   private def load(client: MongoClient, collection: String, items: Seq[Document]) = {
+    println(s"""Clearing db "$db" collection "$collection"...""")
+    Await ready(client getDatabase db getCollection collection drop() toFuture(), 10.seconds) onSuccess {
+      case Seq(_) => println("Cleared.")
+    }
     println(s"Loading basic $collection...")
     Await ready(client getDatabase db getCollection collection insertMany items toFuture(), 30.seconds) onSuccess {
       case Seq(_) => println(s"""Basic $collection loaded to mongo db "$db" collection "$collection".""")
