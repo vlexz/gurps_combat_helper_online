@@ -2,8 +2,8 @@ package controllers
 
 import com.google.inject.Inject
 import daos.TraitDao
-import models.charlist.Trait
-import models.charlist.Charlist.traitFormat
+import models.charlist.{FlaggedTrait, Trait}
+import models.charlist.Charlist.{flaggedTraitFormat, traitFormat}
 import org.mongodb.scala.Completed
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
@@ -37,15 +37,15 @@ class TraitController @Inject()(traitDao: TraitDao) extends Controller {
   }
 
   def add(): Action[JsValue] = Action.async(parse.json) { implicit request =>
-    request.body.validate[Trait] match {
+    request.body.validate[FlaggedTrait] match {
       case e: JsError => invalidMsg(e)
-      case s: JsSuccess[Trait] =>
+      case s: JsSuccess[FlaggedTrait] =>
         traitDao save s.get map { _: Completed => Accepted(Json toJson s.get) } recoverWith throwMsg
     }
   }
 
   def get(id: String): Action[AnyContent] = Action async
-    (traitDao find id map { t: JsValue => Ok(t) } recoverWith throwMsg) // TODO: flag for ready-to-use
+    (traitDao find id map { t: JsValue => Ok(t) } recoverWith throwMsg)
 
   def lookup(category: String, term: String): Action[AnyContent] = Action.async {
     traitDao find(category.toLowerCase.capitalize, term) map {

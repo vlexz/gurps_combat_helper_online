@@ -2,8 +2,8 @@ package controllers
 
 import com.google.inject.Inject
 import daos.SkillDao
-import models.charlist.Skill
-import models.charlist.Charlist.skillFormat
+import models.charlist.{FlaggedSkill, Skill}
+import models.charlist.Charlist.{flaggedSkillFormat, skillFormat}
 import org.mongodb.scala.Completed
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
@@ -37,9 +37,9 @@ class SkillController @Inject()(skillDao: SkillDao) extends Controller {
   }
 
   def add(): Action[JsValue] = Action.async(parse.json) { implicit request =>
-    request.body.validate[Skill] match {
+    request.body.validate[FlaggedSkill] match {
       case e: JsError => invalidMsg(e)
-      case s: JsSuccess[Skill] =>
+      case s: JsSuccess[FlaggedSkill] =>
         skillDao save s.get map { _: Completed => Accepted(Json toJson s.get) } recoverWith throwMsg
     }
   }
@@ -55,6 +55,6 @@ class SkillController @Inject()(skillDao: SkillDao) extends Controller {
     } recoverWith throwMsg
   }
 
-  def get(id: String) = Action async (skillDao find id map { t: JsValue => Ok(t) } recoverWith throwMsg)
-  // TODO: flag for ready-to-use
+  def get(id: String): Action[AnyContent] =
+    Action async (skillDao find id map { t: JsValue => Ok(t) } recoverWith throwMsg)
 }

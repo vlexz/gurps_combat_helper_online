@@ -1,7 +1,8 @@
-import models.charlist.{Skill, Trait}
+import models.charlist.{FlaggedSkill, FlaggedTrait}
 import org.mongodb.scala.{Document, MongoClient}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
+
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
@@ -21,7 +22,7 @@ object Preloader extends App {
   println("Opening connection...")
   private val db = "gurps"
   private val client = MongoClient()
-  load(client, "traits", parse[Trait](new TraitsParser("/adv.xml")))
-  load(client, "skills", parse[Skill](new SkillsParser("/skl.xml")))
+  load(client, "traits", parse[FlaggedTrait](new TraitsParser("/adv.xml")))
+  load(client, "skills", parse[FlaggedSkill](new SkillsParser("/skl.xml")))
   client close()
 }
