@@ -3,7 +3,7 @@ import play.api.libs.json.Writes
 /**
   * Created by crimson on 12/8/16.
   */
-abstract class Parser[A](filePath: String) {
+abstract class Parser[A] {
   val seq: Seq[A]
   val tjs: Writes[A]
 

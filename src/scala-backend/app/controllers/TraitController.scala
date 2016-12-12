@@ -44,9 +44,8 @@ class TraitController @Inject()(traitDao: TraitDao) extends Controller {
     }
   }
 
-  def get(id: String): Action[AnyContent] = Action.async {
-    traitDao find id map { t: JsValue => Ok(t) } recoverWith throwMsg
-  }
+  def get(id: String): Action[AnyContent] = Action async
+    (traitDao find id map { t: JsValue => Ok(t) } recoverWith throwMsg) // TODO: flag for ready-to-use
 
   def lookup(category: String, term: String): Action[AnyContent] = Action.async {
     traitDao find(category.toLowerCase.capitalize, term) map {
@@ -54,11 +53,8 @@ class TraitController @Inject()(traitDao: TraitDao) extends Controller {
     } recoverWith throwMsg
   }
 
-  def list: Action[AnyContent] = Action.async {
-    traitDao find() map { s: Seq[JsObject] => Ok(Json toJson s) } recoverWith throwMsg
-  }
+  def list: Action[AnyContent] = Action async
+    (traitDao find() map { s: Seq[JsObject] => Ok(Json toJson s) } recoverWith throwMsg)
 
-  def create: Action[AnyContent] = Action.async {
-    Future(Created(Json toJson Trait()))
-  }
+  def create: Action[AnyContent] = Action async Future(Created(Json toJson Trait()))
 }

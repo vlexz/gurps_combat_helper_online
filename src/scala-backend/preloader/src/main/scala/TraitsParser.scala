@@ -8,7 +8,7 @@ import scala.xml.{Node, XML}
 /**
   * Created by crimson on 12/8/16.
   */
-class TraitsParser(filePath: String) extends Parser[Trait](filePath) {
+class TraitsParser(filePath: String) extends Parser[Trait] {
   private def parseTraitMod(n: Node) = ( // TODO: weapon parser missing
     for (b <- n \ "attribute_bonus") yield BonusAttribute(
       attr = (b \ "attribute").text,
@@ -53,7 +53,7 @@ class TraitsParser(filePath: String) extends Parser[Trait](filePath) {
         case x if x contains "Advantage" => "Advantage"
         case x if x contains "Disadvantage" => "Disadvantage"
         case x => x.headOption getOrElse ""
-      },
+      }, // TODO: duplicate ambiguous traits
       switch = (adv \ "name" \ "@switchability").text,
       ref = (adv \ "reference").text,
       notes = (adv \ "notes").text,
@@ -65,7 +65,7 @@ class TraitsParser(filePath: String) extends Parser[Trait](filePath) {
         val (atrBns, sklBns, dmgBns, drBns, atrCMd, rctBns) = this parseTraitMod adv
         if ((atrBns :: sklBns :: dmgBns :: drBns :: atrCMd :: rctBns :: Nil) forall (_.isEmpty)) Seq()
         else Seq(TraitModifier(
-          name = "Default",
+          cat = TraitModifierCategory.DEFAULT,
           attrBonuses = atrBns,
           skillBonuses = sklBns,
           dmgBonuses = dmgBns,
@@ -74,24 +74,33 @@ class TraitsParser(filePath: String) extends Parser[Trait](filePath) {
           reactBonuses = rctBns))
       } ++
         ((adv \ "cr") flatMap { _ =>
-          TraitModifier(on = false,
+          TraitModifier(
+            on = false,
+            cat = TraitModifierCategory.VARIANT,
+            variants = "CR",
             name = "CR 6",
             ref = "BS121",
             costType = TraitModifierCostType.MULTIPLIER,
             cost = 2.0) +:
             TraitModifier(
               on = false,
+              cat = TraitModifierCategory.VARIANT,
+              variants = "cr",
               name = "CR 9",
               ref = "BS121",
               costType = TraitModifierCostType.MULTIPLIER,
               cost = 1.5) +:
             TraitModifier(
+              cat = TraitModifierCategory.VARIANT,
+              variants = "cr",
               name = "CR 12",
               ref = "BS121",
               costType = TraitModifierCostType.MULTIPLIER,
               cost = 1.0) +:
             TraitModifier(
               on = false,
+              cat = TraitModifierCategory.VARIANT,
+              variants = "cr",
               name = "CR 15",
               ref = "BS121",
               costType = TraitModifierCostType.MULTIPLIER,
@@ -101,6 +110,8 @@ class TraitsParser(filePath: String) extends Parser[Trait](filePath) {
           val (atrBns, sklBns, dmgBns, drBns, atrCMd, rctBns) = this parseTraitMod mod
           TraitModifier(
             on = false,
+            cat = if ((mod \ "variant").isEmpty) "" else TraitModifierCategory.VARIANT,
+            variants = (mod \ "variant").text,
             name = (mod \ "name").text,
             ref = (mod \ "reference").text,
             notes = (mod \ "notes").text,

@@ -328,6 +328,7 @@
   } ],
   "traits" : [ {
     "name" : "Combat Reflexes",
+    "traitString" : "Combat Reflexes", // calculated field
     "types" : [ "Mental", "Mundane" ], // valid strings: "Mental" "Physical" "Social" "Mundane" "Exotic" "Supernatural"
     "category" : "Advantage", // valid strings: "Race" "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
     "switch" : "Always on", // valid strings: "Always on" "Switchable" "Attack" "Roll"
@@ -337,7 +338,9 @@
     "active" : true,
     "modifiers" : [ {
       "on" : true,
-      "name" : "Default",
+      "cat" : "base", // valid strings: "base" "modifier" "variant"
+      "variants" : "",
+      "name" : "",
       "ref" : "",
       "notes" : "",
       "attrBonuses" : [ {
@@ -380,6 +383,7 @@
     "cp" : 15 // calculated field
   }, {
     "name" : "Sorcery",
+    "traitString" : "Sorcery 2", // calculated field
     "types" : [ "Mental", "Supernatural" ], // valid strings: "Mental" "Physical" "Social" "Mundane" "Exotic" "Supernatural"
     "category" : "Advantage", // valid strings: "Race" "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
     "switch" : "Always on", // valid strings: "Always on" "Switchable" "Attack" "Roll"
@@ -394,6 +398,7 @@
     "cp" : 30 // calculated field
   }, {
     "name" : "Hot Pilot",
+    "traitString" : "Hot Pilot 3", // calculated field
     "types" : [ "Mental", "Mundane" ], // valid strings: "Mental" "Physical" "Social" "Mundane" "Exotic" "Supernatural"
     "category" : "Advantage", // valid strings: "Race" "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
     "switch" : "Always on", // valid strings: "Always on" "Switchable" "Attack" "Roll"
@@ -403,7 +408,9 @@
     "active" : true,
     "modifiers" : [ {
       "on" : true,
-      "name" : "Talent",
+      "cat" : "base", // valid strings: "base" "modifier" "variant"
+      "variants" : "",
+      "name" : "",
       "ref" : "",
       "notes" : "",
       "attrBonuses" : [ ],
@@ -443,7 +450,8 @@
     "cpPerLvl" : 5,
     "cp" : 15 // calculated field
   }, {
-    "name" : "Positive Reputation: Airshipmen",
+    "name" : "Positive Reputation",
+    "traitString" : "Positive Reputation (Group size: Large; Frequency of recognition: Sometimes) 2", // calculated field
     "types" : [ "Social", "Mundane" ], // valid strings: "Mental" "Physical" "Social" "Mundane" "Exotic" "Supernatural"
     "category" : "Advantage", // valid strings: "Race" "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
     "switch" : "Always on", // valid strings: "Always on" "Switchable" "Attack" "Roll"
@@ -453,6 +461,8 @@
     "active" : true,
     "modifiers" : [ {
       "on" : true,
+      "cat" : "variant", // valid strings: "base" "modifier" "variant"
+      "variants" : "Group size",
       "name" : "Group size: Large",
       "ref" : "",
       "notes" : "",
@@ -468,6 +478,8 @@
       "cost" : 0.5
     }, {
       "on" : true,
+      "cat" : "variant", // valid strings: "base" "modifier" "variant"
+      "variants" : "Frequency",
       "name" : "Frequency of recognition: Sometimes",
       "ref" : "",
       "notes" : "",
@@ -494,7 +506,8 @@
     "cpPerLvl" : 5,
     "cp" : 3 // calculated field
   }, {
-    "name" : "Weapon Master (Shield)",
+    "name" : "Weapon Master",
+    "traitString" : "Weapon Master (Shield)", // calculated field
     "types" : [ "Mental", "Mundane" ], // valid strings: "Mental" "Physical" "Social" "Mundane" "Exotic" "Supernatural"
     "category" : "Advantage", // valid strings: "Race" "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
     "switch" : "Always on", // valid strings: "Always on" "Switchable" "Attack" "Roll"
@@ -503,7 +516,10 @@
     "prerequisites" : [ ], // for future functionality
     "active" : true,
     "modifiers" : [ {
-      "name" : "One specific weapon",
+      "on" : true,
+      "name" : "Shield",
+      "cat" : "variant", // valid strings: "base" "modifier" "variant"
+      "variants" : "",
       "ref" : "",
       "notes" : "",
       "attrBonuses" : [ ],
@@ -538,7 +554,8 @@
     "cpPerLvl" : 0,
     "cp" : 20 // calculated field
   }, {
-    "name" : "Skull",
+    "name" : "Human",
+    "traitString" : "Human", // calculated field
     "types" : [ "Physical" ], // valid strings: "Mental" "Physical" "Social" "Mundane" "Exotic" "Supernatural"
     "category" : "Advantage", // valid strings: "Race" "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
     "switch" : "Always on", // valid strings: "Always on" "Switchable" "Attack" "Roll"
@@ -548,7 +565,9 @@
     "active" : true,
     "modifiers" : [ {
       "on" : true,
-      "name" : "Default",
+      "cat" : "base", // valid strings: "base" "modifier" "variant"
+      "variants" : "",
+      "name" : "",
       "ref" : "",
       "notes" : "",
       "attrBonuses" : [ ],
@@ -578,6 +597,7 @@
     "cp" : 0 // calculated field
   }, {
     "name" : "Gigantism",
+    "traitString" : "Gigantism", // calculated field
     "types" : [ "Physical", "Mundane" ], // valid strings: "Mental" "Physical" "Social" "Mundane" "Exotic" "Supernatural"
     "category" : "Advantage", // valid strings: "Race" "Advantage" "Disadvantage" "Perk" "Quirk" "Language"
     "switch" : "Always on", // valid strings: "Always on" "Switchable" "Attack" "Roll"
@@ -587,7 +607,9 @@
     "active" : true,
     "modifiers" : [ {
       "on" : true,
-      "name" : "Default",
+      "cat" : "base", // valid strings: "base" "modifier" "variant"
+      "variants" : "",
+      "name" : "",
       "ref" : "",
       "notes" : "",
       "attrBonuses" : [ {

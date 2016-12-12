@@ -6,7 +6,7 @@ import scala.xml.XML
 /**
   * Created by crimson on 12/8/16.
   */
-class SkillsParser(filePath: String) extends Parser[Skill](filePath) {
+class SkillsParser(filePath: String) extends Parser[Skill] {
   println("Parsing skills...")
   val seq: Seq[Skill] = for (skl <- (XML load (getClass getResourceAsStream filePath)) \ "skill") yield Skill(
     name = (skl \ "name").text,

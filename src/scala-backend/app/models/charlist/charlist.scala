@@ -3,7 +3,7 @@ package models.charlist
 import play.api.libs.json.{Json, OFormat}
 
 import scala.collection.breakOut
-
+// TODO: OOP
 /**
   * Case class for conversion between JSON input and database entries and for calculation and validation of
   * charlist's inner secondary values on construction. Initialization automatically recalculates input values, producing
@@ -31,7 +31,7 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
                     wounds: Seq[Wound] = Nil,
                     conditions: Conditions = Conditions(),
                     var api: String = "") {
-  api = "0.3.1"
+  api = "0.3.3"
 
   {
     import BonusToAttribute._
@@ -331,35 +331,48 @@ case class DmgBns(perDie: Int = 0, plain: Int = 0) {
   **/
 sealed trait DamageBonusing {
   val dmgBonuses: Seq[BonusDamage]
-  val on: Boolean = true
+
+  def on: Boolean = true
+
+  def on_=(b: Boolean) = ()
 
   def dmgBVal(s: => String, spc: => String, lvl: => Int): DmgBns =
     if (on) (DmgBns() /: dmgBonuses.collect {
-      case b @ BonusDamage(_, _, _, _, rSkl, pDie, bns) if NameCompare.fit(s, spc, b) && rSkl <= lvl =>
+      case b@BonusDamage(_, _, _, _, rSkl, pDie, bns) if NameCompare.fit(s, spc, b) && rSkl <= lvl =>
         if (pDie) DmgBns(perDie = bns) else DmgBns(plain = bns)
     }) (_ + _)
     else DmgBns()
 }
 
-case class Trait(
-                  name: String = "",
-                  var types: Seq[String] = Seq(TraitType.PHYSICAL),
-                  var category: String = TraitCategory.ADVANTAGE,
-                  var switch: String = TraitSwitch.ALWAYSON,
-                  ref: String = "",
-                  notes: String = "",
-                  prerequisites: Seq[String] = Nil, // For future functionality
-                  var active: Boolean = true,
-                  modifiers: Seq[TraitModifier] = Nil,
-                  cpBase: Int = 0,
-                  var level: Int = 0,
-                  cpPerLvl: Int = 0,
-                  var cp: Int = 0) {
+case class Trait(// TODO: traitString
+                 name: String = "",
+                 var traitString: String = "",
+                 var types: Seq[String] = Seq(TraitType.PHYSICAL),
+                 var category: String = TraitCategory.ADVANTAGE,
+                 var switch: String = TraitSwitch.ALWAYSON,
+                 ref: String = "",
+                 notes: String = "",
+                 prerequisites: Seq[String] = Nil, // For future functionality
+                 var active: Boolean = true,
+                 modifiers: Seq[TraitModifier] = Nil,
+                 cpBase: Int = 0,
+                 var level: Int = 0,
+                 cpPerLvl: Int = 0,
+                 var cp: Int = 0) {
   if (types forall TraitType.canBe) () else types = Seq(TraitType.PHYSICAL)
   if (TraitCategory canBe category) () else category = TraitCategory.ADVANTAGE
   if (TraitSwitch canBe switch) () else switch = TraitSwitch.ALWAYSON
   if (switch == TraitSwitch.ALWAYSON) active = true
+  for ((_, seq) <- modifiers filter (_.cat == TraitModifierCategory.VARIANT) groupBy (_.variants)) {
+    if (seq.count(_.on) != 1) {
+      seq.head.on = true
+      for (m <- seq.tail) m.on = false
+    }
+  }
   if (level < 0) level = 0
+  private val actNames = modifiers withFilter { m => m.on && m.name != "" } map (_.name) mkString "; "
+  traitString =
+    name + (if (actNames == "") "" else s" ($actNames)") + (if (level > 0 || cpPerLvl != 0) s" $level" else "")
 
   import TraitModifierAffects._
 
@@ -398,7 +411,9 @@ case class Trait(
 }
 
 case class TraitModifier(
-                          override val on: Boolean = true,
+                          override var on: Boolean = true,
+                          var cat: String = TraitModifierCategory.MODIFIER,
+                          variants: String = "",
                           name: String = "",
                           ref: String = "",
                           notes: String = "",
@@ -413,6 +428,8 @@ case class TraitModifier(
                           var level: Int = 0,
                           cost: Double = 0)
   extends DamageBonusing {
+  if (cat == TraitModifierCategory.DEFAULT) on = true
+  if (TraitModifierCategory canBe cat) () else cat = TraitModifierCategory.MODIFIER
   if (TraitModifierAffects canBe affects) () else affects = TraitModifierAffects.TOTAL
   if (TraitModifierCostType canBe costType) () else costType = TraitModifierCostType.PERCENT
   if (level < 0) level = 0
@@ -536,7 +553,7 @@ case class BonusReaction(
                           bonus: Int = 0,
                           notes: String = "") {
   if (ReactionFrequency canBe freq) () else freq = 16
-  private val noteSum = (n: String) => notes + " " + n trim()
+  private val noteSum = (n: String) => Seq(notes, n) filter (_ != "") mkString "; "
 
   def +(that: BonusReaction): BonusReaction = this copy(bonus = this.bonus + that.bonus, notes = noteSum(that.notes))
 
@@ -570,6 +587,13 @@ object TraitCategory {
   val QUIRK = "Quirk"
   val LANGUAGE = "Language"
   val canBe = Set(RACE, ADVANTAGE, DISADVANTAGE, PERK, QUIRK, LANGUAGE)
+}
+
+object TraitModifierCategory {
+  val DEFAULT = "base"
+  val MODIFIER = "modifier"
+  val VARIANT = "variant"
+  val canBe = Set(DEFAULT, MODIFIER, VARIANT)
 }
 
 object TraitModifierAffects {
@@ -702,7 +726,7 @@ sealed trait Possession {
 case class Weapon(
                    name: String = "",
                    var state: String = ItemState.STASH,
-                   innate: Boolean = false,
+                   innate: Boolean = false, // TODO: move to traits
                    attacksMelee: Seq[MeleeAttack] = Nil,
                    attacksRanged: Seq[RangedAttack] = Nil,
                    blocks: Seq[BlockDefence] = Nil,
