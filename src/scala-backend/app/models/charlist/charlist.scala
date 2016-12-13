@@ -951,7 +951,7 @@ case class Armor(
                   var front: Boolean = true,
                   back: Boolean = true,
                   var drType: String = DrType.HARD,
-                  var locations: Seq[String] = Seq(HitLocation.CHEST),
+                  var locations: Seq[String] = Nil,
                   var hp: Int = 1,
                   var hpLeft: Int = 1,
                   broken: Boolean = false,
@@ -965,7 +965,7 @@ case class Armor(
   if (db < 0) db = 0 else if (db > 3) db = 3
   if (!front && !back) front = true
   if (DrType canBe drType) () else drType = DrType.HARD
-  if (locations forall HitLocation.canBe) () else locations = Seq(HitLocation.CHEST)
+  locations = locations.distinct filter HitLocation.canBe
   if (hp < 0) hp = 0
   if (hpLeft < 0) hpLeft = 0 else if (hpLeft > hp) hpLeft = hp
   if (lc > 5) lc = 5 else if (lc < 0) lc = 0
