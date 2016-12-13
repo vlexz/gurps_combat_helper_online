@@ -86,14 +86,14 @@ class TraitsParser(filePath: String) extends Parser[FlaggedTrait] {
               TraitModifier(
                 on = false,
                 cat = TraitModifierCategory.VARIANT,
-                variants = "cr",
+                variants = "CR",
                 name = "CR 9",
                 ref = "BS121",
                 costType = TraitModifierCostType.MULTIPLIER,
                 cost = 1.5) +:
               TraitModifier(
                 cat = TraitModifierCategory.VARIANT,
-                variants = "cr",
+                variants = "CR",
                 name = "CR 12",
                 ref = "BS121",
                 costType = TraitModifierCostType.MULTIPLIER,
@@ -101,7 +101,7 @@ class TraitsParser(filePath: String) extends Parser[FlaggedTrait] {
               TraitModifier(
                 on = false,
                 cat = TraitModifierCategory.VARIANT,
-                variants = "cr",
+                variants = "CR",
                 name = "CR 15",
                 ref = "BS121",
                 costType = TraitModifierCostType.MULTIPLIER,
