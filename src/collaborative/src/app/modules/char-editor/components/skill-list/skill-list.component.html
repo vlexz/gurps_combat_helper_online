@@ -14,7 +14,7 @@
     </tr>
     <tr *ngFor="let skill of skills; let i = index">    
       <td>
-        <input type="text" [(ngModel)]="skill.name" (change)="skillChanged()">
+        <input type="text" [(ngModel)]="skill.skillString" (change)="skillChanged()">
       </td>
       <td>
         <select [(ngModel)]="skill.attr" (change)="skillChanged()">
@@ -37,7 +37,9 @@
       <td><a (click)="removeSkill(i)">Remove</a></td>
     </tr>
     <tr>
-      <td><a (click)="addSkill()">Add Skill</a></td>
+      <td colspan="8">
+        <search-block [search_results]="search_results" (add_new)="addSkill()" (add_from_search)="addFromSearch($event)" (search_term)="searchSkill($event)" (cancel_search)="cancelSearch()"></search-block>
+      </td>
     </tr>
   </table>
 </div>

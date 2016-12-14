@@ -24,6 +24,10 @@ export class ArmorEditorComponent implements OnInit {
     this._showLocations = true;
   }
 
+  hideLocations() {
+    this._showLocations = false;
+  }
+
   addLocation(loc: string) {
     this.armor.locations.push(loc);
     this._showLocations = false;

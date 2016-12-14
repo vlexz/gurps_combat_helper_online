@@ -21,31 +21,11 @@ export class ConstantTables {
     {val: 'H', name: 'Hard'},
   ];
 
-  public armorLocations: string[] = [
-    'eyes',
-    'skull',
-    'face',
-    'head',
-    'neck',
-    'right leg',
-    'left leg',
-    'legs',
-    'right arm',
-    'left arm',
-    'arms',
-    'chest',
-    'vitals',
-    'abdomen',
-    'groin',
-    'torso',
-    'hands',
-    'left hand',
-    'right hand',
-    'feet',
-    'right foot',
-    'left foot',
-    'skin',
-    'full body'
-  ];
-
+  public armorLocations: any = {
+    head: ['eyes', 'skull', 'face', 'head'],
+    body: ['neck', 'chest', 'vitals', 'abdomen', 'groin', 'torso'],
+    arms: ['right arm', 'left arm', 'arms', 'hands', 'left hand', 'right hand'],
+    legs: ['right leg', 'left leg', 'legs', 'feet', 'right foot', 'left foot'],
+    suit: ['skin', 'full body']
+  };
 }

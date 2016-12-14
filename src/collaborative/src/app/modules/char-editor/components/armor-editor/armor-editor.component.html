@@ -33,9 +33,26 @@
           <li *ngFor="let loc of armor.locations; let i = index"><a (click)="removeLocation(i)">{{loc}}</a></li>
           <li>         <a (click)="showLocations()">Add</a></li>
         </ul>
-        <div class="location_list" *ngIf="_showLocations">
+        <div class="location_list" *ngIf="_showLocations" (click)="hideLocations()">
+          <div>Head locations:</div>
           <ul>
-            <li *ngFor="let loc of tables.armorLocations; let i = index"><a (click)="addLocation(loc)">{{loc}}</a></li>
+            <li *ngFor="let loc of tables.armorLocations.head; let i = index"><a (click)="addLocation(loc)">{{loc}}</a></li>
+          </ul>
+          <div>Body locations:</div>
+          <ul>
+            <li *ngFor="let loc of tables.armorLocations.body; let i = index"><a (click)="addLocation(loc)">{{loc}}</a></li>
+          </ul>
+          <div>Arms locations:</div>
+          <ul>
+            <li *ngFor="let loc of tables.armorLocations.arms; let i = index"><a (click)="addLocation(loc)">{{loc}}</a></li>
+          </ul>
+          <div>Legs locations:</div>
+          <ul>
+            <li *ngFor="let loc of tables.armorLocations.legs; let i = index"><a (click)="addLocation(loc)">{{loc}}</a></li>
+          </ul>
+          <div>Full Suits:</div>
+          <ul>
+            <li *ngFor="let loc of tables.armorLocations.suit; let i = index"><a (click)="addLocation(loc)">{{loc}}</a></li>
           </ul>
         </div>
       </div>

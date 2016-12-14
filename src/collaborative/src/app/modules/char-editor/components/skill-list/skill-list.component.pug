@@ -11,7 +11,7 @@
       th Cost
       th 
     tr(*ngFor='let skill of skills; let i = index')     
-      td: input(type='text', [(ngModel)]='skill.name', (change)='skillChanged()')      
+      td: input(type='text', [(ngModel)]='skill.skillString', (change)='skillChanged()')      
       td
         select([(ngModel)]='skill.attr', (change)='skillChanged()')
           option(*ngFor='let attr of tables.attributes; let i = index', value='{{attr}}')  {{attr}}
@@ -24,4 +24,12 @@
       td {{skill.cp}}
       td: a((click)='removeSkill(i)') Remove
     tr
-      td: a((click)='addSkill()') Add Skill
+      td(colspan=8)
+        search-block(
+          [search_results]='search_results',
+          (add_new)='addSkill()',
+          (add_from_search)='addFromSearch($event)',
+          (search_term)='searchSkill($event)',
+          (cancel_search)='cancelSearch()'
+        )
+      //- td: a((click)='addSkill()') Add Skill

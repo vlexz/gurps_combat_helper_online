@@ -1,3 +1,8 @@
+mixin location(caption, part)
+  div= caption
+  ul: li(*ngFor='let loc of tables.armorLocations.' + part + '; let i = index')
+    a((click)='addLocation(loc)') {{loc}}
+
 .cover
 .container(*ngIf='armor')
   .dialog
@@ -25,10 +30,12 @@
             a((click)='removeLocation(i)') {{loc}}
           li          
             a((click)='showLocations()') Add
-        .location_list(*ngIf='_showLocations')
-          ul
-            li(*ngFor='let loc of tables.armorLocations; let i = index')
-              a((click)='addLocation(loc)') {{loc}}
+        .location_list(*ngIf='_showLocations', (click)='hideLocations()')
+          +location('Head locations:', 'head')
+          +location('Body locations:', 'body')
+          +location('Arms locations:', 'arms')
+          +location('Legs locations:', 'legs')
+          +location('Full Suits:', 'suit')
       div: label Cost 
         input(type='number', [(ngModel)]='armor.cost')
       div: label Weight 

@@ -47,8 +47,7 @@
 }
 
 .location_list {
-  position: absolute;
-  width: 250px;
+  position: absolute;  
   top: -50%;
   background: lightgray;
 }

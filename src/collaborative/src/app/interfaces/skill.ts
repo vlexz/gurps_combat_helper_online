@@ -1,6 +1,23 @@
 
+export class SkillDescriptor {
+  id: string;
+  name: string;
+}
+
+export class LibrarySkill {
+  ready: boolean;
+  skill: Skill;
+
+  static fromJson(json: any): LibrarySkill {
+    let res = new LibrarySkill;
+    res.ready = json.ready;
+    res.skill = Skill.fromJson(json.skill);
+    return res;
+  }
+}
+
 export class Skill {
-  name: string = ''; 
+  name: string = '';
   skillString: string = '';
   attr: string = 'DX';
   diff: string = 'E';

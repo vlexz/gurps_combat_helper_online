@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { CharacterService } from './services/character.service';
 import { TraitsService } from './services/traits.service';
 import { ArmorService } from './services/armor.service';
+import { SkillsService } from './services/skills.service';
 import { FileDialogComponent } from './components/file-dialog/file-dialog.component';
 import { SearchBlockComponent } from './components/search-block/search-block.component';
 
@@ -16,7 +17,8 @@ import { SearchBlockComponent } from './components/search-block/search-block.com
   providers: [
     CharacterService,
     TraitsService,
-    ArmorService
+    ArmorService,
+    SkillsService
   ],
   declarations: [
     FileDialogComponent,
