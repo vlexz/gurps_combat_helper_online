@@ -28,13 +28,21 @@ OPTIONS        /api/skills/search/                 controllers.SkillController.o
 GET            /api/skills/search/                 controllers.SkillController.lookup(term)
 OPTIONS        /api/skill/:id                      controllers.SkillController.options(p = "elem", id)
 GET            /api/skill/:id                      controllers.SkillController.get(id)
+# Armor storage
+OPTIONS        /api/armor                          controllers.ArmorController.options(p = "base", id = "")
+POST           /api/armor                          controllers.ArmorController.add()
+GET            /api/armor                          controllers.ArmorController.create
+OPTIONS        /api/armors                         controllers.ArmorController.options(p = "list", id = "")
+GET            /api/armors                         controllers.ArmorController.list
+OPTIONS        /api/armors/search/                 controllers.ArmorController.options(p = "elem", id = "")
+GET            /api/armors/search/                 controllers.ArmorController.lookup(term)
+OPTIONS        /api/armor/:id                      controllers.ArmorController.options(p = "elem", id)
+GET            /api/armor/:id                      controllers.ArmorController.get(id)
 # Charlists components storage
 OPTIONS        /api/teq                            controllers.CharlistController.options(p = "base", id = "")
 GET            /api/teq                            controllers.CharlistController.create(p = "teq")
 OPTIONS        /api/weap                           controllers.CharlistController.options(p = "base", id = "")
 GET            /api/weap                           controllers.CharlistController.create(p = "weap")
-OPTIONS        /api/armor                          controllers.CharlistController.options(p = "base", id = "")
-GET            /api/armor                          controllers.CharlistController.create(p = "armor")
 OPTIONS        /api/item                           controllers.CharlistController.options(p = "base", id = "")
 GET            /api/item                           controllers.CharlistController.create(p = "item")
 # Charlist storage
