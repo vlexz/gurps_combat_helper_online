@@ -651,15 +651,6 @@
 			<reference>P48</reference>
 		</modifier>
         <modifier version="1" enabled="no">
-            <variant>Specialized</variant>
-            <name>Unspecialized</name>
-            <cost type="percentage">0</cost>
-            <affects>total</affects>
-            <reference>B87</reference>
-            <notes></notes>
-        </modifier>
-        <modifier version="1" enabled="no">
-            <variant>Specialized</variant>
             <name>All aquatic animals</name>
 			<cost type="percentage">-40</cost>
 			<affects>total</affects>
@@ -667,7 +658,6 @@
 			<notes>All aquatic animals</notes>
 		</modifier>
 		<modifier version="1" enabled="no">
-            <variant>Specialized</variant>
             <name>All land animals</name>
 			<cost type="percentage">-40</cost>
 			<affects>total</affects>
@@ -675,7 +665,6 @@
 			<notes>All land animals</notes>
 		</modifier>
 		<modifier version="1" enabled="no">
-            <variant>Specialized</variant>
             <name>@One class: Mammals, Birds, etc.@</name>
 			<cost type="percentage">-50</cost>
 			<affects>total</affects>
@@ -683,7 +672,6 @@
 			<notes>@One class: Mammals, Birds, etc.@</notes>
 		</modifier>
 		<modifier version="1" enabled="no">
-            <variant>Specialized</variant>
             <name>@One family: Felines, Parrots, etc.@</name>
 			<cost type="percentage">-60</cost>
 			<affects>total</affects>
@@ -691,7 +679,6 @@
 			<notes>@One family: Felines, Parrots, etc.@</notes>
 		</modifier>
 		<modifier version="1" enabled="no">
-            <variant>Specialized</variant>
             <name>@One species: House Cats, Macaws, etc.@</name>
 			<cost type="percentage">-80</cost>
 			<affects>total</affects>
