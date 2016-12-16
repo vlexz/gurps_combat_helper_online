@@ -812,7 +812,8 @@ case class MeleeDamage(
     dmgString = dmgType match {
       case SPECIAL => dmgType
       case AFFLICTION => s"HT${if (dmgMod > 0) "+" + dmgMod else if (dmgMod < 0) dmgMod else ""}"
-      case _ => s"${dice}d${if (mod > 0) "+" + mod else if (mod < 0) mod else ""}" +
+      case _ => (if (attackType == THRUSTING) "thr+" else if (attackType == SWINGING) "sw+" else "") +
+        s"${dice}d${if (mod > 0) "+" + mod else if (mod < 0) mod else ""}" +
         s"${if (armorDiv < 1) "(" + armorDiv + ")" else if (armorDiv > 1) "(" + armorDiv.toInt + ")" else ""} $dmgType"
     }
     this
