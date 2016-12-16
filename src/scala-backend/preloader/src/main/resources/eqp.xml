@@ -2525,7 +2525,7 @@
         <weight>2 lb</weight>
         <reference>B275</reference>
         <ranged_weapon>
-            <damage>thr-1 cr (see B411)</damage>
+            <damage>thr-1 cr</damage>
             <strength>7</strength>
             <accuracy>0</accuracy>
             <range>x3</range>
@@ -5767,7 +5767,7 @@
         <weight>0.01 lb</weight>
         <reference>B272</reference>
         <melee_weapon>
-            <damage>see B405</damage>
+            <damage>spec</damage>
             <reach>C</reach>
             <parry>No</parry>
             <block>No</block>
@@ -6392,7 +6392,7 @@
             </default>
         </melee_weapon>
         <melee_weapon>
-            <damage>sw+4 imp (may stick)</damage>
+            <damage>sw+4 imp</damage>
             <strength>13&#8225;</strength>
             <usage>Swung Hook</usage>
             <reach>2,3*</reach>
@@ -7235,7 +7235,7 @@
             </default>
         </ranged_weapon>
         <ranged_weapon>
-            <damage>HT-5 aff (10 yd)</damage>
+            <damage>HT-5 aff</damage>
             <strength>10</strength>
             <usage>Stun</usage>
             <accuracy>4+2</accuracy>
@@ -8003,7 +8003,7 @@
         <weight>20 lb</weight>
         <reference>B276</reference>
         <ranged_weapon>
-            <damage>see B411</damage>
+            <damage>spec</damage>
             <strength>11</strength>
             <accuracy>1</accuracy>
             <range>spec</range>
@@ -8088,7 +8088,7 @@
         <weight>30 lb</weight>
         <reference>B287</reference>
         <melee_weapon>
-            <damage>thr +1 cr</damage>
+            <damage>thr+1 cr</damage>
             <strength>0</strength>
             <usage>Shield Bash</usage>
             <reach>1</reach>
@@ -8142,7 +8142,7 @@
         <weight>3 lb</weight>
         <reference>B276</reference>
         <ranged_weapon>
-            <damage>see B411</damage>
+            <damage>spec</damage>
             <strength>7&#8224;</strength>
             <accuracy>0</accuracy>
             <range>spec</range>
@@ -10175,7 +10175,7 @@
         <weight>5 lb</weight>
         <reference>B276</reference>
         <ranged_weapon>
-            <damage>see B411</damage>
+            <damage>spec</damage>
             <strength>8</strength>
             <accuracy>1</accuracy>
             <range>spec</range>
@@ -12627,7 +12627,7 @@
         <weight>17.5 lb</weight>
         <reference>B279</reference>
         <ranged_weapon>
-            <damage>7d+2 (2) pi</damage>
+            <damage>7d+2(2) pi</damage>
             <strength>11B&#8224;</strength>
             <accuracy>6+3</accuracy>
             <range>1500/5500</range>

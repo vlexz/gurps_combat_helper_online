@@ -7,13 +7,17 @@ trait Parser[A] {
   val seq: Seq[A]
   val tjs: Writes[A]
 
-  protected def parseInt(x: String): Int = x match {
-    case "" => 0
-    case _ => x.toInt
-  }
+  protected def parseInt(x: String): Int =
+    try {
+      x.toInt
+    } catch {
+      case _: Throwable => 0
+    }
 
-  protected def parseDouble(x: String): Double = x match {
-    case "" => 0.0
-    case _ => x.toDouble
-  }
+  protected def parseDouble(x: String): Double =
+    try {
+      x.toDouble
+    } catch {
+      case _: Throwable => 0.0
+    }
 }
