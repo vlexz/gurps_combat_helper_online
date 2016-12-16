@@ -52,9 +52,9 @@ class WeaponsParser(filePath: String) extends Parser[Weapon] {
               dmgMod = parseInt(mod),
               armorDiv = parseDouble(div),
               dmgType = dType(typ)),
-            skill = (for (d <- a \ "default")
+            skill = (for (d <- a \ "default" if !((d \ "name").text contains '!'))
               yield parseInt((d \ "modifier").text) -> (d \ "name").text).toMap withDefaultValue "" apply 0,
-            spc = (for (d <- a \ "default")
+            spc = (for (d <- a \ "default" if !((d \ "name").text contains '!'))
               yield parseInt((d \ "modifier").text) -> (d \ "specialization").text).toMap withDefaultValue "" apply 0,
             parry = parseInt(par),
             parryType = parT,
@@ -76,9 +76,9 @@ class WeaponsParser(filePath: String) extends Parser[Weapon] {
               armorDiv = parseDouble(div),
               fragDice = parseInt(frag),
               dmgType = dType(typ)),
-            skill = (for (d <- a \ "default")
+            skill = (for (d <- a \ "default" if !((d \ "name").text contains '!'))
               yield parseInt((d \ "modifier").text) -> (d \ "name").text).toMap withDefaultValue "" apply 0,
-            spc = (for (d <- a \ "default")
+            spc = (for (d <- a \ "default" if !((d \ "name").text contains '!'))
               yield parseInt((d \ "modifier").text) -> (d \ "specialization").text).toMap withDefaultValue "" apply 0,
             st = parseInt(str),
             hands = hnd,
@@ -92,9 +92,9 @@ class WeaponsParser(filePath: String) extends Parser[Weapon] {
         },
         blocks = for (b <- wpn \ "melee_weapon" if (b \ "block").text == "+0") yield BlockDefence(
           name = (b \ "usage").text,
-          skill = (for (d <- b \ "default")
+          skill = (for (d <- b \ "default" if !((d \ "name").text contains '!'))
             yield parseInt((d \ "modifier").text) -> (d \ "name").text).toMap withDefaultValue "" apply 0,
-          spc = (for (d <- b \ "default")
+          spc = (for (d <- b \ "default" if !((d \ "name").text contains '!'))
             yield parseInt((d \ "modifier").text) -> (d \ "specialization").text).toMap withDefaultValue "" apply 0,
           db = parseInt((wpn \ "attribute_bonus" \ "amount").text)),
         bulk = parseInt((wpn \ "ranged_weapon" \ "bulk").text),

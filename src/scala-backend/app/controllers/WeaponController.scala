@@ -2,8 +2,10 @@ package controllers
 
 import com.google.inject.Inject
 import daos.WeaponDao
+import models.charlist.Charlist.weaponFormat
 import models.charlist.Weapon
 import org.mongodb.scala.Completed
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
 import play.api.mvc.{Action, AnyContent, Controller, Result}
 
