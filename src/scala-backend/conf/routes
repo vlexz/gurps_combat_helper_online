@@ -28,6 +28,16 @@ OPTIONS        /api/skills/search/                 controllers.SkillController.o
 GET            /api/skills/search/                 controllers.SkillController.lookup(term)
 OPTIONS        /api/skill/:id                      controllers.SkillController.options(p = "elem", id)
 GET            /api/skill/:id                      controllers.SkillController.get(id)
+# Technique storage
+OPTIONS        /api/tecn                           controllers.TechniqueController.options(p = "base", id = "")
+POST           /api/tecn                           controllers.TechniqueController.add()
+GET            /api/tecn                           controllers.TechniqueController.create
+OPTIONS        /api/tecns                          controllers.TechniqueController.options(p = "list", id = "")
+GET            /api/tecns                          controllers.TechniqueController.list
+OPTIONS        /api/tecns/search/                  controllers.TechniqueController.options(p = "elem", id = "")
+GET            /api/tecns/search/                  controllers.TechniqueController.lookup(term)
+OPTIONS        /api/tecn/:id                       controllers.TechniqueController.options(p = "elem", id)
+GET            /api/tecn/:id                       controllers.TechniqueController.get(id)
 # Armor storage
 OPTIONS        /api/armor                          controllers.ArmorController.options(p = "base", id = "")
 POST           /api/armor                          controllers.ArmorController.add()
@@ -58,9 +68,6 @@ OPTIONS        /api/items/search/                  controllers.ItemController.op
 GET            /api/items/search/                  controllers.ItemController.lookup(term)
 OPTIONS        /api/item/:id                       controllers.ItemController.options(p = "elem", id)
 GET            /api/item/:id                       controllers.ItemController.get(id)
-# Charlists components storage
-OPTIONS        /api/teq                            controllers.CharlistController.options(p = "base", id = "")
-GET            /api/teq                            controllers.CharlistController.create(p = "teq")
 # Charlist storage
 OPTIONS        /api/char                           controllers.CharlistController.options(p = "base", id = "")
 POST           /api/char                           controllers.CharlistController.add()
