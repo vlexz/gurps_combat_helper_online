@@ -494,11 +494,13 @@ case class Technique(
   if (SkillDifficulty techniqueCanBe diff) () else diff = SkillDifficulty.AVERAGE
   if (maxLvl <= defLvl) maxLvl = defLvl + 1
   if (relLvl < defLvl) relLvl = defLvl else if (relLvl > maxLvl) relLvl = maxLvl
-  tchString = s"$name ($skill${if (spc != "") " (" + spc + ")"})"
+  tchString = s"$name ($skill${if (spc != "") " (" + spc + ")" else ""})"
   cp = relLvl - defLvl + (if (diff == SkillDifficulty.HARD && relLvl > defLvl) 1 else 0)
 
   def calculateLvl(skill: Int): Unit = lvl = skill + relLvl
 }
+
+case class FlaggedTechnique(technique: Technique, ready: Boolean)
 
 case class BonusAttribute(var attr: String = BonusToAttribute.ST, perLvl: Boolean = false, bonus: Double = 0) {
   if (BonusToAttribute canBe attr) () else attr = BonusToAttribute.ST
@@ -1189,6 +1191,7 @@ object Charlist {
   implicit val bonusSkillFormat: OFormat[BonusSkill] = Json.format[BonusSkill]
   implicit val bonusAttributeFormat: OFormat[BonusAttribute] = Json.format[BonusAttribute]
   implicit val techniqueFormat: OFormat[Technique] = Json.format[Technique]
+  implicit val flaggedTechniqueFormat: OFormat[FlaggedTechnique] = Json.format[FlaggedTechnique]
   implicit val skillFormat: OFormat[Skill] = Json.format[Skill]
   implicit val flaggedSkillFormat: OFormat[FlaggedSkill] = Json.format[FlaggedSkill]
   implicit val traitModifierFormat: OFormat[TraitModifier] = Json.format[TraitModifier]
