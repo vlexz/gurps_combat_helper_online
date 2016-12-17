@@ -28,6 +28,7 @@ object Preloader extends App {
   private val client = MongoClient()
   load(client, "traits", parse[FlaggedTrait](new TraitsParser("/adv.xml")))
   load(client, "skills", parse[FlaggedSkill](new SkillsParser("/skl.xml")))
+  load(client, "techniques", parse[FlaggedTechnique](new TechniquesParser("/skl.xml")))
   load(client, "armor", parse[Armor](new ArmorParser("/eqp.xml")))
   load(client, "weapons", parse[Weapon](new WeaponsParser("/eqp.xml")))
   load(client, "items", parse[Item](new ItemsParser("/eqp.xml")))
