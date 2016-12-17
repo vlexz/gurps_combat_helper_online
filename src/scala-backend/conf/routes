@@ -48,11 +48,19 @@ OPTIONS        /api/weaps/search/                  controllers.WeaponController.
 GET            /api/weaps/search/                  controllers.WeaponController.lookup(term)
 OPTIONS        /api/weap/:id                       controllers.WeaponController.options(p = "elem", id)
 GET            /api/weap/:id                       controllers.WeaponController.get(id)
+# Item storage
+OPTIONS        /api/item                           controllers.ItemController.options(p = "base", id = "")
+POST           /api/item                           controllers.ItemController.add()
+GET            /api/item                           controllers.ItemController.create
+OPTIONS        /api/items                          controllers.ItemController.options(p = "list", id = "")
+GET            /api/items                          controllers.ItemController.list
+OPTIONS        /api/items/search/                  controllers.ItemController.options(p = "elem", id = "")
+GET            /api/items/search/                  controllers.ItemController.lookup(term)
+OPTIONS        /api/item/:id                       controllers.ItemController.options(p = "elem", id)
+GET            /api/item/:id                       controllers.ItemController.get(id)
 # Charlists components storage
 OPTIONS        /api/teq                            controllers.CharlistController.options(p = "base", id = "")
 GET            /api/teq                            controllers.CharlistController.create(p = "teq")
-OPTIONS        /api/item                           controllers.CharlistController.options(p = "base", id = "")
-GET            /api/item                           controllers.CharlistController.create(p = "item")
 # Charlist storage
 OPTIONS        /api/char                           controllers.CharlistController.options(p = "base", id = "")
 POST           /api/char                           controllers.CharlistController.add()

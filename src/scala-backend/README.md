@@ -41,5 +41,11 @@ piece
 <p>/api/weaps GET — returns the list of basic weapons, [id, name]</p>
 <p>/api/weaps/search/?term=string GET — returns a list of basic weapons with 'string' in name: [id, name]</p>
 <p>/api/weap/:id GET — returns a weapon by id from the list of basic weapons</p>
-<p>/api/[teq|item] GET — returns a charlist component template</p>
+<p>/api/item
+<br>POST — validates the item in request and saves it to the database under new id, returns recalculated item
+<br>GET — returns default template item</p>
+<p>/api/items GET — returns the list of basic items, [id, name]</p>
+<p>/api/items/search/?term=string GET — returns a list of basic items with 'string' in name: [id, name]</p>
+<p>/api/item/:id GET — returns an item by id from the list of basic items</p>
+<p>/api/[teq] GET — returns a charlist component template</p>
 <p>You can see a sample Charlist structure in <code>example.json</code>.</p>
