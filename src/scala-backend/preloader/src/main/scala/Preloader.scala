@@ -1,4 +1,4 @@
-import models.charlist.{Armor, FlaggedSkill, FlaggedTrait, Weapon}
+import models.charlist._
 import org.mongodb.scala.{Document, MongoClient}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
@@ -30,5 +30,6 @@ object Preloader extends App {
   load(client, "skills", parse[FlaggedSkill](new SkillsParser("/skl.xml")))
   load(client, "armor", parse[Armor](new ArmorParser("/eqp.xml")))
   load(client, "weapons", parse[Weapon](new WeaponsParser("/eqp.xml")))
+  load(client, "items", parse[Item](new ItemsParser("/eqp.xml")))
   client close()
 }
