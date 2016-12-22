@@ -41,8 +41,7 @@ class MongoSkillDao @Inject()(mongo: Mongo) extends SkillDao {
   override def find(id: String): Future[JsValue] =
     skills find Filters.eq("_id", new ObjectId(id)) head() map (Json parse _.toJson)
 
-  override def find(category: String, term: String): Future[Seq[JsObject]] =
-    skills find() withFilter { s =>
+  override def find(category: String, term: String): Future[Seq[JsObject]] = skills find() withFilter { s =>
       s.get("skill").get.asDocument.get("name").asString.getValue.toLowerCase.contains(term.toLowerCase) ||
         s.get("skill").get.asDocument.get("spc").asString.getValue.toLowerCase.contains(term.toLowerCase)
     } map docIdToJson toFuture()

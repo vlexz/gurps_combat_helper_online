@@ -669,7 +669,7 @@
     "categories" : [ ],
     "notes" : "",
     "cp" : 12, // calculated field
-    "relLvl" : 3, 
+    "relLvl": 3,
     "lvl" : 16 // calculated field
   }, {
     "name" : "Brawling",
@@ -703,7 +703,7 @@
     "categories" : [ ],
     "notes" : "",
     "cp" : 4, // calculated field
-    "relLvl" : 2, 
+    "relLvl": 2,
     "lvl" : 15 // calculated field
   } ],
   "techniques" : [ {
@@ -939,15 +939,26 @@
       "name" : "Boots",
       "carried" : "Equipped", // valid strings: "Ready" "Equipped" "Combat" "Travel" "Stash"
       "db" : 0, // valid values >= 0 & < 4
-      "protection" : {
-        "dr" : 1, // valid values >= 0
-        "ep" : 1, // valid values >= 0
-        "epi" : 0 // valid values >= 0
-      },
-      "front" : true,
-      "back" : true,
-      "drType" : "hard", // valid strings: "hard" "soft" "force field" "tough skin"
-      "locations" : [ "feet" ], // valid strings:  "eyes" "skull" "face" "head" "neck" "right leg" "left leg" "legs" "right arm" "left arm" "arms" "chest" "vitals" "abdomen" "groin" "torso" "hands" "left hand" "right hand" "feet" "right foot" "left foot" "skin" "full body"
+      "components": [
+        {
+          "protection": {
+            "dr": 1,
+            // valid values >= 0
+            "ep": 1,
+            // valid values >= 0
+            "epi": 0
+            // valid values >= 0
+          },
+          "front": true,
+          "back": true,
+          "drType": "hard",
+          // valid strings: "hard" "soft" "force field" "tough skin"
+          "locations": [
+            "feet"
+          ]
+          // valid strings:  "eyes" "skull" "face" "head" "neck" "right leg" "left leg" "legs" "right arm" "left arm" "arms" "chest" "vitals" "abdomen" "groin" "torso" "hands" "left hand" "right hand" "feet" "right foot" "left foot" "skin" "full body"
+        }
+      ],
       "hp" : 5, // valid values >= 0
       "hpLeft" : 5, // valid values >= 0 & <= hp
       "broken" : false,

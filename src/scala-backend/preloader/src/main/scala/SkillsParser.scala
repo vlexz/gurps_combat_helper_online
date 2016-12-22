@@ -30,12 +30,12 @@ class SkillsParser(filePath: String) extends Parser[FlaggedSkill] {
           perLvl = (b \ "amount" \ "@per_level").text == "yes",
           freq = this parseInt (b \ "frequency").text,
           bonus = this parseInt (b \ "amount").text,
-          notes = (b \ "notes").text), // TODO: no reacts in library
+          notes = (b \ "notes").text),
         encumbr = (this parseInt (skl \ "encumbrance_penalty_multiplier").text) > 0,
         categories = (skl \ "categories" \ "category") map (_.text),
         notes = (skl \ "notes").text),
       !(skl toString() contains '@'))
-  // TODO: missing prerequisites and defaults parsers, RTU boolean
+  // TODO: missing prerequisites and defaults parsers
 
   override val tjs: Writes[FlaggedSkill] = Charlist.flaggedSkillFormat
 }

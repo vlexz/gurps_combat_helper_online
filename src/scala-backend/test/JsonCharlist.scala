@@ -1,5 +1,5 @@
 import models.charlist._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 
 /**
   * Created for testing by crimson on 10/18/16.
@@ -25,11 +25,11 @@ class JsonCharlist {
         modifiers = Seq(TraitModifier(
           name = "Default",
           attrBonuses = Seq(
-            BonusAttribute(BonusToAttribute.DODGE, perLvl = false, bonus = 1),
-            BonusAttribute(BonusToAttribute.PARRY, perLvl = false, bonus = 1),
-            BonusAttribute(BonusToAttribute.BLOCK, perLvl = false, bonus = 1),
-            BonusAttribute(BonusToAttribute.FC, perLvl = false, bonus = 2)),
-          skillBonuses = Seq(BonusSkill(skill = "Fast-Draw", perLvl = false, bonus = 1)))),
+            BonusAttribute(BonusToAttribute.DODGE, bonus = 1),
+            BonusAttribute(BonusToAttribute.PARRY, bonus = 1),
+            BonusAttribute(BonusToAttribute.BLOCK, bonus = 1),
+            BonusAttribute(BonusToAttribute.FC, bonus = 2)),
+          skillBonuses = Seq(BonusSkill(skill = "Fast-Draw", bonus = 1)))),
         cpBase = 15),
       Trait(
         name = "Sorcery",
@@ -89,11 +89,11 @@ class JsonCharlist {
         modifiers = Seq(TraitModifier(
           name = "Default",
           attrBonuses = Seq(
-            BonusAttribute(BonusToAttribute.SM, perLvl = false, bonus = 1),
-            BonusAttribute(BonusToAttribute.BASIC_MOVE, perLvl = false, bonus = 1)),
+            BonusAttribute(BonusToAttribute.SM, bonus = 1),
+            BonusAttribute(BonusToAttribute.BASIC_MOVE, bonus = 1)),
           skillBonuses = Seq(
-            BonusSkill(skill = "Disguise", perLvl = false, bonus = -2),
-            BonusSkill(skill = "Shadowing", perLvl = false, bonus = -2)),
+            BonusSkill(skill = "Disguise", bonus = -2),
+            BonusSkill(skill = "Shadowing", bonus = -2)),
           attrCostMods = Seq(BonusAttributeCost(attr = SkillBaseAttribute.ST, cost = -10)))))),
     skills = Seq[Skill](
       Skill(name = "Guns", spc = "Pistol", diff = SkillDifficulty.AVERAGE, tl = 5, relLvl = 3),
@@ -137,7 +137,6 @@ class JsonCharlist {
           attacksMelee = Seq[MeleeAttack](
             MeleeAttack(
               name = "Punch",
-              available = true,
               damage = MeleeDamage(attackType = AttackType.THRUSTING, dmgMod = -1),
               followup = Seq[MeleeDamage](MeleeDamage(dmgDice = 4, dmgType = DamageType.BURNING)),
               linked = Seq[MeleeDamage](MeleeDamage(dmgDice = 2, dmgType = DamageType.TOXIC)),
@@ -147,7 +146,6 @@ class JsonCharlist {
             ),
             MeleeAttack(
               name = "Kick in Boots",
-              available = true,
               damage = MeleeDamage(attackType = AttackType.THRUSTING),
               skill = "Brawling",
               parryType = "No",
@@ -160,7 +158,6 @@ class JsonCharlist {
           attacksRanged = Seq[RangedAttack](
             RangedAttack(
               name = "LE",
-              available = true,
               damage = RangedDamage(dmgDice = 1, dmgMod = 2, armorDiv = 0.5, dmgType = DamageType.PIERCING_LARGE),
               followup = Seq[RangedDamage](
                 RangedDamage(dmgDice = 1, dmgMod = 1, dmgType = DamageType.CRUSHING_EXPLOSION, fragDice = 1)),
@@ -214,8 +211,9 @@ class JsonCharlist {
         Armor(
           name = "Boots",
           state = ItemState.EQUIPPED,
-          protection = DrSet(1, 1, 0),
-          locations = Seq[String](HitLocation.FEET),
+          components = Seq(ArmorComponent(
+            protection = DrSet(1, 1),
+            locations = Seq[String](HitLocation.FEET))),
           hp = 5,
           hpLeft = 5,
           tl = 5,
@@ -226,7 +224,7 @@ class JsonCharlist {
         Item(name = "Small Backpack", state = ItemState.TRAVEL, hp = 5, hpLeft = 5, tl = 5, wt = 3, cost = 60))),
     currentStats = StatsCurrent(hpLost = 1, fpLost = 10),
     wounds = Seq(Wound()))
-  val jsonCharlist = Json toJson charlist
+  val jsonCharlist: JsValue = Json toJson charlist
 }
 
 object JsonPrinter extends App {

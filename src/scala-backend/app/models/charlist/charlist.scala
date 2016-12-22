@@ -31,7 +31,7 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
                     wounds: Seq[Wound] = Nil,
                     conditions: Conditions = Conditions(),
                     var api: String = "") {
-  api = "0.3.3"
+  api = "0.3.4"
 
   {
     import BonusToAttribute._
@@ -43,9 +43,9 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
         l <- b.locations flatMap locMap
       } yield (l, if (b.front) b.protection else DrSet(), if (b.back) b.protection else DrSet())) ++
         (for {
-          a <- equip.armor
-          l <- a.locations flatMap locMap
-        } yield (l, if (a.front) a.protection else DrSet(), if (a.back) a.protection else DrSet()))
+          c <- equip.armor flatMap (_.components)
+          l <- c.locations flatMap locMap
+        } yield (l, if (c.front) c.protection else DrSet(), if (c.back) c.protection else DrSet()))
     } groupBy {
       case (location, _, _) => location
     } mapValues {
@@ -494,11 +494,13 @@ case class Technique(
   if (SkillDifficulty techniqueCanBe diff) () else diff = SkillDifficulty.AVERAGE
   if (maxLvl <= defLvl) maxLvl = defLvl + 1
   if (relLvl < defLvl) relLvl = defLvl else if (relLvl > maxLvl) relLvl = maxLvl
-  tchString = s"$name ($skill${if (spc != "") " (" + spc + ")"})"
+  tchString = s"$name ($skill${if (spc != "") " (" + spc + ")" else ""})"
   cp = relLvl - defLvl + (if (diff == SkillDifficulty.HARD && relLvl > defLvl) 1 else 0)
 
   def calculateLvl(skill: Int): Unit = lvl = skill + relLvl
 }
+
+case class FlaggedTechnique(technique: Technique, ready: Boolean)
 
 case class BonusAttribute(var attr: String = BonusToAttribute.ST, perLvl: Boolean = false, bonus: Double = 0) {
   if (BonusToAttribute canBe attr) () else attr = BonusToAttribute.ST
@@ -812,7 +814,8 @@ case class MeleeDamage(
     dmgString = dmgType match {
       case SPECIAL => dmgType
       case AFFLICTION => s"HT${if (dmgMod > 0) "+" + dmgMod else if (dmgMod < 0) dmgMod else ""}"
-      case _ => s"${dice}d${if (mod > 0) "+" + mod else if (mod < 0) mod else ""}" +
+      case _ => (if (attackType == THRUSTING) "thr+" else if (attackType == SWINGING) "sw+" else "") +
+        s"${dice}d${if (mod > 0) "+" + mod else if (mod < 0) mod else ""}" +
         s"${if (armorDiv < 1) "(" + armorDiv + ")" else if (armorDiv > 1) "(" + armorDiv.toInt + ")" else ""} $dmgType"
     }
     this
@@ -947,11 +950,7 @@ case class Armor(
                   name: String = "",
                   var state: String = ItemState.EQUIPPED,
                   var db: Int = 0,
-                  var protection: DrSet = DrSet(),
-                  var front: Boolean = true,
-                  back: Boolean = true,
-                  var drType: String = DrType.HARD,
-                  var locations: Seq[String] = Nil,
+                  components: Seq[ArmorComponent] = Seq(ArmorComponent()),
                   var hp: Int = 1,
                   var hpLeft: Int = 1,
                   broken: Boolean = false,
@@ -963,9 +962,6 @@ case class Armor(
   extends Possession {
   if (ItemState canBe state) () else state = ItemState.EQUIPPED
   if (db < 0) db = 0 else if (db > 3) db = 3
-  if (!front && !back) front = true
-  if (DrType canBe drType) () else drType = DrType.HARD
-  locations = locations.distinct filter HitLocation.canBe
   if (hp < 0) hp = 0
   if (hpLeft < 0) hpLeft = 0 else if (hpLeft > hp) hpLeft = hp
   if (lc > 5) lc = 5 else if (lc < 0) lc = 0
@@ -976,6 +972,17 @@ case class Armor(
   override def totalCost: Double = cost
 
   override def totalWt: Double = wt
+}
+
+case class ArmorComponent(
+                           var protection: DrSet = DrSet(),
+                           var front: Boolean = true,
+                           back: Boolean = true,
+                           var drType: String = DrType.HARD,
+                           var locations: Seq[String] = Nil) {
+  if (!front && !back) front = true
+  if (DrType canBe drType) () else drType = DrType.HARD
+  locations = locations.distinct filter HitLocation.canBe
 }
 
 package object DrType {
@@ -1164,6 +1171,7 @@ object Charlist {
   implicit val woundFormat: OFormat[Wound] = Json.format[Wound]
   implicit val itemFormat: OFormat[Item] = Json.format[Item]
   implicit val drSetFormat: OFormat[DrSet] = Json.format[DrSet]
+  implicit val armorComponentFormat: OFormat[ArmorComponent] = Json.format[ArmorComponent]
   implicit val armorElementFormat: OFormat[Armor] = Json.format[Armor]
   implicit val blockDefenceFormat: OFormat[BlockDefence] = Json.format[BlockDefence]
   implicit val rangedShotsFormat: OFormat[RangedShots] = Json.format[RangedShots]
@@ -1183,6 +1191,7 @@ object Charlist {
   implicit val bonusSkillFormat: OFormat[BonusSkill] = Json.format[BonusSkill]
   implicit val bonusAttributeFormat: OFormat[BonusAttribute] = Json.format[BonusAttribute]
   implicit val techniqueFormat: OFormat[Technique] = Json.format[Technique]
+  implicit val flaggedTechniqueFormat: OFormat[FlaggedTechnique] = Json.format[FlaggedTechnique]
   implicit val skillFormat: OFormat[Skill] = Json.format[Skill]
   implicit val flaggedSkillFormat: OFormat[FlaggedSkill] = Json.format[FlaggedSkill]
   implicit val traitModifierFormat: OFormat[TraitModifier] = Json.format[TraitModifier]
