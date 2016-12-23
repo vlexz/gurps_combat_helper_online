@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Armor } from 'interfaces/armor';
+import { Armor, ArmorComponent } from 'interfaces/armor';
 import { ConstantTables } from 'interfaces/tables';
 
 @Component({
@@ -16,25 +16,33 @@ export class ArmorEditorComponent implements OnInit {
 
   tables: ConstantTables = new ConstantTables;
 
-  _showLocations: boolean = false;
+  _showLocations: number = -1;
 
   constructor() { }
 
-  showLocations() {
-    this._showLocations = true;
+  showLocations(i: number) {
+    this._showLocations = i;
   }
 
   hideLocations() {
-    this._showLocations = false;
+    this._showLocations = -1;
   }
 
-  addLocation(loc: string) {
-    this.armor.locations.push(loc);
-    this._showLocations = false;
+  addLocation(component: ArmorComponent, loc: string) {
+    component.locations.push(loc);
+    this._showLocations = -1;
   }
 
-  removeLocation(i: number) {
-    this.armor.locations.splice(i, 1);
+  removeLocation(component: ArmorComponent, i: number) {
+    component.locations.splice(i, 1);
+  }
+
+  addComponent() {
+    this.armor.components.push(new ArmorComponent);
+  }
+
+  removeComponent(i: number) {
+    this.armor.components.splice(i, 1);
   }
 
   done() {

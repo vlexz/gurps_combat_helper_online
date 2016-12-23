@@ -8,6 +8,7 @@ import { ArmorService } from './services/armor.service';
 import { SkillsService } from './services/skills.service';
 import { FileDialogComponent } from './components/file-dialog/file-dialog.component';
 import { SearchBlockComponent } from './components/search-block/search-block.component';
+import { DialogContainerComponent } from './components/dialog-container/dialog-container.component';
 
 @NgModule({
   imports: [
@@ -22,11 +23,13 @@ import { SearchBlockComponent } from './components/search-block/search-block.com
   ],
   declarations: [
     FileDialogComponent,
-    SearchBlockComponent
+    SearchBlockComponent,
+    DialogContainerComponent
   ],
   exports: [
     FileDialogComponent,
-    SearchBlockComponent
+    SearchBlockComponent,
+    DialogContainerComponent
   ]
 })
 export class SharedModule { }

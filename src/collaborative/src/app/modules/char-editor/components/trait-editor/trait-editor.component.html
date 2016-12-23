@@ -1,42 +1,28 @@
 
-<div class="cover"></div>
-<div class="container">
-  <div class="dialog">
-    <div class="title"> 
-      <h3>Edit {{trait.category}}</h3>
-    </div>
-    <div class="content">
-      <div>Name: 
-        <input type="text" [(ngModel)]="trait.name">
-      </div>
-      <div>Cost: {{trait.cp}}<a (click)="switchCostExp()"><span *ngIf="costExpand">Collapse</span><span *ngIf="!costExpand">Expand</span></a>
-        <div *ngIf="costExpand">
-          <label>Base Cost: 
-            <input class="cost" type="number" [(ngModel)]="trait.cpBase">
-          </label>
-          <label>Cost per level:
-            <input class="cost" type="number" [(ngModel)]="trait.cpPerLvl">
-          </label>
-          <label>Level: 
-            <input class="cost" type="number" [(ngModel)]="trait.level">
-          </label>
-        </div>
-      </div>
-      <div>Avaliable modifiers          </div>
-      <table>
-        <tr *ngFor="let mod of trait.modifiers; let i = index">
-          <td>
-            <input type="checkbox" [(ngModel)]="mod.on">
-          </td>
-          <td>{{mod.name}}</td>
-        </tr>
-      </table>
-    </div>
-    <div class="footer"> 
-      <div class="button-holder">
-        <button (click)="cancel()">Cancel</button>
-        <button (click)="done()">Done</button>
-      </div>
+<dialog-container (done)="done()" title="Edit {{trait.category}}">
+  <div>Name: 
+    <input type="text" [(ngModel)]="trait.name">
+  </div>
+  <div>Cost: {{trait.cp}}<a (click)="switchCostExp()"><span *ngIf="costExpand">Collapse</span><span *ngIf="!costExpand">Expand</span></a>
+    <div *ngIf="costExpand">
+      <label>Base Cost: 
+        <input class="cost" type="number" [(ngModel)]="trait.cpBase">
+      </label>
+      <label>Cost per level:
+        <input class="cost" type="number" [(ngModel)]="trait.cpPerLvl">
+      </label>
+      <label>Level: 
+        <input class="cost" type="number" [(ngModel)]="trait.level">
+      </label>
     </div>
   </div>
-</div>
+  <div>Avaliable modifiers          </div>
+  <table>
+    <tr *ngFor="let mod of trait.modifiers; let i = index">
+      <td>
+        <input type="checkbox" [(ngModel)]="mod.on">
+      </td>
+      <td>{{mod.name}}</td>
+    </tr>
+  </table>
+</dialog-container>

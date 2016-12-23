@@ -31,38 +31,6 @@
   padding: 10px;
 }
 
-.component {
-  margin-left: 15px;
-}
-
-.locations {
-  position: relative;
-}
-
-.locations ul {
-  margin: 3px;
-  display: inline-flex;
-  flex-direction: row;
-}
-
-.locations ul li {
-  display: block;
-  margin-left: 10px;
-}
-
-.location_list {
-  position: absolute;  
-  top: -50%;
-  background: lightgray;
-}
-
-.location_list ul{
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;  
-}
-
-.location_list ul li {
-  display: block;
-  margin: 5px;
+.footer {
+  margin-top: 15px;
 }

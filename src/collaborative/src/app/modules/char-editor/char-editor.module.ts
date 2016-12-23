@@ -23,6 +23,7 @@ import { ArmorVisualComponent } from './components/armor-visual/armor-visual.com
 import { ArmorPartComponent } from './components/armor-part/armor-part.component';
 import { ArmorListComponent } from './components/armor-list/armor-list.component';
 import { ArmorEditorComponent } from './components/armor-editor/armor-editor.component';
+import { SkillEditorComponent } from './components/skill-editor/skill-editor.component';
 
 @NgModule({
   imports: [
@@ -46,7 +47,8 @@ import { ArmorEditorComponent } from './components/armor-editor/armor-editor.com
     ArmorVisualComponent,
     ArmorPartComponent,
     ArmorListComponent,
-    ArmorEditorComponent
+    ArmorEditorComponent,
+    SkillEditorComponent
   ],
   providers: [
     CurrentCharService

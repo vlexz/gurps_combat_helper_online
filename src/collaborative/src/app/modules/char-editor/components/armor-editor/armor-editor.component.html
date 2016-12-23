@@ -1,76 +1,62 @@
 
-<div class="cover"></div>
-<div class="container" *ngIf="armor">
-  <div class="dialog">
-    <div class="title"> 
-      <h3>Edit Armor</h3>
-    </div>
-    <div class="content">
-      <div class="name">
-        <input type="text" [(ngModel)]="armor.name">
-      </div>
-      <div class="protection">Protection:        
-        <label>DR:
-          <input class="cost" type="number" [(ngModel)]="armor.protection.dr">
-        </label>
-        <label>EP:
-          <input class="cost" type="number" [(ngModel)]="armor.protection.ep">
-        </label>
-        <label>EPI:
-          <input class="cost" type="number" [(ngModel)]="armor.protection.epi">
-        </label>
-      </div>
-      <div>
-        <input type="checkbox" [(ngModel)]="armor.front">
-        <label>Protects from front</label>
-      </div>
-      <div>
-        <input type="checkbox" [(ngModel)]="armor.back">
-        <label>Protects from back</label>
-      </div>
-      <div class="locations">Locations
-        <ul>
-          <li *ngFor="let loc of armor.locations; let i = index"><a (click)="removeLocation(i)">{{loc}}</a></li>
-          <li>         <a (click)="showLocations()">Add</a></li>
-        </ul>
-        <div class="location_list" *ngIf="_showLocations" (click)="hideLocations()">
-          <div>Head locations:</div>
-          <ul>
-            <li *ngFor="let loc of tables.armorLocations.head; let i = index"><a (click)="addLocation(loc)">{{loc}}</a></li>
-          </ul>
-          <div>Body locations:</div>
-          <ul>
-            <li *ngFor="let loc of tables.armorLocations.body; let i = index"><a (click)="addLocation(loc)">{{loc}}</a></li>
-          </ul>
-          <div>Arms locations:</div>
-          <ul>
-            <li *ngFor="let loc of tables.armorLocations.arms; let i = index"><a (click)="addLocation(loc)">{{loc}}</a></li>
-          </ul>
-          <div>Legs locations:</div>
-          <ul>
-            <li *ngFor="let loc of tables.armorLocations.legs; let i = index"><a (click)="addLocation(loc)">{{loc}}</a></li>
-          </ul>
-          <div>Full Suits:</div>
-          <ul>
-            <li *ngFor="let loc of tables.armorLocations.suit; let i = index"><a (click)="addLocation(loc)">{{loc}}</a></li>
-          </ul>
-        </div>
-      </div>
-      <div>
-        <label>Cost 
-          <input type="number" [(ngModel)]="armor.cost">
-        </label>
-      </div>
-      <div>
-        <label>Weight 
-          <input type="number" [(ngModel)]="armor.wt">
-        </label>
-      </div>
-    </div>
-    <div class="footer"> 
-      <div class="button-holder">       
-        <button (click)="done()">Done</button>
-      </div>
-    </div>
+<dialog-container (done)="done()" title="Edit Armor">
+  <div class="row">
+    <label>Name:  
+      <input type="text" [(ngModel)]="armor.name">
+    </label>
+    <label>Cost 
+      <input type="number" [(ngModel)]="armor.cost">
+    </label>
+    <label>Weight 
+      <input type="number" [(ngModel)]="armor.wt">
+    </label>
   </div>
-</div>
+  <div class="row">Components: </div>
+  <div class="component" *ngFor="let component of armor.components; let i = index">
+    <div class="protection">Protection:        
+      <label>DR:
+        <input class="cost" type="number" [(ngModel)]="component.protection.dr">
+      </label>
+      <label>EP:
+        <input class="cost" type="number" [(ngModel)]="component.protection.ep">
+      </label>
+      <label>EPI:
+        <input class="cost" type="number" [(ngModel)]="component.protection.epi">
+      </label>
+      <input type="checkbox" [(ngModel)]="component.front">
+      <label>Protects from front</label>
+      <input type="checkbox" [(ngModel)]="component.back">
+      <label>Protects from back</label>
+    </div>
+    <div class="locations"> <span>Locations:</span>
+      <ul>
+        <li *ngFor="let loc of component.locations; let i = index"><a (click)="removeLocation(component, i)">{{loc}}</a></li>
+        <li>         <a (click)="showLocations(i)">Add</a></li>
+      </ul>
+      <div class="location_list" *ngIf="_showLocations == i" (click)="hideLocations()">
+        <div>Head locations:</div>
+        <ul>
+          <li *ngFor="let loc of tables.armorLocations.head; let i = index"><a (click)="addLocation(component, loc)">{{loc}}</a></li>
+        </ul>
+        <div>Body locations:</div>
+        <ul>
+          <li *ngFor="let loc of tables.armorLocations.body; let i = index"><a (click)="addLocation(component, loc)">{{loc}}</a></li>
+        </ul>
+        <div>Arms locations:</div>
+        <ul>
+          <li *ngFor="let loc of tables.armorLocations.arms; let i = index"><a (click)="addLocation(component, loc)">{{loc}}</a></li>
+        </ul>
+        <div>Legs locations:</div>
+        <ul>
+          <li *ngFor="let loc of tables.armorLocations.legs; let i = index"><a (click)="addLocation(component, loc)">{{loc}}</a></li>
+        </ul>
+        <div>Full Suits:</div>
+        <ul>
+          <li *ngFor="let loc of tables.armorLocations.suit; let i = index"><a (click)="addLocation(component, loc)">{{loc}}</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="row"><a (click)="removeComponent(i)">Remove Component</a></div>
+  </div>
+  <div class="row"><a (click)="addComponent()">Add Component</a></div>
+</dialog-container>
