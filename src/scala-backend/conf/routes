@@ -24,8 +24,8 @@ POST           /api/skill                          controllers.SkillController.a
 GET            /api/skill                          controllers.SkillController.create
 OPTIONS        /api/skills                         controllers.SkillController.options(p = "list", id = "")
 GET            /api/skills                         controllers.SkillController.list
-OPTIONS        /api/skills/search/                 controllers.SkillController.options(p = "elem", id = "")
-GET            /api/skills/search/                 controllers.SkillController.lookup(term)
+OPTIONS        /api/skills/search                  controllers.SkillController.options(p = "elem", id = "")
+GET            /api/skills/search                  controllers.SkillController.lookup(term)
 OPTIONS        /api/skill/:id                      controllers.SkillController.options(p = "elem", id)
 GET            /api/skill/:id                      controllers.SkillController.get(id)
 # Technique storage
@@ -34,8 +34,8 @@ POST           /api/tecn                           controllers.TechniqueControll
 GET            /api/tecn                           controllers.TechniqueController.create
 OPTIONS        /api/tecns                          controllers.TechniqueController.options(p = "list", id = "")
 GET            /api/tecns                          controllers.TechniqueController.list
-OPTIONS        /api/tecns/search/                  controllers.TechniqueController.options(p = "elem", id = "")
-GET            /api/tecns/search/                  controllers.TechniqueController.lookup(term)
+OPTIONS        /api/tecns/search                   controllers.TechniqueController.options(p = "elem", id = "")
+GET            /api/tecns/search                   controllers.TechniqueController.lookup(term)
 OPTIONS        /api/tecn/:id                       controllers.TechniqueController.options(p = "elem", id)
 GET            /api/tecn/:id                       controllers.TechniqueController.get(id)
 # Armor storage
@@ -44,8 +44,8 @@ POST           /api/armor                          controllers.ArmorController.a
 GET            /api/armor                          controllers.ArmorController.create
 OPTIONS        /api/armors                         controllers.ArmorController.options(p = "list", id = "")
 GET            /api/armors                         controllers.ArmorController.list
-OPTIONS        /api/armors/search/                 controllers.ArmorController.options(p = "elem", id = "")
-GET            /api/armors/search/                 controllers.ArmorController.lookup(term)
+OPTIONS        /api/armors/search                  controllers.ArmorController.options(p = "elem", id = "")
+GET            /api/armors/search                  controllers.ArmorController.lookup(term)
 OPTIONS        /api/armor/:id                      controllers.ArmorController.options(p = "elem", id)
 GET            /api/armor/:id                      controllers.ArmorController.get(id)
 # Weapon storage
@@ -54,8 +54,8 @@ POST           /api/weap                           controllers.WeaponController.
 GET            /api/weap                           controllers.WeaponController.create
 OPTIONS        /api/weaps                          controllers.WeaponController.options(p = "list", id = "")
 GET            /api/weaps                          controllers.WeaponController.list
-OPTIONS        /api/weaps/search/                  controllers.WeaponController.options(p = "elem", id = "")
-GET            /api/weaps/search/                  controllers.WeaponController.lookup(term)
+OPTIONS        /api/weaps/search                   controllers.WeaponController.options(p = "elem", id = "")
+GET            /api/weaps/search                   controllers.WeaponController.lookup(term)
 OPTIONS        /api/weap/:id                       controllers.WeaponController.options(p = "elem", id)
 GET            /api/weap/:id                       controllers.WeaponController.get(id)
 # Item storage
@@ -64,8 +64,8 @@ POST           /api/item                           controllers.ItemController.ad
 GET            /api/item                           controllers.ItemController.create
 OPTIONS        /api/items                          controllers.ItemController.options(p = "list", id = "")
 GET            /api/items                          controllers.ItemController.list
-OPTIONS        /api/items/search/                  controllers.ItemController.options(p = "elem", id = "")
-GET            /api/items/search/                  controllers.ItemController.lookup(term)
+OPTIONS        /api/items/search                   controllers.ItemController.options(p = "elem", id = "")
+GET            /api/items/search                   controllers.ItemController.lookup(term)
 OPTIONS        /api/item/:id                       controllers.ItemController.options(p = "elem", id)
 GET            /api/item/:id                       controllers.ItemController.get(id)
 # Charlist storage
