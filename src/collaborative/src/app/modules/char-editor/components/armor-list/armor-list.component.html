@@ -20,7 +20,7 @@
     </tr>
     <tr>
       <td colspan="8">
-        <search-block (add_new)="add()"></search-block>
+        <search-block [search_results]="search_results" (add_new)="add()" (add_from_search)="addFromSearch($event)" (search_term)="search($event)" (cancel_search)="cancelSearch()"></search-block>
       </td>
     </tr>
   </table>

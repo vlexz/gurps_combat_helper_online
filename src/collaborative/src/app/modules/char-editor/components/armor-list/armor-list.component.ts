@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { CurrentCharService } from '../../services/current-char.service';
 import { Armor } from 'interfaces/armor';
 import { ArmorService } from 'shared/services/armor.service';
+import { SearchItem } from 'interfaces/search_item';
 
 @Component({
   selector: 'armor-list',
@@ -16,6 +17,8 @@ export class ArmorListComponent implements OnInit {
 
   private currentArmor: Armor;
   private currentArmorIdx: number;
+
+  private search_results: SearchItem[];
 
   constructor(
     private current: CurrentCharService,
@@ -43,6 +46,26 @@ export class ArmorListComponent implements OnInit {
     this.currentArmor = null;
     this.currentArmorIdx = null;
     this.current.updateArmor();
+  }
+
+  search(term: string) {
+    this.armorsrv.search(term)
+    .subscribe(results => {
+      this.search_results = results;
+    });
+  }
+
+  addFromSearch(i: number) {
+    this.armorsrv.get(this.search_results[i].id)
+    .subscribe(armor => {
+      this._armors.push(armor);
+      this.search_results = null;
+      this.current.updateArmor();
+    });
+  }
+
+  cancelSearch() {
+    this.search_results = null;
   }
 
   remove(i: number) {
