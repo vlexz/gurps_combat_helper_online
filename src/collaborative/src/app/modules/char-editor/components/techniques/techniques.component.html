@@ -1,7 +1,7 @@
 
 <div class="skills">
-  <h3>Techniques </h3>
-  <table> 
+  <table class="toplevel">
+    <caption align="center" valign="top">Techniques </caption>
     <tr>
       <th>Name</th>
       <th>Skill</th>
@@ -37,7 +37,9 @@
       <td><a (click)="remove(i)">Remove</a></td>
     </tr>
     <tr>
-      <td><a (click)="add()">Add Technique</a></td>
+      <td colspan="8">
+        <search-block [search_results]="search_results" (add_new)="add()" (add_from_search)="addFromSearch($event)" (search_term)="search($event)" (cancel_search)="cancelSearch()"></search-block>
+      </td>
     </tr>
   </table>
 </div>

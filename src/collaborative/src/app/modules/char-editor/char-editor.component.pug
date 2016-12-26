@@ -1,6 +1,6 @@
 mixin statblock(caption, name, stat, readonly)
   tr
-    td: b=caption
+    td: span.caption=caption
     td
       if (!readonly)
         if(stat)
@@ -9,11 +9,11 @@ mixin statblock(caption, name, stat, readonly)
           input.cost(type='number', [(ngModel)]='current.char.' + name, (change)='current.updateCp($event)')
       else
         if stat 
-          span= '{{current.char.stats.' + name + '}}'
+          span.value= '{{current.char.stats.' + name + '}}'
         else
-          span= '{{current.char.' + name + '}}'
+          span.value= '{{current.char.' + name + '}}'
     if(stat)    
-      td= '{{current.char.stats.' + name + '.cp}}' 
+      td: span.value= '{{current.char.stats.' + name + '.cp}}' 
 
 
 
@@ -26,7 +26,8 @@ mixin mainInfo
       input(type="text", name='player', [(ngModel)]='current.char.player', (change)='mainInfoChanged($event)')
 
 mixin mainVariables
-  table.mainvars
+  table.mainvars.toplevel
+    caption(align='center', valign='top') Primary Stats
     tr
       td
         img([src]='current.portrait', (click)='uploadPortrait()')
@@ -84,11 +85,14 @@ char-editor-toolbar
 div(*ngIf='current.char')  
   div: +mainInfo
   div: +mainVariables  
-div([hidden]='!current.char')
+.content-block([hidden]='!current.char')
   nav
-    a(routerLink='advdis') Adv/Dis 
-    a(routerLink='skills') Skills 
-    a(routerLink='armor') Armor
+    .nav-item(routerLinkActive="active")
+      a(routerLink='advdis') Adv/Dis 
+    .nav-item(routerLinkActive="active")
+      a(routerLink='skills') Skills 
+    .nav-item(routerLinkActive="active")
+      a(routerLink='armor') Armor
   .container
     router-outlet
 

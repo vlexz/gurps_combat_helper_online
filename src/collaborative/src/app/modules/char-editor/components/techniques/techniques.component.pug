@@ -1,6 +1,6 @@
 .skills
-  h3 Techniques 
-  table 
+  table.toplevel
+    caption(align='center' valign='top') Techniques 
     tr
       th Name
       th Skill
@@ -24,4 +24,10 @@
       td {{tech.cp}}
       td: a((click)='remove(i)') Remove
     tr
-      td: a((click)='add()') Add Technique
+      td(colspan=8)
+        search-block(
+          [search_results]='search_results',
+          (add_new)='add()',
+          (add_from_search)='addFromSearch($event)',
+          (search_term)='search($event)',
+          (cancel_search)='cancelSearch()')

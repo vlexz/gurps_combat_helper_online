@@ -8,6 +8,6 @@
 
 app-trait-list {
   display: block;
-  flex-grow: 1;
-  max-width: 500px;
+  margin: 5px;
+  flex: 1;
 }

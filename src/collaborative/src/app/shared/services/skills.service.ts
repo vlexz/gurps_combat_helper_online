@@ -24,7 +24,7 @@ export class SkillsService {
   }
 
   search(term: string): Observable<SkillDescriptor[]> {
-    return this.http.get(this.apiEndPoint + `skills/search/?term=${term}`)
+    return this.http.get(this.apiEndPoint + `skills/search?term=${term}`)
     .map(res => res.json());
   }
 

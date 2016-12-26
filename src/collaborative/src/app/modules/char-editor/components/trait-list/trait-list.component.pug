@@ -1,6 +1,6 @@
-h3 {{category}}s
 trait-editor(*ngIf='edited_trait', (editDone)='editFinished()', (editCancel)='editCanceled()', [trait]='edited_trait')
-table
+table.toplevel
+  caption(align='center', valign='top') {{category}}s
   tr
     th Name
     th Cost

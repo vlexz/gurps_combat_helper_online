@@ -1,8 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
 
+html {
+  height: 100%;
+}
+
+body {
+  background: #7D7D7D;
+  height: 100%; 
+}
+
 a {
   cursor: pointer;
   color: blue;
+}
+
+input {
+  background: #7D7D7D;
+  color: white;
+  padding: 3px;
+  border: solid white 1px;
+  box-shadow: none;
+  border-radius: 3px;
+}
+
+table.toplevel {
+  border: solid 1px white;  
+}
+
+table caption {
+  background: #D1945C;
+  border: solid 1px white;
 }
 
 input.cost {

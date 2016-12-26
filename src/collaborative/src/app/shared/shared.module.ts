@@ -9,6 +9,7 @@ import { SkillsService } from './services/skills.service';
 import { FileDialogComponent } from './components/file-dialog/file-dialog.component';
 import { SearchBlockComponent } from './components/search-block/search-block.component';
 import { DialogContainerComponent } from './components/dialog-container/dialog-container.component';
+import { TechniqueService } from './services/technique.service';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { DialogContainerComponent } from './components/dialog-container/dialog-c
     CharacterService,
     TraitsService,
     ArmorService,
-    SkillsService
+    SkillsService,
+    TechniqueService
   ],
   declarations: [
     FileDialogComponent,

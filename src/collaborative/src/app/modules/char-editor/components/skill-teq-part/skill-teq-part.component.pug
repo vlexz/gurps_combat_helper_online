@@ -1,2 +1,3 @@
-app-skill-list(*ngIf='current.char', [skills]='current.char.skills', (change)='current.updateSkills()')
-app-techniques(*ngIf='current.char', [skills]='current.char.skills', [techniques]='current.char.techniques', (change)='current.updateTechniques()')
+.container
+  app-skill-list(*ngIf='current.char', [skills]='current.char.skills', (change)='current.updateSkills()')
+  app-techniques(*ngIf='current.char', [skills]='current.char.skills', [techniques]='current.char.techniques', (change)='current.updateTechniques()')

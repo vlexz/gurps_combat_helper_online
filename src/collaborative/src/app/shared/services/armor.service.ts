@@ -20,7 +20,7 @@ export class ArmorService {
   }
 
   search(term: string): Observable<SearchItem[]> {
-    return this.http.get(this.apiEndPoint + `armors/search/?term=${term}`)
+    return this.http.get(this.apiEndPoint + `armors/search?term=${term}`)
     .map(res => res.json());
   }
 
