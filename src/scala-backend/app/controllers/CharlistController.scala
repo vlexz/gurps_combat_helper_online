@@ -32,8 +32,8 @@ class CharlistController @Inject()(charlistDao: CharlistDao, configuration: Conf
 
   def options(p: String, id: String): Action[AnyContent] = Action { implicit request =>
     val methods = p match {
-      case "base" => "GET, POST"
-      case "list" => "GET"
+      case "base" => "GET"
+      case "list" => "GET, POST"
       case "elem" => "GET, PUT, PATCH, DELETE"
       case "file" => "GET, PUT"
     }
@@ -62,16 +62,7 @@ class CharlistController @Inject()(charlistDao: CharlistDao, configuration: Conf
     charlistDao find id map { charlist: JsValue => Ok(charlist) } recoverWith throwMsg
   }
 
-  def create(p: String): Action[AnyContent] = Action.async {
-    Future(Created(p match {
-      case "" => Json toJson Charlist()
-      case "skill" => Json toJson Skill()
-      case "teq" => Json toJson Technique()
-      case "weap" => Json toJson Weapon()
-      case "armor" => Json toJson Armor()
-      case "item" => Json toJson Item()
-    }))
-  }
+  def create(p: String): Action[AnyContent] = Action async Future(Created(Json toJson Charlist()))
 
   def update(id: String, replace: Boolean): Action[JsValue] = Action.async(parse.json) { implicit request =>
     def save(ch: JsValue): Future[Result] = ch.validate[Charlist] match {
@@ -98,7 +89,7 @@ class CharlistController @Inject()(charlistDao: CharlistDao, configuration: Conf
           if (pf.exists) pf delete()
           Image fromFile p.ref.file cover(120, 150) output pf
         } match {
-          case s: Some[File] => Accepted("Pic uploaded.")
+          case _: Some[File] => Accepted("Pic uploaded.")
           case None => BadRequest("Missing file.")
         } else NotFound("Charlist doesn't exist.")
       } recoverWith throwMsg

@@ -1,5 +1,5 @@
 import play.api.libs.json.Writes
-// TODO: refactor parsers into single file
+
 /**
   * Created by crimson on 12/8/16.
   */

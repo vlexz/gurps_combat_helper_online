@@ -1,84 +1,77 @@
 # Routes
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
-
-# Home page
-#GET           /                    controllers.Application.index
-
-# Map static resources from the /public folder to the /assets URL path
-#GET           /assets/*file        controllers.Assets.at(path="/public", file)
-
 # Traits storage
-OPTIONS        /api/trait                          controllers.TraitController.options(p = "base", id = "")
-POST           /api/trait                          controllers.TraitController.add()
-GET            /api/trait                          controllers.TraitController.create
-OPTIONS        /api/traits                         controllers.TraitController.options(p = "list", id = "")
-GET            /api/traits                         controllers.TraitController.list
-OPTIONS        /api/traits/search/:category        controllers.TraitController.options(p = "elem", category)
-GET            /api/traits/search/:category        controllers.TraitController.lookup(category, term)
-OPTIONS        /api/trait/:id                      controllers.TraitController.options(p = "elem", id)
-GET            /api/trait/:id                      controllers.TraitController.get(id)
+OPTIONS        /api/traits                controllers.CharlistFeatureController.options(p = "list", id = "")
+GET            /api/traits                controllers.CharlistFeatureController.lookup(col = "traits", category ?= "", term = "")
+POST           /api/traits                controllers.CharlistFeatureController.add(col = "traits")
+OPTIONS        /api/traits/default        controllers.CharlistFeatureController.options(p = "base", id = "")
+GET            /api/traits/default        controllers.CharlistFeatureController.create(col = "traits")
+OPTIONS        /api/traits/search         controllers.CharlistFeatureController.options(p = "elem", id = "")
+GET            /api/traits/search         controllers.CharlistFeatureController.lookup(col = "traits", category ?= "", term)
+OPTIONS        /api/traits/:id            controllers.CharlistFeatureController.options(p = "elem", id)
+GET            /api/traits/:id            controllers.CharlistFeatureController.get(col = "traits", id)
 # Skills storage
-OPTIONS        /api/skill                          controllers.SkillController.options(p = "base", id = "")
-POST           /api/skill                          controllers.SkillController.add()
-GET            /api/skill                          controllers.SkillController.create
-OPTIONS        /api/skills                         controllers.SkillController.options(p = "list", id = "")
-GET            /api/skills                         controllers.SkillController.list
-OPTIONS        /api/skills/search                  controllers.SkillController.options(p = "elem", id = "")
-GET            /api/skills/search                  controllers.SkillController.lookup(term)
-OPTIONS        /api/skill/:id                      controllers.SkillController.options(p = "elem", id)
-GET            /api/skill/:id                      controllers.SkillController.get(id)
+OPTIONS        /api/skills                controllers.CharlistFeatureController.options(p = "list", id = "")
+GET            /api/skills                controllers.CharlistFeatureController.lookup(col = "skills", category = "", term = "")
+POST           /api/skills                controllers.CharlistFeatureController.add(col = "skills")
+OPTIONS        /api/skills/default        controllers.CharlistFeatureController.options(p = "base", id = "")
+GET            /api/skills/default        controllers.CharlistFeatureController.create(col = "skills")
+OPTIONS        /api/skills/search         controllers.CharlistFeatureController.options(p = "elem", id = "")
+GET            /api/skills/search         controllers.CharlistFeatureController.lookup(col = "skills", category = "", term)
+OPTIONS        /api/skills/:id            controllers.CharlistFeatureController.options(p = "elem", id)
+GET            /api/skills/:id            controllers.CharlistFeatureController.get(col = "skills", id)
 # Technique storage
-OPTIONS        /api/tecn                           controllers.TechniqueController.options(p = "base", id = "")
-POST           /api/tecn                           controllers.TechniqueController.add()
-GET            /api/tecn                           controllers.TechniqueController.create
-OPTIONS        /api/tecns                          controllers.TechniqueController.options(p = "list", id = "")
-GET            /api/tecns                          controllers.TechniqueController.list
-OPTIONS        /api/tecns/search                   controllers.TechniqueController.options(p = "elem", id = "")
-GET            /api/tecns/search                   controllers.TechniqueController.lookup(term)
-OPTIONS        /api/tecn/:id                       controllers.TechniqueController.options(p = "elem", id)
-GET            /api/tecn/:id                       controllers.TechniqueController.get(id)
+OPTIONS        /api/tecns                 controllers.CharlistFeatureController.options(p = "list", id = "")
+GET            /api/tecns                 controllers.CharlistFeatureController.lookup(col = "techniques", category = "", term = "")
+POST           /api/tecns                 controllers.CharlistFeatureController.add(col = "techniques")
+OPTIONS        /api/tecns/default         controllers.CharlistFeatureController.options(p = "base", id = "")
+GET            /api/tecns/default         controllers.CharlistFeatureController.create(col = "techniques")
+OPTIONS        /api/tecns/search          controllers.CharlistFeatureController.options(p = "elem", id = "")
+GET            /api/tecns/search          controllers.CharlistFeatureController.lookup(col = "techniques", category = "", term)
+OPTIONS        /api/tecns/:id             controllers.CharlistFeatureController.options(p = "elem", id)
+GET            /api/tecns/:id             controllers.CharlistFeatureController.get(col = "techniques", id)
 # Armor storage
-OPTIONS        /api/armor                          controllers.ArmorController.options(p = "base", id = "")
-POST           /api/armor                          controllers.ArmorController.add()
-GET            /api/armor                          controllers.ArmorController.create
-OPTIONS        /api/armors                         controllers.ArmorController.options(p = "list", id = "")
-GET            /api/armors                         controllers.ArmorController.list
-OPTIONS        /api/armors/search                  controllers.ArmorController.options(p = "elem", id = "")
-GET            /api/armors/search                  controllers.ArmorController.lookup(term)
-OPTIONS        /api/armor/:id                      controllers.ArmorController.options(p = "elem", id)
-GET            /api/armor/:id                      controllers.ArmorController.get(id)
+OPTIONS        /api/armors                controllers.CharlistFeatureController.options(p = "list", id = "")
+GET            /api/armors                controllers.CharlistFeatureController.lookup(col = "armors", category = "", term = "")
+POST           /api/armors                controllers.CharlistFeatureController.add(col = "armors")
+OPTIONS        /api/armors/default        controllers.CharlistFeatureController.options(p = "base", id = "")
+GET            /api/armors/default        controllers.CharlistFeatureController.create(col = "armors")
+OPTIONS        /api/armors/search         controllers.CharlistFeatureController.options(p = "elem", id = "")
+GET            /api/armors/search         controllers.CharlistFeatureController.lookup(col = "armors", category = "", term)
+OPTIONS        /api/armors/:id            controllers.CharlistFeatureController.options(p = "elem", id)
+GET            /api/armors/:id            controllers.CharlistFeatureController.get(col = "armors", id)
 # Weapon storage
-OPTIONS        /api/weap                           controllers.WeaponController.options(p = "base", id = "")
-POST           /api/weap                           controllers.WeaponController.add()
-GET            /api/weap                           controllers.WeaponController.create
-OPTIONS        /api/weaps                          controllers.WeaponController.options(p = "list", id = "")
-GET            /api/weaps                          controllers.WeaponController.list
-OPTIONS        /api/weaps/search                   controllers.WeaponController.options(p = "elem", id = "")
-GET            /api/weaps/search                   controllers.WeaponController.lookup(term)
-OPTIONS        /api/weap/:id                       controllers.WeaponController.options(p = "elem", id)
-GET            /api/weap/:id                       controllers.WeaponController.get(id)
+OPTIONS        /api/weaps                 controllers.CharlistFeatureController.options(p = "list", id = "")
+GET            /api/weaps                 controllers.CharlistFeatureController.lookup(col = "weapons", category = "", term = "")
+POST           /api/weaps                 controllers.CharlistFeatureController.add(col = "weapons")
+OPTIONS        /api/weaps/default         controllers.CharlistFeatureController.options(p = "base", id = "")
+GET            /api/weaps/default         controllers.CharlistFeatureController.create(col = "weapons")
+OPTIONS        /api/weaps/search          controllers.CharlistFeatureController.options(p = "elem", id = "")
+GET            /api/weaps/search          controllers.CharlistFeatureController.lookup(col = "weapons", category = "", term)
+OPTIONS        /api/weaps/:id             controllers.CharlistFeatureController.options(p = "elem", id)
+GET            /api/weaps/:id             controllers.CharlistFeatureController.get(col = "weapons", id)
 # Item storage
-OPTIONS        /api/item                           controllers.ItemController.options(p = "base", id = "")
-POST           /api/item                           controllers.ItemController.add()
-GET            /api/item                           controllers.ItemController.create
-OPTIONS        /api/items                          controllers.ItemController.options(p = "list", id = "")
-GET            /api/items                          controllers.ItemController.list
-OPTIONS        /api/items/search                   controllers.ItemController.options(p = "elem", id = "")
-GET            /api/items/search                   controllers.ItemController.lookup(term)
-OPTIONS        /api/item/:id                       controllers.ItemController.options(p = "elem", id)
-GET            /api/item/:id                       controllers.ItemController.get(id)
+OPTIONS        /api/items                 controllers.CharlistFeatureController.options(p = "list", id = "")
+GET            /api/items                 controllers.CharlistFeatureController.lookup(col = "items", category = "", term = "")
+POST           /api/items                 controllers.CharlistFeatureController.add(col = "items")
+OPTIONS        /api/items/default         controllers.CharlistFeatureController.options(p = "base", id = "")
+GET            /api/items/default         controllers.CharlistFeatureController.create(col = "items")
+OPTIONS        /api/items/search          controllers.CharlistFeatureController.options(p = "elem", id = "")
+GET            /api/items/search          controllers.CharlistFeatureController.lookup(col = "items", category = "", term)
+OPTIONS        /api/items/:id             controllers.CharlistFeatureController.options(p = "elem", id)
+GET            /api/items/:id             controllers.CharlistFeatureController.get(col = "items", id)
 # Charlist storage
-OPTIONS        /api/char                           controllers.CharlistController.options(p = "base", id = "")
-POST           /api/char                           controllers.CharlistController.add()
-GET            /api/char                           controllers.CharlistController.create(p = "")
-OPTIONS        /api/chars                          controllers.CharlistController.options(p = "list", id = "")
-GET            /api/chars                          controllers.CharlistController.list
-OPTIONS        /api/char/:id                       controllers.CharlistController.options(p = "elem", id)
-GET            /api/char/:id                       controllers.CharlistController.get(id)
-PUT            /api/char/:id                       controllers.CharlistController.update(id, replace: Boolean = true)
-PATCH          /api/char/:id                       controllers.CharlistController.update(id, replace: Boolean = false)
-DELETE         /api/char/:id                       controllers.CharlistController.delete(id)
-OPTIONS        /api/char/:id/pic                   controllers.CharlistController.options(p = "file", id)
-GET            /api/char/:id/pic                   controllers.CharlistController.getPic(id)
-PUT            /api/char/:id/pic                   controllers.CharlistController.storePic(id)
+OPTIONS        /api/chars                 controllers.CharlistController.options(p = "list", id = "")
+GET            /api/chars                 controllers.CharlistController.list
+POST           /api/chars                 controllers.CharlistController.add()
+OPTIONS        /api/chars/default         controllers.CharlistController.options(p = "base", id = "")
+GET            /api/chars/default         controllers.CharlistController.create(p = "")
+OPTIONS        /api/chars/:id             controllers.CharlistController.options(p = "elem", id)
+GET            /api/chars/:id             controllers.CharlistController.get(id)
+PUT            /api/chars/:id             controllers.CharlistController.update(id, replace: Boolean = true)
+PATCH          /api/chars/:id             controllers.CharlistController.update(id, replace: Boolean = false)
+DELETE         /api/chars/:id             controllers.CharlistController.delete(id)
+OPTIONS        /api/chars/:id/pic         controllers.CharlistController.options(p = "file", id)
+GET            /api/chars/:id/pic         controllers.CharlistController.getPic(id)
+PUT            /api/chars/:id/pic         controllers.CharlistController.storePic(id)
