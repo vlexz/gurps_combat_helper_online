@@ -10,27 +10,28 @@ import scala.concurrent.duration._
   * Created by crimson on 11/15/16.
   */
 object Preloader extends App {
-  private def parse[A](p: Parser[A]): Seq[Document] = p.seq map { x => Document(Json.toJson(x)(p.tjs).toString) }
-
-  private def load(client: MongoClient, collection: String, items: Seq[Document]) = {
+  private def load[A](client: MongoClient, collection: String, parser: Parser[A]) = {
     println(s"""Clearing db "$db" collection "$collection"...""")
     Await ready(client getDatabase db getCollection collection drop() toFuture(), 10.seconds) onSuccess {
       case Seq(_) => println("Cleared.")
     }
     println(s"Loading basic $collection...")
-    Await ready(client getDatabase db getCollection collection insertMany items toFuture(), 30.seconds) onSuccess {
+    val seq = parser.seq map { x => Document(Json.toJson(x)(parser.tjs).toString) }
+    Await ready(client getDatabase db getCollection collection insertMany seq toFuture(), 30.seconds) onSuccess {
       case Seq(_) => println(s"""Basic $collection loaded to mongo db "$db" collection "$collection".""")
     }
   }
 
+  import daos.MongoCollections._
+
   println("Opening connection...")
   private val db = "gurps"
   private val client = MongoClient()
-  load(client, "traits", parse[FlaggedTrait](new TraitsParser("/adv.xml")))
-  load(client, "skills", parse[FlaggedSkill](new SkillsParser("/skl.xml")))
-  load(client, "techniques", parse[FlaggedTechnique](new TechniquesParser("/skl.xml")))
-  load(client, "armor", parse[Armor](new ArmorParser("/eqp.xml")))
-  load(client, "weapons", parse[Weapon](new WeaponsParser("/eqp.xml")))
-  load(client, "items", parse[Item](new ItemsParser("/eqp.xml")))
+  load[FlaggedTrait](client, TRAITS, new TraitsParser("/adv.xml"))
+  load[FlaggedSkill](client, SKILLS, new SkillsParser("/skl.xml"))
+  load[FlaggedTechnique](client, TECHNIQUES, new TechniquesParser("/skl.xml"))
+  load[FlaggedArmor](client, ARMORS, new ArmorParser("/eqp.xml"))
+  load[FlaggedWeapon](client, WEAPONS, new WeaponsParser("/eqp.xml"))
+  load[FlaggedItem](client, ITEMS, new ItemsParser("/eqp.xml"))
   client close()
 }

@@ -1,5 +1,5 @@
 import models.charlist._
-import play.api.libs.json._
+import play.api.libs.json.Writes
 
 import scala.collection.breakOut
 import scala.collection.immutable.Seq
@@ -47,7 +47,7 @@ class TraitsParser(filePath: String) extends Parser[FlaggedTrait] {
   println("Parsing traits...")
   val seq: Seq[FlaggedTrait] =
     for (adv <- (XML load (getClass getResourceAsStream filePath)) \ "advantage") yield FlaggedTrait(
-      Trait(
+      data = Trait(
         name = (adv \ "name").text,
         types = (adv \ "type").text split ", " flatMap (_ split "/"),
         category = adv \ "categories" \ "category" map (_.text) match {
@@ -127,7 +127,7 @@ class TraitsParser(filePath: String) extends Parser[FlaggedTrait] {
               cost = this parseDouble (mod \ "cost").text,
               reactBonuses = rctBns)
           }) (breakOut)),
-      (adv \ "cr").isEmpty && (adv \ "modifier").isEmpty && !adv.toString.contains('@'))
+      ready = (adv \ "cr").isEmpty && (adv \ "modifier").isEmpty && !adv.toString.contains('@'))
 
   override val tjs: Writes[FlaggedTrait] = Charlist.flaggedTraitFormat
 }

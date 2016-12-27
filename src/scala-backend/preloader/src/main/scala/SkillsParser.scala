@@ -10,7 +10,7 @@ class SkillsParser(filePath: String) extends Parser[FlaggedSkill] {
   println("Parsing skills...")
   val seq: Seq[FlaggedSkill] = for (skl <- (XML load (getClass getResourceAsStream filePath)) \ "skill") yield
     FlaggedSkill(
-      Skill(
+      data = Skill(
         name = (skl \ "name").text,
         spc = (skl \ "specialization").text,
         tl = (skl \ "tech_level").size, // TODO: absent field if to edit?
@@ -34,8 +34,7 @@ class SkillsParser(filePath: String) extends Parser[FlaggedSkill] {
         encumbr = (this parseInt (skl \ "encumbrance_penalty_multiplier").text) > 0,
         categories = (skl \ "categories" \ "category") map (_.text),
         notes = (skl \ "notes").text),
-      !(skl toString() contains '@'))
-  // TODO: missing prerequisites and defaults parsers
+      ready = !(skl toString() contains '@')) // TODO: missing prerequisites and defaults parsers
 
   override val tjs: Writes[FlaggedSkill] = Charlist.flaggedSkillFormat
 }

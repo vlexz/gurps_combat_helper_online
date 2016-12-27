@@ -176,7 +176,7 @@ case class Charlist(// TODO: maybe make recalc functions in compliance with func
 /**
   * Charlist sub namespace for json header field name strings.
   **/
-package object CharlistFields {
+object CharlistFields {
   val ID = "_id"
   val TIMESTAMP = "timestamp"
   val PLAYER = "player"
@@ -326,6 +326,8 @@ case class DmgBns(perDie: Int = 0, plain: Int = 0) {
   def +(that: DmgBns) = DmgBns(this.perDie + that.perDie, this.plain + that.plain)
 }
 
+sealed trait Flagged
+
 /**
   * Parent uniting all case classes carrying a bonus to melee damage
   **/
@@ -410,7 +412,7 @@ case class Trait(
   } else Nil
 }
 
-case class FlaggedTrait(traitt: Trait, ready: Boolean)
+case class FlaggedTrait(ready: Boolean, data: Trait) extends Flagged
 
 case class TraitModifier(
                           override var on: Boolean = true,
@@ -476,7 +478,7 @@ case class Skill(
   def calculateLvl(attrVal: Int, enc: Int): Unit = lvl = attrVal + relLvl - (if (encumbr) enc else 0) + bonus
 }
 
-case class FlaggedSkill(skill: Skill, ready: Boolean)
+case class FlaggedSkill(ready: Boolean, data: Skill) extends Flagged
 
 case class Technique(
                       name: String = "",
@@ -500,7 +502,7 @@ case class Technique(
   def calculateLvl(skill: Int): Unit = lvl = skill + relLvl
 }
 
-case class FlaggedTechnique(technique: Technique, ready: Boolean)
+case class FlaggedTechnique(ready: Boolean, data: Technique) extends Flagged
 
 case class BonusAttribute(var attr: String = BonusToAttribute.ST, perLvl: Boolean = false, bonus: Double = 0) {
   if (BonusToAttribute canBe attr) () else attr = BonusToAttribute.ST
@@ -567,7 +569,7 @@ case class BonusReaction(
     this copy(bonus = math.max(math.min(this.bonus + that.bonus, 4), -4), notes = noteSum(that.notes))
 }
 
-package object TraitSwitch {
+object TraitSwitch {
   val ALWAYSON = "Always on"
   val SWITCHABLE = "Switchable"
   val CONTROL = "Roll"
@@ -575,7 +577,7 @@ package object TraitSwitch {
   val canBe = Set(ALWAYSON, SWITCHABLE, CONTROL, ATTACK)
 }
 
-package object TraitType {
+object TraitType {
   val MENTAL = "Mental"
   val PHYSICAL = "Physical"
   val SOCIAL = "Social"
@@ -585,7 +587,7 @@ package object TraitType {
   val canBe = Set(MENTAL, PHYSICAL, SOCIAL, MUNDANE, EXOTIC, SUPER)
 }
 
-package object TraitCategory {
+object TraitCategory {
   val RACE = "Race"
   val ADVANTAGE = "Advantage"
   val DISADVANTAGE = "Disadvantage"
@@ -595,21 +597,21 @@ package object TraitCategory {
   val canBe = Set(RACE, ADVANTAGE, DISADVANTAGE, PERK, QUIRK, LANGUAGE)
 }
 
-package object TraitModifierCategory {
+object TraitModifierCategory {
   val DEFAULT = "base"
   val MODIFIER = "modifier"
   val VARIANT = "variant"
   val canBe = Set(DEFAULT, MODIFIER, VARIANT)
 }
 
-package object TraitModifierAffects {
+object TraitModifierAffects {
   val TOTAL = "total"
   val BASE = "base"
   val LEVELS = "levels only"
   val canBe = Set(TOTAL, BASE, LEVELS)
 }
 
-package object TraitModifierCostType {
+object TraitModifierCostType {
   val PERCENT = "percentage"
   val LEVEL = "percentage per level"
   val POINTS = "points"
@@ -617,7 +619,7 @@ package object TraitModifierCostType {
   val canBe = Set(PERCENT, LEVEL, POINTS, MULTIPLIER)
 }
 
-package object SkillDifficulty {
+object SkillDifficulty {
   val EASY = "E"
   val AVERAGE = "A"
   val HARD = "H"
@@ -629,7 +631,7 @@ package object SkillDifficulty {
   val techniqueCanBe = Set(AVERAGE, HARD)
 }
 
-package object SkillBaseAttribute {
+object SkillBaseAttribute {
   val ST = "ST"
   val IQ = "IQ"
   val DX = "DX"
@@ -639,7 +641,7 @@ package object SkillBaseAttribute {
   val canBe = Set(ST, IQ, DX, HT, WILL, PER)
 }
 
-package object BonusToAttribute {
+object BonusToAttribute {
   val ST = "st"
   val DX = "dx"
   val IQ = "iq"
@@ -665,7 +667,7 @@ package object BonusToAttribute {
     BASIC_MOVE, HP, FP, SM, LIFT, STRIKE)
 }
 
-package object NameCompare {
+object NameCompare {
   val ANY = "is anything"
   val IS = "is"
   val BEGINS = "starts with"
@@ -687,7 +689,7 @@ package object NameCompare {
     })
 }
 
-package object ReactionFrequency {
+object ReactionFrequency {
   val ALLWAYS = 16
   val OFTEN = 13
   val SOMETIMES = 10
@@ -732,7 +734,7 @@ sealed trait Possession {
 case class Weapon(
                    name: String = "",
                    var state: String = ItemState.STASH,
-                   innate: Boolean = false, // TODO: move to traits
+                   innate: Boolean = false, // TODO: move to traits?
                    attacksMelee: Seq[MeleeAttack] = Nil,
                    attacksRanged: Seq[RangedAttack] = Nil,
                    blocks: Seq[BlockDefence] = Nil,
@@ -764,6 +766,8 @@ case class Weapon(
   totalWt = wt + attacksRanged.map(_.shots.totalWt).sum
   totalCost = cost + attacksRanged.map(_.shots.totalCost).sum
 }
+
+case class FlaggedWeapon(ready: Boolean, data: Weapon) extends Flagged
 
 case class MeleeAttack(
                         name: String = "",
@@ -822,7 +826,7 @@ case class MeleeDamage(
   }
 }
 
-package object AttackType {
+object AttackType {
   val THRUSTING = "thr"
   val SWINGING = "sw"
   val WEAPON = ""
@@ -880,11 +884,11 @@ case class RangedDamage(
   }
 }
 
-package object ArmorDivisor {
+object ArmorDivisor {
   val canBe = Set(0.1, 0.2, 0.5, 1, 2, 3, 5, 10, 100)
 }
 
-package object DamageType {
+object DamageType {
   val CRUSHING = "cr"
   val CRUSHING_EXPLOSION = "cr ex"
   val CUTTING = "cut"
@@ -974,6 +978,8 @@ case class Armor(
   override def totalWt: Double = wt
 }
 
+case class FlaggedArmor(ready: Boolean, data: Armor) extends Flagged
+
 case class ArmorComponent(
                            var protection: DrSet = DrSet(),
                            var front: Boolean = true,
@@ -985,7 +991,7 @@ case class ArmorComponent(
   locations = locations.distinct filter HitLocation.canBe
 }
 
-package object DrType {
+object DrType {
   val HARD = "hard"
   val SOFT = "soft"
   val FIELD = "force field"
@@ -993,7 +999,7 @@ package object DrType {
   val canBe = Set(HARD, SOFT, FIELD, SKIN)
 }
 
-package object HitLocation {
+object HitLocation {
   val EYES = "eyes"
   val SKULL = "skull"
   val FACE = "face"
@@ -1065,7 +1071,9 @@ case class Item(
   totalCost = cost * n
 }
 
-package object ItemState {
+case class FlaggedItem(ready: Boolean, data: Item) extends Flagged
+
+object ItemState {
   val READY = "Ready"
   val EQUIPPED = "Equipped"
   val COMBAT = "Combat"
@@ -1153,7 +1161,7 @@ case class Afflictions(
                         coma: Boolean = false,
                         heartAttack: Boolean = false)
 
-package object Posture {
+object Posture {
   val STANDING = "Standing"
   val CROUCHING = "Crouching"
   val SITTING = "Sitting"
@@ -1170,9 +1178,11 @@ object Charlist {
   implicit val conditionsFormat: OFormat[Conditions] = Json.format[Conditions]
   implicit val woundFormat: OFormat[Wound] = Json.format[Wound]
   implicit val itemFormat: OFormat[Item] = Json.format[Item]
+  implicit val flaggedItemFormat: OFormat[FlaggedItem] = Json.format[FlaggedItem]
   implicit val drSetFormat: OFormat[DrSet] = Json.format[DrSet]
   implicit val armorComponentFormat: OFormat[ArmorComponent] = Json.format[ArmorComponent]
   implicit val armorElementFormat: OFormat[Armor] = Json.format[Armor]
+  implicit val flaggedArmorFormat: OFormat[FlaggedArmor] = Json.format[FlaggedArmor]
   implicit val blockDefenceFormat: OFormat[BlockDefence] = Json.format[BlockDefence]
   implicit val rangedShotsFormat: OFormat[RangedShots] = Json.format[RangedShots]
   implicit val rangedRoFFormat: OFormat[RangedRoF] = Json.format[RangedRoF]
@@ -1181,6 +1191,7 @@ object Charlist {
   implicit val meleeDamageFormat: OFormat[MeleeDamage] = Json.format[MeleeDamage]
   implicit val meleeAttackFormat: OFormat[MeleeAttack] = Json.format[MeleeAttack]
   implicit val weaponFormat: OFormat[Weapon] = Json.format[Weapon]
+  implicit val flaggedWeaponFormat: OFormat[FlaggedWeapon] = Json.format[FlaggedWeapon]
   implicit val hitLocationFormat: OFormat[HitLocationDR] = Json.format[HitLocationDR]
   implicit val damageResistanceTotalFormat: OFormat[DamageResistance] = Json.format[DamageResistance]
   implicit val equipmentFormat: OFormat[Equipment] = Json.format[Equipment]
