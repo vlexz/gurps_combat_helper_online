@@ -1,4 +1,5 @@
-#!/bin/bash -x
+#!/bin/bash
+echo $PATH
 activator clean
 activator stage
 activator preloader/clean

@@ -4,7 +4,7 @@ import { TechniqueService } from 'shared/services/technique.service';
 import { Technique } from 'interfaces/technique';
 import { Skill } from 'interfaces/skill';
 import { ConstantTables } from 'interfaces/tables';
-import { SearchItem } from 'interfaces/search_item';
+import { LibraryItem } from 'interfaces/search';
 
 @Component({
   selector: 'app-techniques',
@@ -17,10 +17,7 @@ export class TechniquesComponent implements OnInit {
   @Input() skills: Skill[];
   @Output() change: EventEmitter<Object> = new EventEmitter();
 
-  private defaultTech: Technique;
   tables: ConstantTables = new ConstantTables;
-
-  search_results: SearchItem[];
 
   constructor(
     private chars: CharacterService,
@@ -31,8 +28,8 @@ export class TechniquesComponent implements OnInit {
     return this.skills.map(skill => skill.name);
   }
 
-  add() {
-    this.techniques.push(this.defaultTech.clone());
+  add(data: LibraryItem) {
+    this.techniques.push(Technique.fromJson(data.data));
     this.change.emit({});
   }
 
@@ -41,31 +38,11 @@ export class TechniquesComponent implements OnInit {
     this.change.emit({});
   }
 
-  search(term) {
-    this.techsrv.search(term)
-    .subscribe(res => this.search_results = res);
-  }
-
-  addFromSearch(i: number) {
-    this.techsrv.get(this.search_results[i].id)
-    .subscribe(tech => {
-      this.techniques.push(tech.technique);
-      this.cancelSearch();
-      this.change.emit({});
-    });
-  }
-
-  cancelSearch() {
-    this.search_results = null;
-  }
-
   techChanged() {
     this.change.emit({});
   }
 
   ngOnInit() {
-    this.techsrv.default
-    .subscribe(tech => this.defaultTech = tech);
   }
 
 }

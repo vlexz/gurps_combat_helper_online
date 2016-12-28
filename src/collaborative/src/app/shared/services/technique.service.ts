@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import { Technique, LibraryTechnique } from 'interfaces/technique';
-import { SearchItem } from 'interfaces/search_item';
+import { Technique } from 'interfaces/technique';
 import { Observable } from 'rxjs/Observable';
 import { environment } from '../../../environments/environment';
+import { SearchApi } from 'interfaces/searchapi';
+import { SearchItem, LibraryItem } from 'interfaces/search';
 
 @Injectable()
-export class TechniqueService {
+export class TechniqueService implements SearchApi {
 
   apiEndPoint: string = environment.apiEndpoint;
 
@@ -14,8 +15,8 @@ export class TechniqueService {
     private http: Http
   ) { }
 
-  get default(): Observable<Technique> {
-    return this.http.get(this.apiEndPoint + 'tecn')
+  default(): Observable<Technique> {
+    return this.http.get(this.apiEndPoint + 'tecns/default')
     .map(res => Technique.fromJson(res.json()));
   }
 
@@ -24,9 +25,9 @@ export class TechniqueService {
     .map(res => res.json());
   }
 
-  get(id: string): Observable<LibraryTechnique> {
-    return this.http.get(this.apiEndPoint + `tecn/${id}`)
-    .map(res => LibraryTechnique.fromJson(res.json()));
+  getOne(id: string): Observable<LibraryItem> {
+    return this.http.get(this.apiEndPoint + `tecns/${id}`)
+    .map(res => res.json());
   }
 
 }

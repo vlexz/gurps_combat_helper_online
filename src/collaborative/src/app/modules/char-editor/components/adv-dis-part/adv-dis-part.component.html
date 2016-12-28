@@ -1,9 +1,5 @@
 
 <div class="container">
-  <app-trait-list *ngIf="current.char" [traits]="current.char.traits" [category]="'Advantage'" (traitChange)="traitChanged()"></app-trait-list>
-  <app-trait-list *ngIf="current.char" [traits]="current.char.traits" [category]="'Disadvantage'" (traitChange)="traitChanged()"></app-trait-list>
-</div>
-<div class="container">
-  <app-trait-list *ngIf="current.char" [traits]="current.char.traits" [category]="'Perk'" (traitChange)="traitChanged()"></app-trait-list>
-  <app-trait-list *ngIf="current.char" [traits]="current.char.traits" [category]="'Quirk'" (traitChange)="traitChanged()"></app-trait-list>
+  <app-trait-list *ngIf="current.char" [traits]="current.char.traits" [category]="'Advantage,Perk'" (traitChange)="traitChanged()"></app-trait-list>
+  <app-trait-list *ngIf="current.char" [traits]="current.char.traits" [category]="'Disadvantage,Quirk'" (traitChange)="traitChanged()"></app-trait-list>
 </div>

@@ -24,7 +24,7 @@ export class CurrentCharService {
 
   get portrait() {
     if (this.current._id) {
-      return this.chars.apiEndPoint + 'char/' + this.current._id + '/pic?' + this.timestamp;
+      return this.chars.apiEndPoint + 'chars/' + this.current._id + '/pic?' + this.timestamp;
     } else {
       return '/assets/default_portrait.png';
     }

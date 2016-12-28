@@ -1,7 +1,7 @@
 
 <trait-editor *ngIf="edited_trait" (editDone)="editFinished()" (editCancel)="editCanceled()" [trait]="edited_trait"></trait-editor>
 <table class="toplevel">
-  <caption align="center" valign="top">{{category}}s</caption>
+  <caption align="center" valign="top">{{category}}</caption>
   <tr>
     <th>Name</th>
     <th>Cost</th>
@@ -19,7 +19,7 @@
   </tr>
   <tr>
     <td colspan="4">
-      <search-block [search_results]="search_results" (add_new)="addTrait()" (add_from_search)="addFromSearch($event)" (search_term)="searchTrait($event)" (cancel_search)="cancelSearch()"></search-block>
+      <search-block [api]="searchAdapter" (newitem)="addTrait($event)"></search-block>
     </td>
   </tr>
 </table>

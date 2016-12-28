@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { CurrentCharService } from '../../services/current-char.service';
 import { Armor } from 'interfaces/armor';
 import { ArmorService } from 'shared/services/armor.service';
-import { SearchItem } from 'interfaces/search_item';
+import { LibraryItem } from 'interfaces/search';
 
 @Component({
   selector: 'armor-list',
@@ -11,14 +11,10 @@ import { SearchItem } from 'interfaces/search_item';
 })
 export class ArmorListComponent implements OnInit {
 
-  private defaultArmor: Armor;
-
   private _armors: Armor[];
 
   private currentArmor: Armor;
   private currentArmorIdx: number;
-
-  private search_results: SearchItem[];
 
   constructor(
     private current: CurrentCharService,
@@ -32,8 +28,12 @@ export class ArmorListComponent implements OnInit {
     }
   }
 
-  add() {
-    this._armors.push(this.defaultArmor.clone());
+  add(data: LibraryItem) {
+    this._armors.push(Armor.fromJson(data.data));
+    if (!data.ready) {
+      this.currentArmorIdx = this._armors.length - 1;
+      this.currentArmor = this._armors[this.currentArmorIdx];
+    }
     this.current.updateArmor();
   }
 
@@ -48,34 +48,12 @@ export class ArmorListComponent implements OnInit {
     this.current.updateArmor();
   }
 
-  search(term: string) {
-    this.armorsrv.search(term)
-    .subscribe(results => {
-      this.search_results = results;
-    });
-  }
-
-  addFromSearch(i: number) {
-    this.armorsrv.get(this.search_results[i].id)
-    .subscribe(armor => {
-      this._armors.push(armor);
-      this.search_results = null;
-      this.current.updateArmor();
-    });
-  }
-
-  cancelSearch() {
-    this.search_results = null;
-  }
-
   remove(i: number) {
     this._armors.splice(i, 1);
     this.current.updateArmor();
   }
 
   ngOnInit() {
-    this.armorsrv.defaultArmor()
-    .subscribe(armor => this.defaultArmor = armor);
   }
 
 }

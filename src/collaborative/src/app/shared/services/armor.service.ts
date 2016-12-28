@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Http } from '@angular/http';
 import { environment } from '../../../environments/environment';
-import { Armor } from 'interfaces/armor';
-import { SearchItem } from 'interfaces/search_item';
+import { SearchItem, LibraryItem } from 'interfaces/search';
+import { SearchApi } from 'interfaces/searchapi';
 
 @Injectable()
-export class ArmorService {
+export class ArmorService implements SearchApi {
 
   apiEndPoint: string = environment.apiEndpoint;
 
@@ -14,9 +14,9 @@ export class ArmorService {
     private http: Http
   ) { }
 
-  defaultArmor(): Observable<Armor> {
-    return this.http.get(this.apiEndPoint + 'armor')
-    .map(res => Armor.fromJson(res.json()));
+  default(): Observable<Object> {
+    return this.http.get(this.apiEndPoint + 'armors/default')
+    .map(res => res.json());
   }
 
   search(term: string): Observable<SearchItem[]> {
@@ -24,9 +24,9 @@ export class ArmorService {
     .map(res => res.json());
   }
 
-  get(id: string): Observable<Armor> {
-    return this.http.get(this.apiEndPoint + `armor/${id}`)
-    .map(res => Armor.fromJson(res.json()));
+  getOne(id: string): Observable<LibraryItem> {
+    return this.http.get(this.apiEndPoint + `armors/${id}`)
+    .map(res => res.json());
   }
 
 }

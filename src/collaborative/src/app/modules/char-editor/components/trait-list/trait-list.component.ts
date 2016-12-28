@@ -1,7 +1,30 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CharacterService } from '../../../../shared/services/character.service';
-import { Trait, TraitDescriptor } from '../../../../interfaces/trait';
+import { Trait } from '../../../../interfaces/trait';
 import { TraitsService } from 'shared/services/traits.service';
+
+import { Observable } from 'rxjs';
+import { SearchApi } from 'interfaces/searchapi';
+import { SearchItem, LibraryItem} from 'interfaces/search';
+
+class TraitsSearchAdapter implements SearchApi {
+  constructor(
+    private service: TraitsService,
+    private categories: string[]) {
+  }
+
+  search(term: string): Observable<SearchItem[]> {
+    return this.service.search(this.categories, term);
+  }
+
+  getOne(id: string): Observable<LibraryItem> {
+    return this.service.getTrait(id);
+  }
+
+  default(): Observable<Object> {
+    return this.service.default;
+  }
+}
 
 @Component({
   selector: 'app-trait-list',
@@ -12,23 +35,24 @@ import { TraitsService } from 'shared/services/traits.service';
 export class TraitListComponent implements OnInit {
 
   _traits: Trait[];
-  @Input() category: string;
 
   @Output() traitChange: EventEmitter<Object> = new EventEmitter;
 
   defaultTrait: Trait;
 
-  search_results: TraitDescriptor[];
-
-
   edited_trait: Trait = null;
   edited_trait_idx: number;
+
+  searchAdapter: TraitsSearchAdapter;
+
+  private categories: string[];
 
 
   constructor(
     private chars: CharacterService,
     private traitsrv: TraitsService
-  ) { }
+  ) {
+  }
 
   @Input() set traits(traits: Trait[]) {
     console.log('Set traits into list');
@@ -38,15 +62,24 @@ export class TraitListComponent implements OnInit {
     }
   }
 
-  addTrait() {
-    let newTrait = this.defaultTrait.clone();
-    this.edited_trait_idx = this.filtered.length;
-    this._traits.push(newTrait);
+  @Input() set category(categories: string) {
+    this.categories = categories.split(',');
+  }
+
+  get category(): string {
+    return this.categories.map(cat => cat + 's').join(' and ');
+  }
+
+  addTrait(data: LibraryItem) {
+    if (!data.ready) {
+      this.edited_trait_idx = this.filtered.length;
+    }
+    this._traits.push(Trait.fromJson(data.data));
     this.traitChange.emit({});
   }
 
   get filtered() {
-    return this._traits.filter(t => t.category === this.category);
+    return this._traits.filter(t => this.categories.indexOf(t.category) !== -1);
   }
 
   removeTrait(index: number) {
@@ -62,44 +95,6 @@ export class TraitListComponent implements OnInit {
     });
     this._traits.splice(toRemove, 1);
     this.traitChange.emit({});
-  }
-
-  // get searchTerm() {
-  //   return this._search_term;
-  // }
-
-  // set searchTerm(term: string) {
-  //   this._search_term = term;
-  //   if (this._search_term.length > 2) {
-  //     this.traitsrv.search(this.category, term)
-  //     .subscribe(results => this.search_results = results);
-  //   } else {
-  //     this.search_results = null;
-  //   }
-  // }
-
-  searchTrait(term: string) {
-    this.traitsrv.search(this.category, term)
-    .subscribe(results => this.search_results = results);
-  }
-
-  addFromSearch(idx: number) {
-    this.traitsrv.getTrait(this.search_results[idx].id)
-    .subscribe(trait => {
-      this._traits.push(trait.trait);
-      if (!trait.ready) {
-        this.edited_trait_idx = this._traits.length - 1;
-        this.edited_trait = this._traits[this.edited_trait_idx];
-      } else {
-        this.traitChange.emit();
-      }
-      this.cancelSearch();
-    });
-  }
-
-  cancelSearch() {
-    this.search_results = null;
-    // this._search_term = '';
   }
 
   editTrait(idx: number) {
@@ -125,10 +120,11 @@ export class TraitListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.traitsrv.default.subscribe(trait => {
-      trait.category = this.category;
-      this.defaultTrait = trait;
-    });
+    this.searchAdapter = new TraitsSearchAdapter(this.traitsrv, [this.category]);
+    // this.traitsrv.default.subscribe(trait => {
+    //   trait.category = this.category;
+    //   this.defaultTrait = trait;
+    // });
   }
 
 }

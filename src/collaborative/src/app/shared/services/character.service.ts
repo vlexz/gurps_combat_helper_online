@@ -26,12 +26,12 @@ export class CharacterService {
     let data = {stats: {}};
     data.stats[name] = {delta: val};
     console.log(data);
-    return this.http.patch(this.apiEndPoint + `char/${id}`, data)
+    return this.http.patch(this.apiEndPoint + `chars/${id}`, data)
     .map(res => Character.fromJson(res.json() || {}));
   }
 
   updateCp(id: string, cp: number) {
-    return this.http.patch(this.apiEndPoint + `char/${id}`, {cp: {cp}})
+    return this.http.patch(this.apiEndPoint + `chars/${id}`, {cp: {cp}})
     .map(res => Character.fromJson(res.json() || {}));
   }
 
@@ -41,35 +41,35 @@ export class CharacterService {
     for (let i = 0; i < files.length; ++i) {
       data.append('pic', files[i]);
     }
-    return this.http.put(this.apiEndPoint + `char/${id}/pic`, data);
+    return this.http.put(this.apiEndPoint + `chars/${id}/pic`, data);
   }
 
   updateMainInfo(id: string, data): Observable<Character> {
     console.log('Update main info of the character');
-    return this.http.patch(this.apiEndPoint + `char/${id}`, data)
+    return this.http.patch(this.apiEndPoint + `chars/${id}`, data)
     .map(res => Character.fromJson(res.json() || {}));
   }
 
   updateTraits(id: string, traits: Trait[]): Observable<Character> {
     console.log('Update traits for character', id);
     let data = {traits};
-    return this.http.patch(this.apiEndPoint + `char/${id}`, data)
+    return this.http.patch(this.apiEndPoint + `chars/${id}`, data)
     .map(res => Character.fromJson(res.json() || {}));
   }
 
   updateSkills(id: string, skills: Skill[]): Observable<Character> {
     let data = {skills};
-    return this.http.patch(this.apiEndPoint + `char/${id}`, data)
+    return this.http.patch(this.apiEndPoint + `chars/${id}`, data)
     .map(res => Character.fromJson(res.json() || {}));
   }
 
   updateTechniques(id: string, techniques: Technique[]): Observable<Character> {
-    return this.http.patch(this.apiEndPoint + `char/${id}`, {techniques})
+    return this.http.patch(this.apiEndPoint + `chars/${id}`, {techniques})
     .map(res => Character.fromJson(res.json() || {}));
   }
 
   updateArmor(id: string, armor: Armor[]): Observable<Character> {
-    return this.http.patch(this.apiEndPoint + `char/${id}`, {equip: {armor}})
+    return this.http.patch(this.apiEndPoint + `chars/${id}`, {equip: {armor}})
     .map(res => Character.fromJson(res.json() || {}));
   }
 
@@ -81,40 +81,35 @@ export class CharacterService {
 
   load(id: string): Observable<Character> {
     console.log('Loading character', id);
-    return this.http.get(this.apiEndPoint + 'char/' + id)
+    return this.http.get(this.apiEndPoint + 'chars/' + id)
     .map(res => Character.fromJson(res.json() || {}));
   }
 
   add(char: Character): Observable<Character> {
     console.log('adding character');
-    return this.http.post(this.apiEndPoint + 'char', char)
+    return this.http.post(this.apiEndPoint + 'chars', char)
     .map(res => Character.fromJson(res.json() || {}));
   }
 
   del(id: string): Observable<CharacterDescriptor[]> {
-    return this.http.delete(this.apiEndPoint + `char/${id}`)
+    return this.http.delete(this.apiEndPoint + `chars/${id}`)
     .map(res => res.json());
   }
 
   save(char: Character): Observable<Character> {
     console.log('Saving character');
-    return this.http.put(this.apiEndPoint + 'char/' + char._id, char)
+    return this.http.put(this.apiEndPoint + 'chars/' + char._id, char)
     .map(res => Character.fromJson(res.json() || {}));
   }
 
   defaultCharacter(): Observable<Character> {
     console.log('Get default character from scala api');
-    return this.http.get(this.apiEndPoint + 'char')
+    return this.http.get(this.apiEndPoint + 'chars/default')
     .map((res: Response) => {
       return Character.fromJson(res.json() || {});
     });
   }
 
-  defaultTrait(): Observable<Trait> {
-    console.log('get default trait from scala api');
-    return this.http.get(this.apiEndPoint + 'char/trait')
-    .map(res => Trait.fromJson(res.json()));
-  }
 
   defaultSkill(): Observable<Skill> {
     console.log('get default skill from scala api');

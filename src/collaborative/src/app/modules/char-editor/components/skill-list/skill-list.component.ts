@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CharacterService } from 'shared/services/character.service';
 import { Skill, SkillDescriptor } from 'interfaces/skill';
+import { LibraryItem } from 'interfaces/search';
 import { SkillsService } from 'shared/services/skills.service';
 import { ConstantTables } from 'interfaces/tables';
 
@@ -29,10 +30,15 @@ export class SkillListComponent implements OnInit {
     this.change.emit({});
   }
 
-  addSkill() {
-    this.skills.push(this.defaultSkill.clone());
+  addSkill(skill: LibraryItem) {
+    this.skills.push(Skill.fromJson(skill.data));
     this.change.emit({});
   }
+
+  // addSkill() {
+  //   this.skills.push(this.defaultSkill.clone());
+  //   this.change.emit({});
+  // }
 
   addFromSearch(idx: number) {
     this.skillssrv.skill(this.search_results[idx].id)
@@ -61,7 +67,7 @@ export class SkillListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.skillssrv.default.subscribe(skill => this.defaultSkill = skill);
+    // this.skillssrv.default.subscribe(skill => this.defaultSkill = skill);
   }
 
 }

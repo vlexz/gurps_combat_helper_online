@@ -38,7 +38,7 @@
     </tr>
     <tr>
       <td colspan="8">
-        <search-block [search_results]="search_results" (add_new)="addSkill()" (add_from_search)="addFromSearch($event)" (search_term)="searchSkill($event)" (cancel_search)="cancelSearch()"></search-block>
+        <search-block [api]="skillssrv" (newitem)="addSkill($event)"></search-block>
       </td>
     </tr>
   </table>

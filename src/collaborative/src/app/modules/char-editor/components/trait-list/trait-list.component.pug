@@ -1,6 +1,6 @@
 trait-editor(*ngIf='edited_trait', (editDone)='editFinished()', (editCancel)='editCanceled()', [trait]='edited_trait')
 table.toplevel
-  caption(align='center', valign='top') {{category}}s
+  caption(align='center', valign='top') {{category}}
   tr
     th Name
     th Cost
@@ -12,11 +12,5 @@ table.toplevel
     td: a((click)='removeTrait(i)') Remove  
   tr
     td(colspan=4)
-      search-block(
-        [search_results]='search_results',
-        (add_new)='addTrait()',
-        (add_from_search)='addFromSearch($event)',
-        (search_term)='searchTrait($event)',
-        (cancel_search)='cancelSearch()'
-      )
+      search-block([api]='searchAdapter', (newitem)='addTrait($event)')
             

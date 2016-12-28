@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import { Trait, TraitDescriptor, LibraryTrait } from 'interfaces/trait';
+import { Trait } from 'interfaces/trait';
 import { Observable } from 'rxjs/Observable';
 import { environment } from '../../../environments/environment';
+import { SearchItem, LibraryItem } from 'interfaces/search';
 
 @Injectable()
 export class TraitsService {
@@ -14,17 +15,17 @@ export class TraitsService {
   ) { }
 
   get default(): Observable<Trait> {
-    return this.http.get(this.apiEndPoint + 'trait')
+    return this.http.get(this.apiEndPoint + 'traits/default')
     .map( resp  => Trait.fromJson(resp.json()));
   }
 
-  getTrait(id: string): Observable<LibraryTrait> {
-    return this.http.get(this.apiEndPoint + `trait/${id}`)
-    .map( resp  => LibraryTrait.fromJson(resp.json()));
+  getTrait(id: string): Observable<LibraryItem> {
+    return this.http.get(this.apiEndPoint + `traits/${id}`)
+    .map( resp  => resp.json());
   }
 
-  search(category: string, term: string): Observable<TraitDescriptor[]> {
-    return this.http.get(this.apiEndPoint + `traits/search/${category}?term=${term}`)
+  search(categories: string[], term: string): Observable<SearchItem[]> {
+    return this.http.get(this.apiEndPoint + `traits/search?term=${term}&categories=${categories.join(',')}`)
     .map(resp => resp.json());
   }
 
