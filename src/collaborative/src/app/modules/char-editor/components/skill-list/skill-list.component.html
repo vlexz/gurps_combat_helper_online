@@ -1,39 +1,28 @@
 
+<skill-editor *ngIf="editedSkill" (done)="editFinished()" [skill]="editedSkill"></skill-editor>
 <div class="skills">
   <table class="toplevel">
     <caption align="center" valign="top">Skills</caption>
     <tr>
       <th>Name</th>
-      <th>Attr</th>
-      <th>Diff</th>
+      <th>Type</th>
       <th>Rel</th>
       <th>Bonus</th>
       <th>Total</th>
       <th>Cost</th>
       <th> </th>
+      <th></th>
     </tr>
-    <tr *ngFor="let skill of skills; let i = index">    
-      <td>
-        <input type="text" [(ngModel)]="skill.skillString" (change)="skillChanged()">
-      </td>
-      <td>
-        <select [(ngModel)]="skill.attr" (change)="skillChanged()">
-          <option *ngFor="let attr of tables.attributes; let i = index" value="{{attr}}"> {{attr}}</option>
-        </select>
-      </td>
-      <td>
-        <select [(ngModel)]="skill.diff" (change)="skillChanged()">
-          <option *ngFor="let attr of tables.skillDifficulties; let i = index" value="{{attr.val}}"> {{attr.name}}</option>
-        </select>
-      </td>
+    <tr *ngFor="let skill of _skills; let i = index">    
+      <td>{{skill.skillString}}</td>
+      <td class="numval">{{skillType(skill)}}</td>
       <td>
         <input class="cost" type="number" [(ngModel)]="skill.relLvl" (change)="skillChanged()">
       </td>
-      <td>
-        <input class="cost" type="number" [(ngModel)]="skill.bonus" (change)="skillChanged()">
-      </td>
-      <td>{{skill.lvl}}</td>
-      <td>{{skill.cp}}</td>
+      <td class="numval">{{skill.bonus}}</td>
+      <td class="numval">{{skill.lvl}}</td>
+      <td class="numval">{{skill.cp}}</td>
+      <td><a (click)="editSkill(i)">Edit</a></td>
       <td><a (click)="removeSkill(i)">Remove</a></td>
     </tr>
     <tr>

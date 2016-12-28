@@ -8,7 +8,7 @@ export class ConstantTables {
     'Per'
   ];
 
-  public skillDifficulties: Object[] = [
+  public skillDifficulties: any[] = [
     {val: 'E', name: 'Easy'},
     {val: 'A', name: 'Average'},
     {val: 'H', name: 'Hard'},

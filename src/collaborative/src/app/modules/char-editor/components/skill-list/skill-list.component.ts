@@ -13,61 +13,61 @@ import { ConstantTables } from 'interfaces/tables';
 export class SkillListComponent implements OnInit {
 
   @Output() change: EventEmitter<Object> = new EventEmitter();
-  @Input() skills: Skill[] = null;
+   _skills: Skill[] = null;
 
   tables: ConstantTables = new ConstantTables;
 
-  defaultSkill: Skill = null;
-
   search_results: SkillDescriptor[];
+
+  editedSkill: Skill = null;
+  editedSkillIdx: number = -1;
 
   constructor(
     private chars: CharacterService,
     private skillssrv: SkillsService
   ) { }
 
+  @Input() set skills(skills: Skill[]) {
+    this._skills = skills;
+    if (this.editedSkillIdx !== -1) {
+      this.editedSkill = this._skills[this.editedSkillIdx];
+    }
+  }
+
   skillChanged() {
     this.change.emit({});
   }
 
   addSkill(skill: LibraryItem) {
-    this.skills.push(Skill.fromJson(skill.data));
+    this._skills.push(Skill.fromJson(skill.data));
+    if (!skill.ready) {
+      this.editedSkillIdx = this._skills.length - 1;
+    }
     this.change.emit({});
   }
 
-  // addSkill() {
-  //   this.skills.push(this.defaultSkill.clone());
-  //   this.change.emit({});
-  // }
-
-  addFromSearch(idx: number) {
-    this.skillssrv.skill(this.search_results[idx].id)
-    .subscribe(skill => {
-      console.log(skill.skill);
-      this.skills.push(skill.skill);
-      this.cancelSearch();
-      this.change.emit({});
-    });
-  }
-
-  searchSkill(term: string) {
-    this.skillssrv.search(term)
-    .subscribe(results => {
-      this.search_results = results;
-    });
-  }
-
-  cancelSearch() {
-    this.search_results = null;
+  skillType(skill: Skill) {
+    let diff = this.tables.skillDifficulties.find(d => d.val === skill.diff).name;
+    return `${skill.attr}/${diff}`;
   }
 
   removeSkill(i: number) {
-    this.skills.splice(i, 1);
+    this._skills.splice(i, 1);
+    this.change.emit({});
+  }
+
+  editSkill(i: number) {
+    this.editedSkillIdx = i;
+    this.editedSkill = this._skills[i];
+  }
+
+  editFinished() {
+    this.editedSkillIdx = -1;
+    this.editedSkill = null;
     this.change.emit({});
   }
 
   ngOnInit() {
-    // this.skillssrv.default.subscribe(skill => this.defaultSkill = skill);
   }
 
 }

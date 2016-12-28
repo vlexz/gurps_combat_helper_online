@@ -1,0 +1,33 @@
+
+<dialog-container (done)="_done()" title="Edit Skill">
+  <div> 
+    <label>Name: 
+      <input type="text" [(ngModel)]="skill.name">
+    </label>
+    <label>Specialty:
+      <input type="text" [(ngModel)]="skill.spc">
+    </label>
+  </div>
+  <div>
+    <label>Attribute:
+      <select [(ngModel)]="skill.attr">
+        <option *ngFor="let attr of tables.attributes; let i = index" value="{{attr}}">{{attr}}</option>
+      </select>
+    </label>
+    <label>Difficulty:
+      <select [(ngModel)]="skill.diff">
+        <option *ngFor="let item of tables.skillDifficulties; let i = index" value="{{item.val}}">{{item.name}}</option>
+      </select>
+    </label>
+  </div>
+  <div> 
+    <input type="checkbox" [(ngModel)]="tlDependent">
+    <label>Depends on Techlevel</label>
+    <label *ngIf="tlDependent">Techlevel</label>
+    <input class="cost" type="number" *ngIf="tlDependent" [(ngModel)]="skill.tl">
+  </div>
+  <div>
+    <input type="checkbox" [(ngModel)]="skill.encumbr">
+    <label>Depends on encumbrance</label>
+  </div>
+</dialog-container>

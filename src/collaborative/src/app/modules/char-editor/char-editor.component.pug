@@ -13,7 +13,7 @@ mixin statblock(caption, name, stat, readonly)
         else
           span.value= '{{current.char.' + name + '}}'
     if(stat)    
-      td: span.value= '{{current.char.stats.' + name + '.cp}}' 
+      td.numval: span.value= '{{current.char.stats.' + name + '.cp}}' 
 
 
 

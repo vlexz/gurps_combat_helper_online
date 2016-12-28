@@ -23,6 +23,7 @@ export class Skill {
   diff: string = 'E';
   relLvl: number = 0;
   bonus: number = 0;
+  tl: number = 0;
   lvl: number = 0; // calculated
   cp: number = 0; // calculated
 
