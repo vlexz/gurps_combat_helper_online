@@ -49,12 +49,18 @@ nav {
   border-width: 0px 1px 1px 1px;
 }
 
+.nav-item a {
+  background: #4d4d4d;  
+  border: none;
+}
+
 .nav-item.active{
   background: #7D7D7D;
   color: black;
 }
 
 .nav-item.active a{
+   background: #7D7D7D;
    color: black;
 }
 

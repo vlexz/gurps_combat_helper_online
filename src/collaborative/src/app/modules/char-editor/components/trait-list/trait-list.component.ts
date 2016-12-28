@@ -120,7 +120,7 @@ export class TraitListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.searchAdapter = new TraitsSearchAdapter(this.traitsrv, [this.category]);
+    this.searchAdapter = new TraitsSearchAdapter(this.traitsrv, this.categories);
     // this.traitsrv.default.subscribe(trait => {
     //   trait.category = this.category;
     //   this.defaultTrait = trait;

@@ -3,7 +3,7 @@ h1 {
   font-size: 24px;
   margin: 5px;
   font-style: italic;
-  color: lightgreen;
+  color: #C3D7DF;
 }
 
 .container {
@@ -23,7 +23,7 @@ h1 {
 nav {
   display: block;
   width: 1200px;
-  background: #4D4D4D;
+  background: #67727A;
   text-align: justify;
   overflow: hidden;
   height: 25px;
@@ -41,13 +41,15 @@ nav a {
   border-width: 1px;
   margin: 0;
   padding: 0;
-  border-color: white;
-  color: white;
+  border-radius: 0;
+  background: #67727A;
+  border-color: #C3D7DF;
+  color: #C3D7DF;
   text-decoration: none;
   padding: 2px;
 }
 
 nav a.active {
-  color: yellow;
-  background: #7D7D7D;
+  color: #F5F5F5;  
+  background: #6991AC;
 }
