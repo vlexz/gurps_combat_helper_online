@@ -42,14 +42,14 @@ nav a {
   margin: 0;
   padding: 0;
   border-radius: 0;
-  background: #67727A;
-  border-color: #C3D7DF;
-  color: #C3D7DF;
+  background: #343837 ;
+  border-color: #A9AA95;
+  color: #A9AA95;
   text-decoration: none;
   padding: 2px;
 }
 
 nav a.active {
-  color: #F5F5F5;  
-  background: #6991AC;
+  color: #343837;  
+  background: #A9AA95;
 }

@@ -1,15 +1,16 @@
 trait-editor(*ngIf='edited_trait', (editDone)='editFinished()', (editCancel)='editCanceled()', [trait]='edited_trait')
 table.toplevel
   caption(align='center', valign='top') {{category}}
-  tr
+  tr     
     th Name
     th Cost
-    th 
-  tr(*ngFor='let trait of filtered; let i = index')
+    th
+  tr.list(*ngFor='let trait of filtered; let i = index')    
     td.name: .name {{trait.traitString}}
-    td: .cost {{trait.cp}}
-    td: a((click)='editTrait(i)') Edit
-    td: a((click)='removeTrait(i)') Remove  
+    td.numval {{trait.cp}}
+    td.controls
+      svg-icon.button(src='/assets/svg/edit.svg', title='Edit', (click)='editTrait(i)')
+      svg-icon.button(src='/assets/svg/trash.svg', title='Remove', (click)='removeTrait(i)')
   tr
     td(colspan=4)
       search-block([api]='searchAdapter', (newitem)='addTrait($event)')

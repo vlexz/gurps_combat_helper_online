@@ -1,3 +1,13 @@
-input.cost {
-  width: 45px;
+
+
+.controls {
+  width: 50px;
+}
+
+.name {
+  max-width: 99%;  
+}
+
+table {
+  width: 100%;
 }

@@ -5,9 +5,11 @@ html {
 }
 
 body {
-  background: #67727A;
+  background: #343837;
   height: 100%; 
-  color: #C3D7DF;
+  color: #A7CCC7;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10pt;
 }
 
 a {
@@ -16,40 +18,49 @@ a {
   padding-left: 6px;
   padding-right: 6px;
   border-radius: 5px; 
-  border: solid 1px #6991AC;
+  border: solid 1px #A9AA95;
   cursor: pointer;
-  background: #6991AC;
-  color: #C3D7DF;
+  background: #343837;
+  color: #A9AA95;
   font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
 }
 
 a:hover {
-  background: #67727A;
-  border: solid 1px #6991AC;
+  background: #A9AA95;
+  color: #343837;
+  border: solid 1px #A9AA95;
 }
 
 td.numval {
   text-align: center;
+  white-space: nowrap;
+  width: 1%;
 }
 
 input {
-  background: #67727A;
-  color: #C3D7DF;
+  background: #343837;
+  color: #A7CCC7;
   padding: 3px;
-  border: solid #C3D7DF 1px;
+  border: solid #A7CCC7 1px;
   box-shadow: none;
   border-radius: 3px;
 }
 
 table.toplevel {
-  border: solid 1px #C3D7DF;  
+  border-style: solid;
+  border-width: 0px 1px 1px 1px;
+  border-color: #A9AA95;  
+  padding: 5px;
 }
 
 table caption {
-  background: #D75C37;
-  border: solid 1px #C3D7DF;  
-  color: #C3D7DF;
+  background: #4D280D;
+  border: solid 1px #4D280D ;  
+  font-size: 11pt;
+  color: #A9AA95;
   font-family: Arial, Helvetica, sans-serif;
+  padding: 3px;
 }
 
 input.cost {
@@ -58,4 +69,24 @@ input.cost {
 
 h3 {
   margin-top: 5px;
+}
+
+svg-icon.button {
+  display: inline-block;
+  border: solid 1px #A9AA95;
+  border-radius: 5px;
+  padding: 2px;
+  fill: #A9AA95;
+  width: 16px;
+  height: 16px;
+}
+
+svg-icon.button:hover {
+  fill: #343837;
+  background: #A9AA95;
+}
+
+/*for highlight miscelanous rows*/
+.list:hover {
+  background: #202523;
 }

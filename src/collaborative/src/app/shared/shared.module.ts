@@ -10,6 +10,8 @@ import { FileDialogComponent } from './components/file-dialog/file-dialog.compon
 import { SearchBlockComponent } from './components/search-block/search-block.component';
 import { DialogContainerComponent } from './components/dialog-container/dialog-container.component';
 import { TechniqueService } from './services/technique.service';
+import { SvgIconComponent } from './components/svg-icon/svg-icon.component';
+import { SvgCacheService } from './services/svg-cache.service';
 
 @NgModule({
   imports: [
@@ -21,17 +23,20 @@ import { TechniqueService } from './services/technique.service';
     TraitsService,
     ArmorService,
     SkillsService,
-    TechniqueService
+    TechniqueService,
+    SvgCacheService
   ],
   declarations: [
     FileDialogComponent,
     SearchBlockComponent,
-    DialogContainerComponent
+    DialogContainerComponent,
+    SvgIconComponent
   ],
   exports: [
     FileDialogComponent,
     SearchBlockComponent,
-    DialogContainerComponent
+    DialogContainerComponent,
+    SvgIconComponent
   ]
 })
 export class SharedModule { }

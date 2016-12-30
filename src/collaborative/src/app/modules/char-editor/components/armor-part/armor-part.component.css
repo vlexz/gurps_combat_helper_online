@@ -4,9 +4,9 @@
 }
 
 armor-list {
-  flex-grow: 1.5;
+  flex-grow: 1; 
 }
 
-armo-visual {
-  flex-grow: 1;
+armor-visual {
+  width: 375;
 }

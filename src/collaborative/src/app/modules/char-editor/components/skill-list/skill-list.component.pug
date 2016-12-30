@@ -11,15 +11,16 @@ skill-editor(*ngIf='editedSkill', (done)='editFinished()', [skill]='editedSkill'
       th Cost
       th 
       th
-    tr(*ngFor='let skill of _skills; let i = index')     
-      td {{skill.skillString}}
+    tr.list(*ngFor='let skill of _skills; let i = index')     
+      td.name {{skill.skillString}}
       td.numval {{skillType(skill)}}
-      td: input.cost(type='number', [(ngModel)] = 'skill.relLvl', (change)='skillChanged()')
+      td.numval: input.cost(type='number', [(ngModel)] = 'skill.relLvl', (change)='skillChanged()')
       td.numval {{skill.bonus}}
       td.numval {{skill.lvl}}
       td.numval {{skill.cp}}
-      td: a((click)='editSkill(i)') Edit
-      td: a((click)='removeSkill(i)') Remove
+      td.controls
+        svg-icon.button(src='/assets/svg/edit.svg', title='Edit', (click)='editSkill(i)')
+        svg-icon.button(src='/assets/svg/trash.svg', title='Remove', (click)='removeSkill(i)')      
     tr
       td(colspan=8)
         search-block([api]='skillssrv', (newitem)='addSkill($event)')

@@ -13,28 +13,53 @@ import { LibraryItem } from 'interfaces/search';
 })
 export class TechniquesComponent implements OnInit {
 
-  @Input() techniques: Technique[];
+  _techniques: Technique[];
   @Input() skills: Skill[];
   @Output() change: EventEmitter<Object> = new EventEmitter();
 
   tables: ConstantTables = new ConstantTables;
+
+  editedTeq: Technique = null;
+  editedTeqIdx: number= -1;
 
   constructor(
     private chars: CharacterService,
     private techsrv: TechniqueService
   ) { }
 
+  @Input() set techniques(tecns: Technique[]) {
+    this._techniques = tecns;
+    if (this.editedTeqIdx !== -1) {
+      this.editedTeq = this._techniques[this.editedTeqIdx];
+    }
+  }
+
   get skillNames(): string[] {
     return this.skills.map(skill => skill.name);
   }
 
   add(data: LibraryItem) {
-    this.techniques.push(Technique.fromJson(data.data));
+    this._techniques.push(Technique.fromJson(data.data));
+    if (data.ready) {
+      this.editedTeqIdx = this._techniques.length - 1;
+      this.editedTeq = this._techniques[this.editedTeqIdx];
+    }
     this.change.emit({});
   }
 
+  edit(i: number) {
+    this.editedTeqIdx = i;
+    this.editedTeq = this._techniques[i];
+  }
+
+  editDone() {
+    this.editedTeq = null;
+    this.editedTeqIdx = -1;
+    this.change.emit();
+  }
+
   remove(i: number) {
-    this.techniques.splice(i, 1);
+    this._techniques.splice(i, 1);
     this.change.emit({});
   }
 

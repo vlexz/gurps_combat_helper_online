@@ -25,7 +25,7 @@ export class TraitsService {
   }
 
   search(categories: string[], term: string): Observable<SearchItem[]> {
-    return this.http.get(this.apiEndPoint + `traits/search?term=${term}&categories=${categories.join(',')}`)
+    return this.http.get(this.apiEndPoint + `traits/search?term=${term}&category=${categories.join(',')}`)
     .map(resp => resp.json());
   }
 

@@ -1,0 +1,16 @@
+dialog-container((done)='_done()', title='Edit Technique')
+  div 
+    label Name: 
+      input(type='text', [(ngModel)] = 'technique.name')
+    label Skill:
+      select([(ngModel)]='technique.skill')
+        option(*ngFor='let skill of skills; let i = index', value='{{skill.name}}')  {{skill.skillString}}
+  div 
+    label Default:
+      input(type='number', [(ngModel)]='technique.defLvl')
+    label Max level:
+      input(type='number', [(ngModel)]='technique.mmaxLvl')
+    label Difficulty:
+      select([(ngModel)]='technique.diff')
+        option(value='H') Hard
+        option(value='A') Average          

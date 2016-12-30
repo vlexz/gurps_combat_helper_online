@@ -85,7 +85,7 @@ export class TraitListComponent implements OnInit {
   removeTrait(index: number) {
     let i = -1;
     let toRemove = this._traits.findIndex(t => {
-      if (t.category === this.category) {
+      if (this.categories.indexOf(t.category) !== -1) {
         ++i;
       }
       if (i === index) {

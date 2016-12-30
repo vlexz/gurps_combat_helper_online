@@ -2,20 +2,20 @@
 <trait-editor *ngIf="edited_trait" (editDone)="editFinished()" (editCancel)="editCanceled()" [trait]="edited_trait"></trait-editor>
 <table class="toplevel">
   <caption align="center" valign="top">{{category}}</caption>
-  <tr>
+  <tr>    
     <th>Name</th>
     <th>Cost</th>
-    <th> </th>
+    <th></th>
   </tr>
-  <tr *ngFor="let trait of filtered; let i = index">
+  <tr class="list" *ngFor="let trait of filtered; let i = index">   
     <td class="name">
       <div class="name">{{trait.traitString}}</div>
     </td>
-    <td>
-      <div class="cost">{{trait.cp}}</div>
+    <td class="numval">{{trait.cp}}</td>
+    <td class="controls">
+      <svg-icon class="button" src="/assets/svg/edit.svg" title="Edit" (click)="editTrait(i)"></svg-icon>
+      <svg-icon class="button" src="/assets/svg/trash.svg" title="Remove" (click)="removeTrait(i)"></svg-icon>
     </td>
-    <td><a (click)="editTrait(i)">Edit</a></td>
-    <td><a (click)="removeTrait(i)">Remove  </a></td>
   </tr>
   <tr>
     <td colspan="4">

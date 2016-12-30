@@ -17,11 +17,18 @@ table {
   width: 100%;
 }
 
+
+
 span {
   margin-left: 5px;
   margin-right: 5px;
 }
 
-name {
+.controls {
+  width: 50px;
+}
+
+.name {
+  width: 100%;
   max-width: 99%;
 }

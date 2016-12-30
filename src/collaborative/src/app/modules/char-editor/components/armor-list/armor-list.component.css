@@ -1,0 +1,16 @@
+:host {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.name {
+  max-width: 100%;
+}
+
+table {
+  width: 100%;
+}
+
+.controls {
+  width: 50px;  
+}

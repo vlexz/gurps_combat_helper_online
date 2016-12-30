@@ -13,17 +13,19 @@
       <th> </th>
       <th></th>
     </tr>
-    <tr *ngFor="let skill of _skills; let i = index">    
-      <td>{{skill.skillString}}</td>
+    <tr class="list" *ngFor="let skill of _skills; let i = index">    
+      <td class="name">{{skill.skillString}}</td>
       <td class="numval">{{skillType(skill)}}</td>
-      <td>
+      <td class="numval">
         <input class="cost" type="number" [(ngModel)]="skill.relLvl" (change)="skillChanged()">
       </td>
       <td class="numval">{{skill.bonus}}</td>
       <td class="numval">{{skill.lvl}}</td>
       <td class="numval">{{skill.cp}}</td>
-      <td><a (click)="editSkill(i)">Edit</a></td>
-      <td><a (click)="removeSkill(i)">Remove</a></td>
+      <td class="controls">
+        <svg-icon class="button" src="/assets/svg/edit.svg" title="Edit" (click)="editSkill(i)"></svg-icon>
+        <svg-icon class="button" src="/assets/svg/trash.svg" title="Remove" (click)="removeSkill(i)">     </svg-icon>
+      </td>
     </tr>
     <tr>
       <td colspan="8">

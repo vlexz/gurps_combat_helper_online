@@ -35,8 +35,8 @@ nav {
   display: inline-flex;
   flex-direction: column;
   width: 80px;
-  background: black;
   height: 100%;
+  margin-top: 20px;
 }
 
 .nav-item {  
@@ -44,33 +44,43 @@ nav {
   align-items: center;
   justify-content: center;
   height:60px;  
-  background: #4d4d4d;
+  background: #343837;
+  border-color: #A9AA95;
+  color: #A9AA95;
   border-style: solid;
-  border-width: 0px 1px 1px 1px;
+  border-width: 1px 1px 1px 1px;
 }
 
 .nav-item a {
-  background: #4d4d4d;  
-  border: none;
+  padding: 0px;  
+  background: #343837;
+  border: none;  
 }
 
 .nav-item.active{
-  background: #7D7D7D;
-  color: black;
+  color: #343837;  
+  background: #A9AA95;
 }
 
 .nav-item.active a{
-   background: #7D7D7D;
-   color: black;
+  color: #343837;  
+  background: #A9AA95;
 }
 
 nav a {  
   text-align: center;
   display: block;
-  color: white;
+  /*color: white;*/
+  background: #67727A;
   font-size: 14pt;
   font-family: Arial, Helvetica, sans-serif;
   text-decoration: none;
+}
+
+
+.nav-item:hover, .nav-item:hover > a {
+  color: #343837;  
+  background: #A9AA95;
 }
 
 router-outlet {
@@ -81,13 +91,13 @@ router-outlet {
   display: block;
 }*/
 
-span.caption{
+/*span.caption{
   color: #B9F0E6;
-}
+}*/
 
-span.value {
+/*span.value {
   color: #3ce063;
-}
+}*/
 
 .content-block {
   flex: 1;
