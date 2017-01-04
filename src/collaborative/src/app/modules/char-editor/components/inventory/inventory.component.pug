@@ -1,0 +1,33 @@
+inventory-editor(*ngIf='editedItem', [item]='editedItem', (done)='editFinished()')
+.container(*ngIf='_items')
+  //- armor-editor(*ngIf='currentArmor', [armor]='currentArmor', (editDone)='editDone()')
+  table.toplevel
+    caption Inventory
+    tr
+      th Name
+      th Carry
+      th Count
+      th TL
+      th Cost/1
+      th Weight/1
+      th Cost
+      th Weight
+      th
+      th
+    tr.list(*ngFor='let item of _items; let i = index')
+      td.name {{item.name}}
+      td.numval
+        select([(ngModel)]='item.state', (change)='update()')
+          option(*ngFor='let c of tables.carry', value='{{c}}')  {{c}}
+      td.numval: input.cost(type='number', [(ngModel)]='item.n', (change)='update()') 
+      td.numval {{item.tl}}
+      td.numval {{item.cost}}
+      td.numval {{item.wt}}
+      td.numval {{item.totalCost}}
+      td.numval {{item.totalWt}}
+      td.controls
+        svg-icon.button(src='/assets/svg/edit.svg', title='Edit', (click)='edit(i)')
+        svg-icon.button(src='/assets/svg/trash.svg', title='Remove', (click)='remove(i)')
+    tr
+      td(colspan=8)
+        search-block([api]='inventorysrv', (newitem)='add($event)')

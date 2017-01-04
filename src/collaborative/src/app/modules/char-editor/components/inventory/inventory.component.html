@@ -1,0 +1,44 @@
+
+<inventory-editor *ngIf="editedItem" [item]="editedItem" (done)="editFinished()"></inventory-editor>
+<div class="container" *ngIf="_items">
+  <table class="toplevel">
+    <caption>Inventory</caption>
+    <tr>
+      <th>Name</th>
+      <th>Carry</th>
+      <th>Count</th>
+      <th>TL</th>
+      <th>Cost/1</th>
+      <th>Weight/1</th>
+      <th>Cost</th>
+      <th>Weight</th>
+      <th></th>
+      <th></th>
+    </tr>
+    <tr class="list" *ngFor="let item of _items; let i = index">
+      <td class="name">{{item.name}}</td>
+      <td class="numval">
+        <select [(ngModel)]="item.state" (change)="update()">
+          <option *ngFor="let c of tables.carry" value="{{c}}"> {{c}}</option>
+        </select>
+      </td>
+      <td class="numval">
+        <input class="cost" type="number" [(ngModel)]="item.n" (change)="update()">
+      </td>
+      <td class="numval">{{item.tl}}</td>
+      <td class="numval">{{item.cost}}</td>
+      <td class="numval">{{item.wt}}</td>
+      <td class="numval">{{item.totalCost}}</td>
+      <td class="numval">{{item.totalWt}}</td>
+      <td class="controls">
+        <svg-icon class="button" src="/assets/svg/edit.svg" title="Edit" (click)="edit(i)"></svg-icon>
+        <svg-icon class="button" src="/assets/svg/trash.svg" title="Remove" (click)="remove(i)"></svg-icon>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="8">
+        <search-block [api]="inventorysrv" (newitem)="add($event)"></search-block>
+      </td>
+    </tr>
+  </table>
+</div>

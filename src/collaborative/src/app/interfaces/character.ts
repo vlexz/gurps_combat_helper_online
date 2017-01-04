@@ -3,6 +3,7 @@ import { Trait } from './trait';
 import { Skill } from './skill';
 import { Technique } from './technique';
 import { Armor } from './armor';
+import { InventoryItem } from './inventory';
 
 export class Stat {
   base: number;
@@ -36,6 +37,7 @@ class Stats {
 
 class Equipment {
   armor: Armor[];
+  items: InventoryItem[];
 }
 
 

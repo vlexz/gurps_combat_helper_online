@@ -21,5 +21,4 @@ export class SvgIconComponent implements OnInit {
     this.cache.getsvg(this.src)
     .subscribe(svg => this.placeholder.nativeElement.innerHTML =  svg);
   }
-
 }

@@ -25,6 +25,9 @@ import { ArmorListComponent } from './components/armor-list/armor-list.component
 import { ArmorEditorComponent } from './components/armor-editor/armor-editor.component';
 import { SkillEditorComponent } from './components/skill-editor/skill-editor.component';
 import { TechniqueEditorComponent } from './components/technique-editor/technique-editor.component';
+import { InventoryComponent } from './components/inventory/inventory.component';
+import { InvPartComponent } from './components/inv-part/inv-part.component';
+import { InventoryEditorComponent } from './components/inventory-editor/inventory-editor.component';
 
 @NgModule({
   imports: [
@@ -50,7 +53,10 @@ import { TechniqueEditorComponent } from './components/technique-editor/techniqu
     ArmorListComponent,
     ArmorEditorComponent,
     SkillEditorComponent,
-    TechniqueEditorComponent
+    TechniqueEditorComponent,
+    InventoryComponent,
+    InvPartComponent,
+    InventoryEditorComponent
   ],
   providers: [
     CurrentCharService

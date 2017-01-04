@@ -6,6 +6,7 @@ import { Skill } from 'interfaces/skill';
 import { Trait } from 'interfaces/trait';
 import { Technique } from 'interfaces/technique';
 import { Armor } from 'interfaces/armor';
+import { InventoryItem } from 'interfaces/inventory';
 import { CharacterDescriptor } from '../../interfaces/char_descriptor';
 
 import { Observable }     from 'rxjs/Observable';
@@ -70,6 +71,11 @@ export class CharacterService {
 
   updateArmor(id: string, armor: Armor[]): Observable<Character> {
     return this.http.patch(this.apiEndPoint + `chars/${id}`, {equip: {armor}})
+    .map(res => Character.fromJson(res.json() || {}));
+  }
+
+  updateInventory(id: string, items: InventoryItem[]): Observable<Character> {
+    return this.http.patch(this.apiEndPoint + `chars/${id}`, {equip: {items}})
     .map(res => Character.fromJson(res.json() || {}));
   }
 

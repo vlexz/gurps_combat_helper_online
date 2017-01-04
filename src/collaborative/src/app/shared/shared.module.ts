@@ -12,6 +12,7 @@ import { DialogContainerComponent } from './components/dialog-container/dialog-c
 import { TechniqueService } from './services/technique.service';
 import { SvgIconComponent } from './components/svg-icon/svg-icon.component';
 import { SvgCacheService } from './services/svg-cache.service';
+import { InventoryService } from './services/inventory.service';
 
 @NgModule({
   imports: [
@@ -24,7 +25,8 @@ import { SvgCacheService } from './services/svg-cache.service';
     ArmorService,
     SkillsService,
     TechniqueService,
-    SvgCacheService
+    SvgCacheService,
+    InventoryService
   ],
   declarations: [
     FileDialogComponent,

@@ -28,4 +28,12 @@ export class ConstantTables {
     legs: ['right leg', 'left leg', 'legs', 'feet', 'right foot', 'left foot'],
     suit: ['skin', 'full body']
   };
+
+  public carry: any = [
+    'Ready',
+    'Equipped',
+    'Combat',
+    'Travel',
+    'Stash'
+  ];
 }
