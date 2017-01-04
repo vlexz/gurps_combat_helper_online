@@ -23,3 +23,8 @@ span.item:hover {
   background: black;
   color: white;
 }
+
+.item-list {
+  max-height: 600px;
+  overflow: auto;
+}

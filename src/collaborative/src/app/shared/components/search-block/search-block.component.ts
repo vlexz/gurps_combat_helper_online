@@ -91,7 +91,7 @@ export class SearchBlockComponent implements OnInit {
 
   get filteredItems(): SearchItem[] {
     if (this.filterTerm) {
-      return this.allItems.filter(item => item.name.indexOf(this.filterTerm) !== -1);
+      return this.allItems.filter(item => item.name.toLowerCase().indexOf(this.filterTerm.toLowerCase()) !== -1);
     } else {
       return this.allItems;
     }

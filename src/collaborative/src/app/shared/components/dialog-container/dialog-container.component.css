@@ -30,8 +30,6 @@
   border: solid 1px;
   box-shadow: 5px 5px 5px;
   padding: 10px;
-  max-height: 80%;
-  overflow: scroll;
 }
 
 .footer {
