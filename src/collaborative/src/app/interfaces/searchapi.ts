@@ -6,4 +6,5 @@ export declare abstract class SearchApi {
   abstract search(term: string): Observable<SearchItem[]>;
   abstract getOne(id: string): Observable<LibraryItem>;
   abstract default(): Observable<Object>;
+  abstract getAll(): Observable<SearchItem[]>;
 }

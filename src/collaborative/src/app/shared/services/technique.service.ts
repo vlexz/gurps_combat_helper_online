@@ -30,4 +30,9 @@ export class TechniqueService implements SearchApi {
     .map(res => res.json());
   }
 
+  getAll(): Observable<SearchItem[]> {
+    return this.http.get(this.apiEndPoint + 'tecns')
+    .map(res => res.json());
+  }
+
 }

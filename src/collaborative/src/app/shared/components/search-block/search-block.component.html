@@ -1,6 +1,6 @@
 
 <div class="search_block">
-  <input type="text" [(ngModel)]="searchTerm" placeholder="Search"><span>or</span><a (click)="addNew()">Add New</a>
+  <input type="text" [(ngModel)]="searchTerm" placeholder="Search"><span>or</span><a (click)="addNew()">Add New</a><span>or</span><a (click)="viewAll()">View All</a>
   <div class="search_results" *ngIf="search_results">
     <table>
       <tr>
@@ -11,4 +11,12 @@
       </tr>
     </table>
   </div>
+  <dialog-container *ngIf="showAll" title="Full List" (done)="closeFullList()">
+    <div>
+      <label>Filter: 
+        <input type="text" [(ngModel)]="filterTerm">
+      </label>
+    </div>
+    <div class="item-list"><span class="item" *ngFor="let item of filteredItems" (click)="addFromFullList(item.id)">{{item.name}}</span></div>
+  </dialog-container>
 </div>

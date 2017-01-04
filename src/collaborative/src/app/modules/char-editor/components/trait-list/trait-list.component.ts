@@ -24,6 +24,10 @@ class TraitsSearchAdapter implements SearchApi {
   default(): Observable<Object> {
     return this.service.default;
   }
+
+  getAll(): Observable<SearchItem[]> {
+    return this.service.getTraits(this.categories);
+  }
 }
 
 @Component({

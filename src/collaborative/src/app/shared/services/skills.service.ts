@@ -35,4 +35,9 @@ export class SkillsService implements SearchApi {
     .map(res => res.json());
   }
 
+  getAll(): Observable<SearchItem[]> {
+    return this.http.get(this.apiEndPoint + 'skills')
+    .map(res => res.json());
+  }
+
 }

@@ -29,4 +29,9 @@ export class ArmorService implements SearchApi {
     .map(res => res.json());
   }
 
+  getAll(): Observable<SearchItem[]> {
+    return this.http.get(this.apiEndPoint + 'armors')
+    .map(res => res.json());
+  }
+
 }

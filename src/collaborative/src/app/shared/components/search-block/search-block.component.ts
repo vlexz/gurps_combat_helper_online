@@ -11,10 +11,14 @@ import { SearchApi } from 'interfaces/searchapi';
 export class SearchBlockComponent implements OnInit {
 
   @Input() api: SearchApi;
-
   @Output() newitem: EventEmitter<LibraryItem> = new EventEmitter<LibraryItem>();
+  @Input() dialogTitle: string;
 
   search_results: SearchItem[];
+
+  allItems: SearchItem[] = null;
+  filterTerm: string;
+  showAll: boolean = false;
 
   private _searchTerm: string;
 
@@ -59,6 +63,38 @@ export class SearchBlockComponent implements OnInit {
   cancelSearch() {
     this.search_results = null;
     this._searchTerm = '';
+  }
+
+  viewAll() {
+    if (this.allItems) {
+      this.showAll = true;
+    } else {
+      this.api.getAll()
+      .subscribe(items => {
+        this.allItems = items;
+        this.showAll = true;
+      });
+    }
+  }
+
+  closeFullList() {
+    this.showAll = false;
+  }
+
+  addFromFullList(itemId: string) {
+    this.api.getOne(itemId)
+    .subscribe(item => {
+      this.showAll = false;
+      this.newitem.emit(item);
+    });
+  }
+
+  get filteredItems(): SearchItem[] {
+    if (this.filterTerm) {
+      return this.allItems.filter(item => item.name.indexOf(this.filterTerm) !== -1);
+    } else {
+      return this.allItems;
+    }
   }
 
   ngOnInit() {
