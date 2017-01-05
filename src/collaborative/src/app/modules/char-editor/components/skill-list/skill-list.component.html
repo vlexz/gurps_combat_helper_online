@@ -1,8 +1,10 @@
 
 <skill-editor *ngIf="editedSkill" (done)="editFinished()" [skill]="editedSkill"></skill-editor>
-<div class="skills">
+<div class="table-container">
+  <div class="table-caption">
+    <div class="table-caption-content">Skills</div>
+  </div>
   <table class="toplevel">
-    <caption align="center" valign="top">Skills</caption>
     <tr>
       <th>Name</th>
       <th>Type</th>

@@ -1,25 +1,29 @@
 
 <trait-editor *ngIf="edited_trait" (editDone)="editFinished()" (editCancel)="editCanceled()" [trait]="edited_trait"></trait-editor>
-<table class="toplevel">
-  <caption align="center" valign="top">{{category}}</caption>
-  <tr>    
-    <th>Name</th>
-    <th>Cost</th>
-    <th></th>
-  </tr>
-  <tr class="list" *ngFor="let trait of filtered; let i = index">   
-    <td class="name">
-      <div class="name">{{trait.traitString}}</div>
-    </td>
-    <td class="numval">{{trait.cp}}</td>
-    <td class="controls">
-      <svg-icon class="button" src="/assets/svg/edit.svg" title="Edit" (click)="editTrait(i)"></svg-icon>
-      <svg-icon class="button" src="/assets/svg/trash.svg" title="Remove" (click)="removeTrait(i)"></svg-icon>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="4">
-      <search-block [api]="searchAdapter" (newitem)="addTrait($event)"></search-block>
-    </td>
-  </tr>
-</table>
+<div class="table-container">
+  <div class="table-caption">
+    <div class="table-caption-content">{{category}}</div>
+  </div>
+  <table class="toplevel">   
+    <tr class="header">    
+      <th>Name</th>
+      <th>Cost</th>
+      <th></th>
+    </tr>
+    <tr class="list" *ngFor="let trait of filtered; let i = index">   
+      <td class="name">
+        <div class="name">{{trait.traitString}}</div>
+      </td>
+      <td class="numval">{{trait.cp}}</td>
+      <td class="controls">
+        <svg-icon class="button" src="/assets/svg/edit.svg" title="Edit" (click)="editTrait(i)"></svg-icon>
+        <svg-icon class="button" src="/assets/svg/trash.svg" title="Remove" (click)="removeTrait(i)"></svg-icon>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4">
+        <search-block [api]="searchAdapter" (newitem)="addTrait($event)"></search-block>
+      </td>
+    </tr>
+  </table>
+</div>

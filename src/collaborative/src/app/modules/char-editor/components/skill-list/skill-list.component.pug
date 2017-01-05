@@ -1,7 +1,8 @@
 skill-editor(*ngIf='editedSkill', (done)='editFinished()', [skill]='editedSkill')
-.skills
+.table-container
+  .table-caption
+    .table-caption-content Skills
   table.toplevel
-    caption(align='center' valign='top') Skills
     tr
       th Name
       th Type

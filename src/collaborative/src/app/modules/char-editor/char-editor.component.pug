@@ -26,8 +26,8 @@ mixin mainInfo
       input(type="text", name='player', [(ngModel)]='current.char.player', (change)='mainInfoChanged($event)')
 
 mixin mainVariables
-  table.mainvars.toplevel
-    caption(align='center', valign='top') Primary Stats
+  table.mainvars
+    //- caption(align='center', valign='top') Primary Stats
     tr
       td
         img([src]='current.portrait', (click)='uploadPortrait()')
@@ -81,10 +81,17 @@ mixin mainVariables
           +statblock('Skills:', 'cp.skills', false, true)
           +statblock('Unspent:', 'cp.unspent', false, true)
 
-char-editor-toolbar
-div(*ngIf='current.char')  
-  div: +mainInfo
-  div: +mainVariables  
+.row
+  .header
+    .header-wrapper
+      .horizontal-line 
+      span Primary Stats
+      .horizontal-line 
+.row
+  char-editor-toolbar
+  .main-info(*ngIf='current.char'): +mainInfo
+.row.last(*ngIf='current.char')
+  +mainVariables  
 .content-block([hidden]='!current.char')
   nav
     .nav-item(routerLinkActive="active")

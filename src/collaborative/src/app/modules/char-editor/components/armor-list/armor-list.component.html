@@ -1,30 +1,34 @@
 
 <div class="container" *ngIf="_armors">
   <armor-editor *ngIf="currentArmor" [armor]="currentArmor" (editDone)="editDone()"></armor-editor>
-  <table class="toplevel">
-    <caption>Armors</caption>
-    <tr>
-      <th>Name</th>
-      <th>TL</th>
-      <th>Cost</th>
-      <th>Weight</th>
-      <th></th>
-      <th></th>
-    </tr>
-    <tr class="list" *ngFor="let armor of _armors; let i = index">
-      <td class="name">{{armor.name}}</td>
-      <td class="numval">{{armor.tl}}</td>
-      <td class="numval">{{armor.cost}}</td>
-      <td class="numval">{{armor.wt}}</td>
-      <td class="controls">
-        <svg-icon class="button" src="/assets/svg/edit.svg" title="Edit" (click)="edit(i)"></svg-icon>
-        <svg-icon class="button" src="/assets/svg/trash.svg" title="Remove" (click)="remove(i)"></svg-icon>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="8">
-        <search-block [api]="armorsrv" (newitem)="add($event)"></search-block>
-      </td>
-    </tr>
-  </table>
+  <div class="table-container">
+    <div class="table-caption">
+      <div class="table-caption-content">Armors</div>
+    </div>
+    <table class="toplevel">
+      <tr>
+        <th>Name</th>
+        <th>TL</th>
+        <th>Cost</th>
+        <th>Weight</th>
+        <th></th>
+        <th></th>
+      </tr>
+      <tr class="list" *ngFor="let armor of _armors; let i = index">
+        <td class="name">{{armor.name}}</td>
+        <td class="numval">{{armor.tl}}</td>
+        <td class="numval">{{armor.cost}}</td>
+        <td class="numval">{{armor.wt}}</td>
+        <td class="controls">
+          <svg-icon class="button" src="/assets/svg/edit.svg" title="Edit" (click)="edit(i)"></svg-icon>
+          <svg-icon class="button" src="/assets/svg/trash.svg" title="Remove" (click)="remove(i)"></svg-icon>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="8">
+          <search-block [api]="armorsrv" (newitem)="add($event)"></search-block>
+        </td>
+      </tr>
+    </table>
+  </div>
 </div>

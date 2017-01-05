@@ -1,8 +1,10 @@
 
 <inventory-editor *ngIf="editedItem" [item]="editedItem" (done)="editFinished()"></inventory-editor>
-<div class="container" *ngIf="_items">
+<div class="table-container">
+  <div class="table-caption">
+    <div class="table-caption-content">Inventory</div>
+  </div>
   <table class="toplevel">
-    <caption>Inventory</caption>
     <tr>
       <th>Name</th>
       <th>Carry</th>

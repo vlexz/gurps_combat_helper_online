@@ -1,8 +1,10 @@
 
 <technique-editor *ngIf="editedTeq" (done)="editDone()" [technique]="editedTeq" [skills]="skills"></technique-editor>
-<div class="skills">
+<div class="table-container">
+  <div class="table-caption">
+    <div class="table-caption-content">Techniques </div>
+  </div>
   <table class="toplevel">
-    <caption align="center" valign="top">Techniques </caption>
     <tr>
       <th>Name</th>
       <th>Diff</th>

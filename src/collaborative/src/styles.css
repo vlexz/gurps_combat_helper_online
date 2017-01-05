@@ -1,15 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 
-html {
-  height: 100%;
-}
 
 body {
-  background: #343837;
-  height: 100%; 
-  color: #A7CCC7;
+  background: #2b363e;
+  /*height: 100%; */
+  color: #abbec6;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 10pt;
+  margin: 0px;
+  padding: 0px;
 }
 
 a {
@@ -18,18 +17,17 @@ a {
   padding-left: 6px;
   padding-right: 6px;
   border-radius: 5px; 
-  border: solid 1px #A9AA95;
+  border: solid 1px #50a592;
   cursor: pointer;
-  background: #343837;
-  color: #A9AA95;
+  background: #3e4b54;
+  color: #50a592;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
 }
 
 a:hover {
-  background: #A9AA95;
-  color: #343837;
-  border: solid 1px #A9AA95;
+  background: #50a592;
+  color: #3e4b54;  
 }
 
 td.numval {
@@ -39,28 +37,45 @@ td.numval {
 }
 
 input {
-  background: #343837;
-  color: #A7CCC7;
+  background: #33414a;
+  color: #abbec6;
   padding: 3px;
-  border: solid #A7CCC7 1px;
+  border: solid #abbec6 1px;
   box-shadow: none;
   border-radius: 3px;
 }
 
 table.toplevel {
   border-style: solid;
-  border-width: 0px 1px 1px 1px;
-  border-color: #A9AA95;  
+  border-width: 1px 1px 1px 1px;
+  border-color: #73828b;  
   padding: 5px;
 }
 
-table caption {
-  background: #4D280D;
-  border: solid 1px #4D280D ;  
+tr.header {
+  margin-top: 10px;
+}
+
+/*table caption {  
+  margin-bottom: -10px;
   font-size: 11pt;
-  color: #A9AA95;
+  color: #73828b;
   font-family: Arial, Helvetica, sans-serif;
   padding: 3px;
+}*/
+
+.table-caption {
+  display: flex;
+  justify-content: space-around;
+}
+
+.table-caption-content {
+  background: #3e4b54;
+  font-size: 11pt;
+  margin-bottom: -10px; 
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #74858d;
 }
 
 input.cost {
@@ -73,17 +88,17 @@ h3 {
 
 svg-icon.button {
   display: inline-block;
-  border: solid 1px #A9AA95;
+  border: solid 1px #50a592;
   border-radius: 5px;
   padding: 2px;
-  fill: #A9AA95;
+  fill: #50a592;
   width: 16px;
   height: 16px;
 }
 
 svg-icon.button:hover {
-  fill: #343837;
-  background: #A9AA95;
+  fill: #3e4b54;
+  background: #50a592;
 }
 
 /*for highlight miscelanous rows*/

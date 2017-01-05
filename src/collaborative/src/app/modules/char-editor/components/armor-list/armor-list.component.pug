@@ -1,22 +1,24 @@
 .container(*ngIf='_armors')
   armor-editor(*ngIf='currentArmor', [armor]='currentArmor', (editDone)='editDone()')
-  table.toplevel
-    caption Armors
-    tr
-      th Name
-      th TL
-      th Cost
-      th Weight
-      th
-      th
-    tr.list(*ngFor='let armor of _armors; let i = index')
-      td.name {{armor.name}}
-      td.numval {{armor.tl}}
-      td.numval {{armor.cost}}
-      td.numval {{armor.wt}}
-      td.controls
-        svg-icon.button(src='/assets/svg/edit.svg', title='Edit', (click)='edit(i)')
-        svg-icon.button(src='/assets/svg/trash.svg', title='Remove', (click)='remove(i)')
-    tr
-      td(colspan=8)
-        search-block([api]='armorsrv', (newitem)='add($event)')
+  .table-container
+    .table-caption
+      .table-caption-content Armors
+    table.toplevel
+      tr
+        th Name
+        th TL
+        th Cost
+        th Weight
+        th
+        th
+      tr.list(*ngFor='let armor of _armors; let i = index')
+        td.name {{armor.name}}
+        td.numval {{armor.tl}}
+        td.numval {{armor.cost}}
+        td.numval {{armor.wt}}
+        td.controls
+          svg-icon.button(src='/assets/svg/edit.svg', title='Edit', (click)='edit(i)')
+          svg-icon.button(src='/assets/svg/trash.svg', title='Remove', (click)='remove(i)')
+      tr
+        td(colspan=8)
+          search-block([api]='armorsrv', (newitem)='add($event)')

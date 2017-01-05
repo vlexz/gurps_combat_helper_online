@@ -1,8 +1,8 @@
 inventory-editor(*ngIf='editedItem', [item]='editedItem', (done)='editFinished()')
-.container(*ngIf='_items')
-  //- armor-editor(*ngIf='currentArmor', [armor]='currentArmor', (editDone)='editDone()')
+.table-container
+  .table-caption
+    .table-caption-content Inventory
   table.toplevel
-    caption Inventory
     tr
       th Name
       th Carry

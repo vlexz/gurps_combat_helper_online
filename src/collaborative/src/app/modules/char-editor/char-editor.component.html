@@ -1,7 +1,15 @@
 
-<char-editor-toolbar></char-editor-toolbar>
-<div *ngIf="current.char"> 
-  <div>
+<div class="row">
+  <div class="header">
+    <div class="header-wrapper">
+      <div class="horizontal-line"> </div><span>Primary Stats</span>
+      <div class="horizontal-line"> </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <char-editor-toolbar></char-editor-toolbar>
+  <div class="main-info" *ngIf="current.char">
     <table>
       <tr></tr>
       <td>Name 
@@ -12,225 +20,224 @@
       </td>
     </table>
   </div>
-  <div>
-    <table class="mainvars toplevel">
-      <caption align="center" valign="top">Primary Stats</caption>
-      <tr>
-        <td><img [src]="current.portrait" (click)="uploadPortrait()">
-          <input class="file" type="file" (change)="current.uploadPortrait($event.srcElement.files)" id="portrait_file">
-        </td>
-        <td>
-          <table class="top">    
-            <tr>
-              <td><span class="caption">ST:</span></td>
-              <td>
-                <app-stat-block [statName]="'st'" [stat]="current.char.stats.st" (statChanged)="current.updateStats($event)"></app-stat-block>
-              </td>
-              <td class="numval"><span class="value">{{current.char.stats.st.cp}}</span></td>
-            </tr>
-            <tr>
-              <td><span class="caption">DX:</span></td>
-              <td>
-                <app-stat-block [statName]="'dx'" [stat]="current.char.stats.dx" (statChanged)="current.updateStats($event)"></app-stat-block>
-              </td>
-              <td class="numval"><span class="value">{{current.char.stats.dx.cp}}</span></td>
-            </tr>
-            <tr>
-              <td><span class="caption">IQ:</span></td>
-              <td>
-                <app-stat-block [statName]="'iq'" [stat]="current.char.stats.iq" (statChanged)="current.updateStats($event)"></app-stat-block>
-              </td>
-              <td class="numval"><span class="value">{{current.char.stats.iq.cp}}</span></td>
-            </tr>
-            <tr>
-              <td><span class="caption">HT:</span></td>
-              <td>
-                <app-stat-block [statName]="'ht'" [stat]="current.char.stats.ht" (statChanged)="current.updateStats($event)"></app-stat-block>
-              </td>
-              <td class="numval"><span class="value">{{current.char.stats.ht.cp}}</span></td>
-            </tr>
-            <tr>
-              <td><span class="caption">Will:</span></td>
-              <td>
-                <app-stat-block [statName]="'will'" [stat]="current.char.stats.will" (statChanged)="current.updateStats($event)"></app-stat-block>
-              </td>
-              <td class="numval"><span class="value">{{current.char.stats.will.cp}}</span></td>
-            </tr>
-            <tr>
-              <td><span class="caption">Per:</span></td>
-              <td>
-                <app-stat-block [statName]="'per'" [stat]="current.char.stats.per" (statChanged)="current.updateStats($event)"></app-stat-block>
-              </td>
-              <td class="numval"><span class="value">{{current.char.stats.per.cp}}</span></td>
-            </tr>
-          </table>
-        </td>
-        <td>
-          <table class="top"> 
-            <tr>
-              <td><span class="caption">Lift ST:</span></td>
-              <td>
-                <app-stat-block [statName]="'liftSt'" [stat]="current.char.stats.liftSt" (statChanged)="current.updateStats($event)"></app-stat-block>
-              </td>
-              <td class="numval"><span class="value">{{current.char.stats.liftSt.cp}}</span></td>
-            </tr>
-            <tr>
-              <td><span class="caption">Strike ST:</span></td>
-              <td>
-                <app-stat-block [statName]="'strikeSt'" [stat]="current.char.stats.strikeSt" (statChanged)="current.updateStats($event)"></app-stat-block>
-              </td>
-              <td class="numval"><span class="value">{{current.char.stats.strikeSt.cp}}</span></td>
-            </tr>
-            <tr>
-              <td><span class="caption">BM:</span></td>
-              <td>
-                <app-stat-block [statName]="'basicMove'" [stat]="current.char.stats.basicMove" (statChanged)="current.updateStats($event)"></app-stat-block>
-              </td>
-              <td class="numval"><span class="value">{{current.char.stats.basicMove.cp}}</span></td>
-            </tr>
-            <tr>
-              <td><span class="caption">BS:</span></td>
-              <td>
-                <app-stat-block [statName]="'basicSpeed'" [stat]="current.char.stats.basicSpeed" (statChanged)="current.updateStats($event)"></app-stat-block>
-              </td>
-              <td class="numval"><span class="value">{{current.char.stats.basicSpeed.cp}}</span></td>
-            </tr>
-            <tr>
-              <td><span class="caption">FP:</span></td>
-              <td>
-                <app-stat-block [statName]="'fp'" [stat]="current.char.stats.fp" (statChanged)="current.updateStats($event)"></app-stat-block>
-              </td>
-              <td class="numval"><span class="value">{{current.char.stats.fp.cp}}</span></td>
-            </tr>
-            <tr>
-              <td><span class="caption">HP:</span></td>
-              <td>
-                <app-stat-block [statName]="'hp'" [stat]="current.char.stats.hp" (statChanged)="current.updateStats($event)"></app-stat-block>
-              </td>
-              <td class="numval"><span class="value">{{current.char.stats.hp.cp}}</span></td>
-            </tr>
-          </table>
-        </td>
-        <td>
-          <table class="top">
-            <tr>
-              <td><span class="caption">Fright Check:</span></td>
-              <td><span class="value">{{current.char.statVars.frightCheck}}</span>
-              </td>
-            </tr>
-            <tr>
-              <td><span class="caption">Vision:</span></td>
-              <td><span class="value">{{current.char.statVars.vision}}</span>
-              </td>
-            </tr>
-            <tr>
-              <td><span class="caption">Hearing:</span></td>
-              <td><span class="value">{{current.char.statVars.hearing}}</span>
-              </td>
-            </tr>
-            <tr>
-              <td><span class="caption">Taste/Smell:</span></td>
-              <td><span class="value">{{current.char.statVars.tasteSmell}}</span>
-              </td>
-            </tr>
-            <tr>
-              <td><span class="caption">Touch:</span></td>
-              <td><span class="value">{{current.char.statVars.touch}}</span>
-              </td>
-            </tr>
-            <tr>
-              <td><span class="caption">Basic Lift:</span></td>
-              <td><span class="value">{{current.char.statVars.bl}}</span>
-              </td>
-            </tr>
-          </table>
-        </td>
-        <td>
-          <table class="top">
-            <tr>
-              <td><span class="caption">Size:</span></td>
-              <td><span class="value">{{current.char.statVars.sm}}</span>
-              </td>
-            </tr>
-            <tr>
-              <td><span class="caption">Dodge:</span></td>
-              <td><span class="value">{{current.char.statVars.dodge}}</span>
-              </td>
-            </tr>
-            <tr>
-              <td><span class="caption">Thrust:</span></td>
-              <td><span class="value">{{current.char.statVars.thrDmg}}</span>
-              </td>
-            </tr>
-            <tr>
-              <td><span class="caption">Swing:</span></td>
-              <td><span class="value">{{current.char.statVars.swDmg}}</span>
-              </td>
-            </tr>
-            <tr>
-              <td><span class="caption">Combat Enc.:</span></td>
-              <td><span class="value">{{current.char.statVars.combatEncumbrance}}</span>
-              </td>
-            </tr>
-            <tr>
-              <td><span class="caption">Travel Enc.:</span></td>
-              <td><span class="value">{{current.char.statVars.travelEncumbrance}}</span>
-              </td>
-            </tr>
-          </table>
-        </td>
-        <td>
-          <table class="top">
-            <tr>
-              <td><span class="caption">Combat Move:</span></td>
-              <td><span class="value">{{current.char.statVars.combMove}}</span>
-              </td>
-            </tr>
-            <tr>
-              <td><span class="caption">Travel Move:</span></td>
-              <td><span class="value">{{current.char.statVars.travMove}}</span>
-              </td>
-            </tr>
-          </table>
-        </td>
-        <td>
-          <table class="top">
-            <tr>
-              <td><span class="caption">Point Total:</span></td>
-              <td>
-                <input class="cost" type="number" [(ngModel)]="current.char.cp.cp" (change)="current.updateCp($event)">
-              </td>
-            </tr>
-            <tr>
-              <td><span class="caption">Stats:</span></td>
-              <td><span class="value">{{current.char.cp.stats}}</span>
-              </td>
-            </tr>
-            <tr>
-              <td><span class="caption">Advantages:</span></td>
-              <td><span class="value">{{current.char.cp.adv}}</span>
-              </td>
-            </tr>
-            <tr>
-              <td><span class="caption">Disadvantages:</span></td>
-              <td><span class="value">{{current.char.cp.dis}}</span>
-              </td>
-            </tr>
-            <tr>
-              <td><span class="caption">Skills:</span></td>
-              <td><span class="value">{{current.char.cp.skills}}</span>
-              </td>
-            </tr>
-            <tr>
-              <td><span class="caption">Unspent:</span></td>
-              <td><span class="value">{{current.char.cp.unspent}}</span>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-  </div>
+</div>
+<div class="row last" *ngIf="current.char">
+  <table class="mainvars">
+    <tr>
+      <td><img [src]="current.portrait" (click)="uploadPortrait()">
+        <input class="file" type="file" (change)="current.uploadPortrait($event.srcElement.files)" id="portrait_file">
+      </td>
+      <td>
+        <table class="top">    
+          <tr>
+            <td><span class="caption">ST:</span></td>
+            <td>
+              <app-stat-block [statName]="'st'" [stat]="current.char.stats.st" (statChanged)="current.updateStats($event)"></app-stat-block>
+            </td>
+            <td class="numval"><span class="value">{{current.char.stats.st.cp}}</span></td>
+          </tr>
+          <tr>
+            <td><span class="caption">DX:</span></td>
+            <td>
+              <app-stat-block [statName]="'dx'" [stat]="current.char.stats.dx" (statChanged)="current.updateStats($event)"></app-stat-block>
+            </td>
+            <td class="numval"><span class="value">{{current.char.stats.dx.cp}}</span></td>
+          </tr>
+          <tr>
+            <td><span class="caption">IQ:</span></td>
+            <td>
+              <app-stat-block [statName]="'iq'" [stat]="current.char.stats.iq" (statChanged)="current.updateStats($event)"></app-stat-block>
+            </td>
+            <td class="numval"><span class="value">{{current.char.stats.iq.cp}}</span></td>
+          </tr>
+          <tr>
+            <td><span class="caption">HT:</span></td>
+            <td>
+              <app-stat-block [statName]="'ht'" [stat]="current.char.stats.ht" (statChanged)="current.updateStats($event)"></app-stat-block>
+            </td>
+            <td class="numval"><span class="value">{{current.char.stats.ht.cp}}</span></td>
+          </tr>
+          <tr>
+            <td><span class="caption">Will:</span></td>
+            <td>
+              <app-stat-block [statName]="'will'" [stat]="current.char.stats.will" (statChanged)="current.updateStats($event)"></app-stat-block>
+            </td>
+            <td class="numval"><span class="value">{{current.char.stats.will.cp}}</span></td>
+          </tr>
+          <tr>
+            <td><span class="caption">Per:</span></td>
+            <td>
+              <app-stat-block [statName]="'per'" [stat]="current.char.stats.per" (statChanged)="current.updateStats($event)"></app-stat-block>
+            </td>
+            <td class="numval"><span class="value">{{current.char.stats.per.cp}}</span></td>
+          </tr>
+        </table>
+      </td>
+      <td>
+        <table class="top"> 
+          <tr>
+            <td><span class="caption">Lift ST:</span></td>
+            <td>
+              <app-stat-block [statName]="'liftSt'" [stat]="current.char.stats.liftSt" (statChanged)="current.updateStats($event)"></app-stat-block>
+            </td>
+            <td class="numval"><span class="value">{{current.char.stats.liftSt.cp}}</span></td>
+          </tr>
+          <tr>
+            <td><span class="caption">Strike ST:</span></td>
+            <td>
+              <app-stat-block [statName]="'strikeSt'" [stat]="current.char.stats.strikeSt" (statChanged)="current.updateStats($event)"></app-stat-block>
+            </td>
+            <td class="numval"><span class="value">{{current.char.stats.strikeSt.cp}}</span></td>
+          </tr>
+          <tr>
+            <td><span class="caption">BM:</span></td>
+            <td>
+              <app-stat-block [statName]="'basicMove'" [stat]="current.char.stats.basicMove" (statChanged)="current.updateStats($event)"></app-stat-block>
+            </td>
+            <td class="numval"><span class="value">{{current.char.stats.basicMove.cp}}</span></td>
+          </tr>
+          <tr>
+            <td><span class="caption">BS:</span></td>
+            <td>
+              <app-stat-block [statName]="'basicSpeed'" [stat]="current.char.stats.basicSpeed" (statChanged)="current.updateStats($event)"></app-stat-block>
+            </td>
+            <td class="numval"><span class="value">{{current.char.stats.basicSpeed.cp}}</span></td>
+          </tr>
+          <tr>
+            <td><span class="caption">FP:</span></td>
+            <td>
+              <app-stat-block [statName]="'fp'" [stat]="current.char.stats.fp" (statChanged)="current.updateStats($event)"></app-stat-block>
+            </td>
+            <td class="numval"><span class="value">{{current.char.stats.fp.cp}}</span></td>
+          </tr>
+          <tr>
+            <td><span class="caption">HP:</span></td>
+            <td>
+              <app-stat-block [statName]="'hp'" [stat]="current.char.stats.hp" (statChanged)="current.updateStats($event)"></app-stat-block>
+            </td>
+            <td class="numval"><span class="value">{{current.char.stats.hp.cp}}</span></td>
+          </tr>
+        </table>
+      </td>
+      <td>
+        <table class="top">
+          <tr>
+            <td><span class="caption">Fright Check:</span></td>
+            <td><span class="value">{{current.char.statVars.frightCheck}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="caption">Vision:</span></td>
+            <td><span class="value">{{current.char.statVars.vision}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="caption">Hearing:</span></td>
+            <td><span class="value">{{current.char.statVars.hearing}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="caption">Taste/Smell:</span></td>
+            <td><span class="value">{{current.char.statVars.tasteSmell}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="caption">Touch:</span></td>
+            <td><span class="value">{{current.char.statVars.touch}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="caption">Basic Lift:</span></td>
+            <td><span class="value">{{current.char.statVars.bl}}</span>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td>
+        <table class="top">
+          <tr>
+            <td><span class="caption">Size:</span></td>
+            <td><span class="value">{{current.char.statVars.sm}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="caption">Dodge:</span></td>
+            <td><span class="value">{{current.char.statVars.dodge}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="caption">Thrust:</span></td>
+            <td><span class="value">{{current.char.statVars.thrDmg}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="caption">Swing:</span></td>
+            <td><span class="value">{{current.char.statVars.swDmg}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="caption">Combat Enc.:</span></td>
+            <td><span class="value">{{current.char.statVars.combatEncumbrance}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="caption">Travel Enc.:</span></td>
+            <td><span class="value">{{current.char.statVars.travelEncumbrance}}</span>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td>
+        <table class="top">
+          <tr>
+            <td><span class="caption">Combat Move:</span></td>
+            <td><span class="value">{{current.char.statVars.combMove}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="caption">Travel Move:</span></td>
+            <td><span class="value">{{current.char.statVars.travMove}}</span>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td>
+        <table class="top">
+          <tr>
+            <td><span class="caption">Point Total:</span></td>
+            <td>
+              <input class="cost" type="number" [(ngModel)]="current.char.cp.cp" (change)="current.updateCp($event)">
+            </td>
+          </tr>
+          <tr>
+            <td><span class="caption">Stats:</span></td>
+            <td><span class="value">{{current.char.cp.stats}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="caption">Advantages:</span></td>
+            <td><span class="value">{{current.char.cp.adv}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="caption">Disadvantages:</span></td>
+            <td><span class="value">{{current.char.cp.dis}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="caption">Skills:</span></td>
+            <td><span class="value">{{current.char.cp.skills}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="caption">Unspent:</span></td>
+            <td><span class="value">{{current.char.cp.unspent}}</span>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </div>
 <div class="content-block" [hidden]="!current.char">
   <nav>
