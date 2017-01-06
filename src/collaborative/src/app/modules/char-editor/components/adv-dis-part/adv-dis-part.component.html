@@ -2,4 +2,5 @@
 <div class="container">
   <app-trait-list *ngIf="current.char" [traits]="current.char.traits" [category]="'Advantage,Perk'" (traitChange)="traitChanged()"></app-trait-list>
   <app-trait-list *ngIf="current.char" [traits]="current.char.traits" [category]="'Disadvantage,Quirk'" (traitChange)="traitChanged()"></app-trait-list>
+  <div class="spacer"></div>
 </div>

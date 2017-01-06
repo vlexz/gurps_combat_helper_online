@@ -50,6 +50,7 @@ table.toplevel {
   border-width: 1px 1px 1px 1px;
   border-color: #73828b;  
   padding: 5px;
+  padding-top:15px;
 }
 
 tr.header {
@@ -102,5 +103,5 @@ svg-icon.button:hover {
 
 /*for highlight miscelanous rows*/
 .list:hover {
-  background: #202523;
+  background: #2b363e;
 }

@@ -1,16 +1,16 @@
 .container {
   display: flex;
   flex-direction: row;
+  align-items: stretch;
   height: 100%;
 }
 
-armor-list {
+armor-list, armor-visual {
   display: block;
   flex: 1; 
+  margin-left: 10px;
 }
 
-armor-visual {
-  display: block;
-  flex: 1;
-  height: 100%;
+.spacer {
+  width: 10px;
 }

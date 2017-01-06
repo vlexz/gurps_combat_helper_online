@@ -12,8 +12,7 @@ inventory-editor(*ngIf='editedItem', [item]='editedItem', (done)='editFinished()
       th Weight/1
       th Cost
       th Weight
-      th
-      th
+      th      
     tr.list(*ngFor='let item of _items; let i = index')
       td.name {{item.name}}
       td.numval
