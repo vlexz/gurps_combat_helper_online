@@ -56,13 +56,11 @@ tr.header {
   margin-top: 10px;
 }
 
-/*table caption {  
-  margin-bottom: -10px;
-  font-size: 11pt;
-  color: #73828b;
-  font-family: Arial, Helvetica, sans-serif;
-  padding: 3px;
-}*/
+td.controls {
+  padding: 0  px;
+  margin: 0px;
+  display: block;
+}
 
 .table-caption {
   display: flex;
@@ -91,6 +89,7 @@ svg-icon.button {
   border: solid 1px #50a592;
   border-radius: 5px;
   padding: 2px;
+  margin: 0px;
   fill: #50a592;
   width: 16px;
   height: 16px;

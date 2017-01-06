@@ -94,14 +94,14 @@ mixin mainVariables
   +mainVariables  
 .content-block([hidden]='!current.char')
   nav
-    .nav-item(routerLinkActive="active")
-      a(routerLink='advdis') Adv/Dis 
-    .nav-item(routerLinkActive="active")
-      a(routerLink='skills') Skills 
-    .nav-item(routerLinkActive="active")
-      a(routerLink='armor') Armor
-    .nav-item(routerLinkActive="active")
-      a(routerLink='items') Items
+    .nav-item(routerLinkActive="active" routerLink='advdis')
+      a() Adv/Dis 
+    .nav-item(routerLinkActive="active" routerLink='skills')
+      a() Skills 
+    .nav-item(routerLinkActive="active" routerLink='armor')
+      a() Armor
+    .nav-item(routerLinkActive="active" routerLink='items')
+      a() Items
   .container
     router-outlet
 
