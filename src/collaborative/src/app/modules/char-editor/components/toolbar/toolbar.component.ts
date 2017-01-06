@@ -29,6 +29,15 @@ export class ToolbarComponent implements OnInit {
     }
   }
 
+  @HostListener('document:click', ['$event'])
+  onClick(ev) {
+    if (this.showCharlist) {
+      if (ev.path.findIndex(obj => obj.localName === 'char-editor-toolbar') === -1) {
+        this.showCharlist = false;
+      }
+    }
+  }
+
   showCharacters() {
     this.showCharlist = !this.showCharlist;
   }

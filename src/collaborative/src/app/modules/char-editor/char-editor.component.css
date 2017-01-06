@@ -107,6 +107,7 @@ router-outlet {
 
 .main-info table{
   border-spacing: 10px;
+  margin-top: -10px;
 }
 
 .row {
