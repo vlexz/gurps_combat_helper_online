@@ -87,7 +87,7 @@ mixin mainVariables
       .horizontal-line 
       span Primary Stats
       .horizontal-line 
-.row
+.row([class.last]='!current.char')
   char-editor-toolbar
   .main-info(*ngIf='current.char'): +mainInfo
 .row.last(*ngIf='current.char')

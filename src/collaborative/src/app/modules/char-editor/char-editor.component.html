@@ -7,7 +7,7 @@
     </div>
   </div>
 </div>
-<div class="row">
+<div class="row" [class.last]="!current.char">
   <char-editor-toolbar></char-editor-toolbar>
   <div class="main-info" *ngIf="current.char">
     <table>
