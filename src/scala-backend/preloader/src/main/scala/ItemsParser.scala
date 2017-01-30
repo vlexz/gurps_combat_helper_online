@@ -16,7 +16,7 @@ class ItemsParser(filePath: String) extends Parser[FlaggedItem] {
           name = (itm \ "description").text,
           lc = parseInt((itm \ "legality_class").text),
           tl = parseInt((itm \ "tech_level").text),
-          wt = parseDouble((itm \ "weight").text),
+          wt = parseDouble((itm \ "weight").text replace(" lb", "")),
           cost = parseDouble((itm \ "value").text)),
         ready = true)
 

@@ -13,9 +13,9 @@ class SkillsParser(filePath: String) extends Parser[FlaggedSkill] {
       data = Skill(
         name = (skl \ "name").text,
         spc = (skl \ "specialization").text,
-        tl = (skl \ "tech_level").size, // TODO: absent field if to edit?
-        attr = (skl \ "difficulty").text.take(2),
-        diff = (skl \ "difficulty").text.drop(3),
+        tl = (skl \ "tech_level").size,
+        attr = (skl \ "difficulty").text takeWhile (_ != '/'),
+        diff = (skl \ "difficulty").text dropWhile (_ != '/') drop 1,
         dmgBonuses = for (b <- skl \ "weapon_bonus") yield BonusDamage(
           skill = (b \ "name").text,
           skillCompare = (b \ "name" \ "@compare").text,
@@ -34,7 +34,7 @@ class SkillsParser(filePath: String) extends Parser[FlaggedSkill] {
         encumbr = (this parseInt (skl \ "encumbrance_penalty_multiplier").text) > 0,
         categories = (skl \ "categories" \ "category") map (_.text),
         notes = (skl \ "notes").text),
-      ready = !(skl toString() contains '@')) // TODO: missing prerequisites and defaults parsers
+      ready = !(skl toString() contains '@') && (skl \ "tech_level").isEmpty) // TODO: missing prerequisites and defaults parsers
 
   override val tjs: Writes[FlaggedSkill] = Charlist.flaggedSkillFormat
 }
