@@ -4,6 +4,7 @@ export class Trait {
   public name: string;
   public cp: number;
   public cpBase: number;
+  public traitString: string;
 
   static fromJson(json: Object) {
     let ret = new Trait;
@@ -22,5 +23,4 @@ export class Trait {
     }
     return trait;
   }
-
 }

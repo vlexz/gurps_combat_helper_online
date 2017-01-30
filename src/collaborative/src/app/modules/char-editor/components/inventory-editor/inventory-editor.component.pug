@@ -1,0 +1,15 @@
+dialog-container((done)='_done()', title='Edit Item')
+  div
+    label Name:
+      input(type='text', [(ngModel)]='item.name')
+  div
+    label Legality Class:
+      input(type='number', [(ngModel)]='item.lc')
+    label TL:
+      input(type='number', [(ngModel)]='item.tl')
+  div
+    label Weight:
+      input(type='number', [(ngModel)]='item.wt')
+    label Cost:
+      input(type='number', [(ngModel)]='item.cost')
+  

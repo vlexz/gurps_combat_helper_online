@@ -1,11 +1,11 @@
 /* tslint:disable:no-unused-variable */
 
 import { TestBed, async } from '@angular/core/testing';
-import { SkillListComponent } from './skill-list.component';
+import { DialogContainerComponent } from './dialog-container.component';
 
-describe('Component: SkillList', () => {
+describe('Component: DialogContainer', () => {
   it('should create an instance', () => {
-    let component = new SkillListComponent();
+    let component = new DialogContainerComponent();
     expect(component).toBeTruthy();
   });
 });

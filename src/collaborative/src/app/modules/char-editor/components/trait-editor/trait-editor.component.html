@@ -1,0 +1,28 @@
+
+<dialog-container (done)="done()" title="Edit {{trait.category}}">
+  <div>Name: 
+    <input type="text" [(ngModel)]="trait.name">
+  </div>
+  <div>Cost: {{trait.cp}}<a (click)="switchCostExp()"><span *ngIf="costExpand">Collapse</span><span *ngIf="!costExpand">Expand</span></a>
+    <div *ngIf="costExpand">
+      <label>Base Cost: 
+        <input class="cost" type="number" [(ngModel)]="trait.cpBase">
+      </label>
+      <label>Cost per level:
+        <input class="cost" type="number" [(ngModel)]="trait.cpPerLvl">
+      </label>
+      <label>Level: 
+        <input class="cost" type="number" [(ngModel)]="trait.level">
+      </label>
+    </div>
+  </div>
+  <div>Avaliable modifiers          </div>
+  <table>
+    <tr *ngFor="let mod of trait.modifiers; let i = index">
+      <td>
+        <input type="checkbox" [(ngModel)]="mod.on">
+      </td>
+      <td>{{mod.name}}</td>
+    </tr>
+  </table>
+</dialog-container>

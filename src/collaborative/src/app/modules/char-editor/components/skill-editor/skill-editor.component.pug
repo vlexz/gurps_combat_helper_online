@@ -1,0 +1,22 @@
+dialog-container((done)='_done()', title='Edit Skill')
+  div 
+    label Name: 
+      input(type='text', [(ngModel)] = 'skill.name')
+    label Specialty:
+      input(type='text', [(ngModel)] = 'skill.spc')
+  div
+    label Attribute:
+      select([(ngModel)]='skill.attr')
+        option(*ngFor='let attr of tables.attributes; let i = index', value='{{attr}}') {{attr}}
+    label Difficulty:
+      select([(ngModel)]='skill.diff')
+        option(*ngFor='let item of tables.skillDifficulties; let i = index', value='{{item.val}}') {{item.name}}
+  div 
+    input(type='checkbox', [(ngModel)]='tlDependent')
+    label Depends on Techlevel
+    label(*ngIf='tlDependent') Techlevel
+    input.cost(type='number', *ngIf='tlDependent', [(ngModel)]='skill.tl')
+  div
+    input(type='checkbox', [(ngModel)]='skill.encumbr')
+    label Depends on encumbrance
+

@@ -3,8 +3,14 @@
     {{title}}
   </h1>
   <nav>
-    <a routerLink="/char-editor" routerLinkActive="active" class="first"> Character Editor </a
-    ><a routerLink="/party-editor" routerLinkActive="active" class="last"> Party Editor </a>
+    <div class="nav-item" routerLinkActive="active" routerLink="/char-editor">
+      <a> Character Editor </a>
+    </div>
+    <div class="nav-item" routerLinkActive="active" routerLink="/party-editor">
+      <a> Party Editor </a>
+    </div>
   </nav>
-  <router-outlet></router-outlet>
+  <div class='outlet-container'>
+    <router-outlet></router-outlet>
+  </div>
 </div>

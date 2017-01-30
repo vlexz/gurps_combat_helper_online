@@ -1,0 +1,42 @@
+mixin location(caption, part)
+  div= caption
+  ul: li(*ngFor='let loc of tables.armorLocations.' + part + '; let i = index')
+    a((click)='addLocation(component, loc)') {{loc}}
+
+dialog-container((done)='done()', title='Edit Armor')
+  .row
+    label Name:  
+      input(type='text', [(ngModel)]='armor.name') 
+    label Cost 
+      input(type='number', [(ngModel)]='armor.cost')
+    label Weight 
+      input(type='number', [(ngModel)]='armor.wt')
+  .row Components: 
+  .component(*ngFor='let component of armor.components; let i = index')
+    .protection Protection:        
+      label DR:
+        input.cost(type='number', [(ngModel)]='component.protection.dr')
+      label EP:
+        input.cost(type='number', [(ngModel)]='component.protection.ep')
+      label EPI:
+        input.cost(type='number', [(ngModel)]='component.protection.epi')
+      input(type='checkbox', [(ngModel)]='component.front')
+      label Protects from front
+      input(type='checkbox', [(ngModel)]='component.back')
+      label Protects from back
+    .locations 
+      span Locations:
+      ul
+        li(*ngFor='let loc of component.locations; let i = index')
+          a((click)='removeLocation(component, i)') {{loc}}
+        li          
+          a((click)='showLocations(i)') Add
+      .location_list(*ngIf='_showLocations == i', (click)='hideLocations()')
+        +location('Head locations:', 'head')
+        +location('Body locations:', 'body')
+        +location('Arms locations:', 'arms')
+        +location('Legs locations:', 'legs')
+        +location('Full Suits:', 'suit')
+    .row: a((click)='removeComponent(i)') Remove Component
+  .row
+    a((click)='addComponent()') Add Component

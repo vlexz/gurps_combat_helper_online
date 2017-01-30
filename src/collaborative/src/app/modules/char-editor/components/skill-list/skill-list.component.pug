@@ -1,27 +1,27 @@
-.skills
-  h3 Skills 
-  table 
+skill-editor(*ngIf='editedSkill', (done)='editFinished()', [skill]='editedSkill')
+.table-container
+  .table-caption
+    .table-caption-content Skills
+  table.toplevel
     tr
       th Name
-      th Attr
-      th Diff
+      th Type
       th Rel
       th Bonus
       th Total
       th Cost
       th 
-    tr(*ngFor='let skill of skills; let i = index')     
-      td: input(type='text', [(ngModel)]='skill.name', (change)='skillChanged()')      
-      td
-        select([(ngModel)]='skill.attr', (change)='skillChanged()')
-          option(*ngFor='let attr of tables.attributes; let i = index', value='{{attr}}')  {{attr}}
-      td
-        select([(ngModel)]='skill.diff', (change)='skillChanged()')
-          option(*ngFor='let attr of tables.skillDifficulties; let i = index', value='{{attr.val}}')  {{attr.name}}
-      td: input.cost(type='number', [(ngModel)] = 'skill.relLvl', (change)='skillChanged()')
-      td: input.cost(type='number', [(ngModel)] = 'skill.bonus', (change)='skillChanged()')
-      td {{skill.lvl}}
-      td {{skill.cp}}
-      td: a((click)='removeSkill(i)') Remove
+      th
+    tr.list(*ngFor='let skill of _skills; let i = index')     
+      td.name {{skill.skillString}}
+      td.numval {{skillType(skill)}}
+      td.numval: input.cost(type='number', [(ngModel)] = 'skill.relLvl', (change)='skillChanged()')
+      td.numval {{skill.bonus}}
+      td.numval {{skill.lvl}}
+      td.numval {{skill.cp}}
+      td.controls
+        svg-icon.button(src='/assets/svg/edit.svg', title='Edit', (click)='editSkill(i)')
+        svg-icon.button(src='/assets/svg/trash.svg', title='Remove', (click)='removeSkill(i)')      
     tr
-      td: a((click)='addSkill()') Add Skill
+      td(colspan=8)
+        search-block([api]='skillssrv', (newitem)='addSkill($event)')

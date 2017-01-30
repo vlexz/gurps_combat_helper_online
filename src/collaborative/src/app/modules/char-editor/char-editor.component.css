@@ -1,18 +1,27 @@
-.to_top {
-  vertical-align: top;
+:host {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 table.mainvars {
-  width: 100%;
+  width: 100%;  
+  padding: 5px;
+  padding-left: 10px;
+  flex: 1;
 }
 
 table.mainvars td {  
-  vertical-align: top;
+  vertical-align: top;  
+}
+
+table.mainvars table {
+  border-spacing: 5px;
 }
 
 .container {
-  display: inline-block;
-  vertical-align: top;
+  display: block;  
+  flex: 1;
 }
 
 app-skill-list {
@@ -24,18 +33,129 @@ app-skill-list {
   display: none;
 }
 
-input.cost {
-  width: 45px;
+nav {
+  display: flex;
+  flex-direction: column;
+  width: 80px;  
+  margin-right: -1px;
+  z-index: 5;  
 }
 
-nav {
-  display: inline-block;
+.nav-item {  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height:60px;  
+  background: #3e4b54;
+  border-color: #596871;
+  border-right-color: #9fb0b9;
+  color: #A9AA95;
+  border-style: solid;
+  border-width: 1px 1px 1px 1px;
 }
+
+.nav-item a {
+  padding: 0px;  
+  background: #3e4b54;
+  color: #6b757c;
+  border: none;  
+ 
+}
+
+.nav-item.active{
+   border-color: #9fb0b9;
+   border-right-color: #3e4b54;
+}
+
+.nav-item.active a{
+  color: #f0f1f2;    
+}
+
+nav a {  
+  text-align: center;
+  display: block;
+  /*color: white;*/
+  background: #67727A;
+  font-size: 14pt;
+  font-family: Arial, Helvetica, sans-serif;
+  text-decoration: none;
+}
+
 
 router-outlet {
   display: inline-block;
 }
 
-a[routerLink] {
-  display: block;
+.content-block {
+  min-height: 400px;
+  margin-top: 15px;
+  flex: 1;
+  display: flex;
+  flex-direction: row;    
 }
+
+.content-block .container {
+  flex: 1;
+  background: #3e4b54;
+  border: 1px solid #a7b8c1;
+  padding-bottom: 10px;
+}
+
+.main-info {
+  margin-left: 40px;
+}
+
+.main-info table{
+  border-spacing: 10px;
+  margin-top: -10px;
+}
+
+.row {
+  background: #3e4b54;
+  border-color: #abbec6;
+  border-style: solid;
+  border-width: 0px 1px 0px 1px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.row .header {  
+  width: 100%;
+  height: 40px;    
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 11pt;
+  color: #596871;
+}
+
+.last {
+  border-bottom-width: 1px;
+}
+
+.header-wrapper {
+  width: 95%;
+  display: flex;
+  align-items: center;
+}
+
+.header-wrapper span {
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+.horizontal-line {
+  flex: 1;
+  width: 45%;;
+  text-align: center;
+  height: 0px;
+  border-style: solid;
+  border-width: 1px 0px 0px 0px;
+  border-color: #596871;
+}
+
+
+
+
+ 

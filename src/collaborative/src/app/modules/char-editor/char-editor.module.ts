@@ -18,6 +18,16 @@ import { StatBlockComponent } from './components/stat-block/stat-block.component
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { AdvDisPartComponent } from './components/adv-dis-part/adv-dis-part.component';
 import { SkillTeqPartComponent } from './components/skill-teq-part/skill-teq-part.component';
+import { TraitEditorComponent } from './components/trait-editor/trait-editor.component';
+import { ArmorVisualComponent } from './components/armor-visual/armor-visual.component';
+import { ArmorPartComponent } from './components/armor-part/armor-part.component';
+import { ArmorListComponent } from './components/armor-list/armor-list.component';
+import { ArmorEditorComponent } from './components/armor-editor/armor-editor.component';
+import { SkillEditorComponent } from './components/skill-editor/skill-editor.component';
+import { TechniqueEditorComponent } from './components/technique-editor/technique-editor.component';
+import { InventoryComponent } from './components/inventory/inventory.component';
+import { InvPartComponent } from './components/inv-part/inv-part.component';
+import { InventoryEditorComponent } from './components/inventory-editor/inventory-editor.component';
 
 @NgModule({
   imports: [
@@ -36,7 +46,17 @@ import { SkillTeqPartComponent } from './components/skill-teq-part/skill-teq-par
     StatBlockComponent,
     ToolbarComponent,
     AdvDisPartComponent,
-    SkillTeqPartComponent
+    SkillTeqPartComponent,
+    TraitEditorComponent,
+    ArmorVisualComponent,
+    ArmorPartComponent,
+    ArmorListComponent,
+    ArmorEditorComponent,
+    SkillEditorComponent,
+    TechniqueEditorComponent,
+    InventoryComponent,
+    InvPartComponent,
+    InventoryEditorComponent
   ],
   providers: [
     CurrentCharService

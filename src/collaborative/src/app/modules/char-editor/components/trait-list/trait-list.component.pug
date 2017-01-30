@@ -1,11 +1,19 @@
-h3 {{category}}s
-table
-  tr
-    th Name
-    th Cost
-    th 
-  tr(*ngFor='let trait of filtered; let i = index')
-    td: input(type='text', [(ngModel)]='trait.name', (change)='traitChanged($event)')
-    td: input.cost(type='number', [(ngModel)]='trait.cpBase', (change)='traitChanged()')  
-    td: a((click)='removeTrait(i)') Remove
-  tr: td(colspan=3): a((click)='addTrait()') Add {{category}}
+trait-editor(*ngIf='edited_trait', (editDone)='editFinished()', (editCancel)='editCanceled()', [trait]='edited_trait')
+.table-container
+  .table-caption
+    .table-caption-content {{category}}
+  table.toplevel    
+    tr.header     
+      th Name
+      th Cost
+      th
+    tr.list(*ngFor='let trait of filtered; let i = index')    
+      td.name: .name {{trait.traitString}}
+      td.numval {{trait.cp}}
+      td.controls
+        svg-icon.button(src='/assets/svg/edit.svg', title='Edit', (click)='editTrait(i)')
+        svg-icon.button(src='/assets/svg/trash.svg', title='Remove', (click)='removeTrait(i)')
+    tr
+      td(colspan=4)
+        search-block([api]='searchAdapter', (newitem)='addTrait($event)')
+            

@@ -1,3 +1,17 @@
-app-skill-list, app-techniques {
-  display: inline-block;
+.container {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  justify-content: space-around;
 }
+
+app-skill-list, app-techniques {
+  display: block;
+  margin-left: 10px;
+  flex: 1;
+}
+
+.spacer {
+  width: 10px;
+}
+

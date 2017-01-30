@@ -1,43 +1,38 @@
 
-<div class="skills">
-  <h3>Skills </h3>
-  <table> 
+<skill-editor *ngIf="editedSkill" (done)="editFinished()" [skill]="editedSkill"></skill-editor>
+<div class="table-container">
+  <div class="table-caption">
+    <div class="table-caption-content">Skills</div>
+  </div>
+  <table class="toplevel">
     <tr>
       <th>Name</th>
-      <th>Attr</th>
-      <th>Diff</th>
+      <th>Type</th>
       <th>Rel</th>
       <th>Bonus</th>
       <th>Total</th>
       <th>Cost</th>
       <th> </th>
+      <th></th>
     </tr>
-    <tr *ngFor="let skill of skills; let i = index">    
-      <td>
-        <input type="text" [(ngModel)]="skill.name" (change)="skillChanged()"/>
+    <tr class="list" *ngFor="let skill of _skills; let i = index">    
+      <td class="name">{{skill.skillString}}</td>
+      <td class="numval">{{skillType(skill)}}</td>
+      <td class="numval">
+        <input class="cost" type="number" [(ngModel)]="skill.relLvl" (change)="skillChanged()">
       </td>
-      <td>
-        <select [(ngModel)]="skill.attr" (change)="skillChanged()">
-          <option *ngFor="let attr of tables.attributes; let i = index" value="{{attr}}"> {{attr}}</option>
-        </select>
+      <td class="numval">{{skill.bonus}}</td>
+      <td class="numval">{{skill.lvl}}</td>
+      <td class="numval">{{skill.cp}}</td>
+      <td class="controls">
+        <svg-icon class="button" src="/assets/svg/edit.svg" title="Edit" (click)="editSkill(i)"></svg-icon>
+        <svg-icon class="button" src="/assets/svg/trash.svg" title="Remove" (click)="removeSkill(i)">     </svg-icon>
       </td>
-      <td>
-        <select [(ngModel)]="skill.diff" (change)="skillChanged()">
-          <option *ngFor="let attr of tables.skillDifficulties; let i = index" value="{{attr.val}}"> {{attr.name}}</option>
-        </select>
-      </td>
-      <td>
-        <input class="cost" type="number" [(ngModel)]="skill.relLvl" (change)="skillChanged()"/>
-      </td>
-      <td>
-        <input class="cost" type="number" [(ngModel)]="skill.bonus" (change)="skillChanged()"/>
-      </td>
-      <td>{{skill.lvl}}</td>
-      <td>{{skill.cp}}</td>
-      <td><a (click)="removeSkill(i)">Remove</a></td>
     </tr>
     <tr>
-      <td><a (click)="addSkill()">Add Skill</a></td>
+      <td colspan="8">
+        <search-block [api]="skillssrv" (newitem)="addSkill($event)"></search-block>
+      </td>
     </tr>
   </table>
 </div>

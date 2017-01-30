@@ -28,3 +28,15 @@ export class Technique {
   }
 }
 
+export class LibraryTechnique {
+  ready: boolean;
+  technique: Technique;
+
+  static fromJson(json: any): LibraryTechnique {
+    let res: LibraryTechnique = new LibraryTechnique();
+    res.ready = json.ready;
+    res.technique = Technique.fromJson(json.technique);
+    return res;
+  }
+}
+

@@ -1,2 +1,4 @@
-app-trait-list(*ngIf='current.char', [traits]='current.char.traits', [category]="'Advantage'", (change)='traitChanged()')
-app-trait-list(*ngIf='current.char', [traits]='current.char.traits', [category]="'Disadvantage'", (change)='traitChanged()')
+.container
+  app-trait-list(*ngIf='current.char', [traits]='current.char.traits', [category]="'Advantage,Perk'", (traitChange)='traitChanged()')
+  app-trait-list(*ngIf='current.char', [traits]='current.char.traits', [category]="'Disadvantage,Quirk'", (traitChange)='traitChanged()')
+  .spacer

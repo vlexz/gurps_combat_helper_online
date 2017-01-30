@@ -1,0 +1,24 @@
+
+<dialog-container (done)="_done()" title="Edit Item">
+  <div>
+    <label>Name:
+      <input type="text" [(ngModel)]="item.name">
+    </label>
+  </div>
+  <div>
+    <label>Legality Class:
+      <input type="number" [(ngModel)]="item.lc">
+    </label>
+    <label>TL:
+      <input type="number" [(ngModel)]="item.tl">
+    </label>
+  </div>
+  <div>
+    <label>Weight:
+      <input type="number" [(ngModel)]="item.wt">
+    </label>
+    <label>Cost:
+      <input type="number" [(ngModel)]="item.cost">
+    </label>
+  </div>
+</dialog-container>

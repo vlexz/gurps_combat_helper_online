@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { CharListComponent } from '../char-list/char-list.component';
 
@@ -21,6 +21,22 @@ export class ToolbarComponent implements OnInit {
   constructor(
     private router: Router
   ) { }
+
+  @HostListener('document:keydown', ['$event'])
+  onKey(ev) {
+    if (ev.code === 'Escape') {
+      this.showCharlist = false;
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClick(ev) {
+    if (this.showCharlist) {
+      if (ev.path.findIndex(obj => obj.localName === 'char-editor-toolbar') === -1) {
+        this.showCharlist = false;
+      }
+    }
+  }
 
   showCharacters() {
     this.showCharlist = !this.showCharlist;

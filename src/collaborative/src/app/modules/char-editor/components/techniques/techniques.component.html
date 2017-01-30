@@ -1,43 +1,38 @@
 
-<div class="skills">
-  <h3>Techniques </h3>
-  <table> 
+<technique-editor *ngIf="editedTeq" (done)="editDone()" [technique]="editedTeq" [skills]="skills"></technique-editor>
+<div class="table-container">
+  <div class="table-caption">
+    <div class="table-caption-content">Techniques </div>
+  </div>
+  <table class="toplevel">
     <tr>
       <th>Name</th>
-      <th>Skill</th>
       <th>Diff</th>
       <th>Default</th>
       <th>Level</th>
       <th>Total</th>
       <th>Cost</th>
       <th> </th>
+      <th></th>
     </tr>
-    <tr *ngFor="let tech of techniques; let i = index">    
-      <td>
-        <input type="text" [(ngModel)]="tech.name" (change)="techChanged()"/>
+    <tr class="list" *ngFor="let tech of _techniques; let i = index">    
+      <td class="name">{{tech.tchString}}</td>
+      <td class="numval">{{tech.diff}}</td>
+      <td class="numval">{{tech.defLvl}}</td>
+      <td class="numval">
+        <input class="cost" type="number" [(ngModel)]="tech.relLvl" (change)="techChanged()">
       </td>
-      <td>
-        <select [(ngModel)]="tech.skill" (change)="techChanged()">
-          <option *ngFor="let name of skillNames; let i = index" value="{{name}}"> {{name}}</option>
-        </select>
+      <td class="numval">{{tech.lvl}}</td>
+      <td class="numval">{{tech.cp}}</td>
+      <td class="controls">
+        <svg-icon class="button" src="/assets/svg/edit.svg" title="Edit" (click)="edit(i)"></svg-icon>
+        <svg-icon class="button" src="/assets/svg/trash.svg" title="Remove" (click)="remove(i)">     </svg-icon>
       </td>
-      <td>
-        <select [(ngModel)]="tech.diff" (change)="techChanged()">
-          <option *ngFor="let attr of tables.techniqueDifficulties; let i = index" value="{{attr.val}}"> {{attr.name}}</option>
-        </select>
-      </td>
-      <td>
-        <input class="cost" type="number" [(ngModel)]="tech.defLvl" (change)="techChanged()"/>
-      </td>
-      <td>
-        <input class="cost" type="number" [(ngModel)]="tech.relLvl" (change)="techChanged()"/>
-      </td>
-      <td>{{tech.lvl}}</td>
-      <td>{{tech.cp}}</td>
-      <td><a (click)="remove(i)">Remove</a></td>
     </tr>
     <tr>
-      <td><a (click)="add()">Add Technique</a></td>
+      <td colspan="8">
+        <search-block [api]="techsrv" (newitem)="add($event)"></search-block>
+      </td>
     </tr>
   </table>
 </div>

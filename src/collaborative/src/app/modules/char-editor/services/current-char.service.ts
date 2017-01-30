@@ -24,7 +24,7 @@ export class CurrentCharService {
 
   get portrait() {
     if (this.current._id) {
-      return this.chars.apiEndPoint + 'char/' + this.current._id + '/pic?' + this.timestamp;
+      return this.chars.apiEndPoint + 'chars/' + this.current._id + '/pic?' + this.timestamp;
     } else {
       return '/assets/default_portrait.png';
     }
@@ -122,6 +122,26 @@ export class CurrentCharService {
     .then(saved => {
       if (!saved) {
         this.chars.updateTechniques(this.current._id, this.current.techniques)
+        .subscribe(this.setchar);
+      }
+    });
+  }
+
+  updateArmor() {
+    this.ensureCharacterExists()
+    .then(saved => {
+      if (!saved) {
+        this.chars.updateArmor(this.current._id, this.current.equip.armor)
+        .subscribe(this.setchar);
+      }
+    });
+  }
+
+  updateInventory() {
+    this.ensureCharacterExists()
+    .then(saved => {
+      if (!saved) {
+        this.chars.updateInventory(this.current._id, this.current.equip.items)
         .subscribe(this.setchar);
       }
     });

@@ -1,8 +1,80 @@
 /* You can add global styles to this file, and also import other style files */
 
+
+body {
+  background: #2b363e;
+  /*height: 100%; */
+  color: #abbec6;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10pt;
+  margin: 0px;
+  padding: 0px;
+}
+
 a {
+  display: inline-block;
+  padding: 3px;
+  padding-left: 6px;
+  padding-right: 6px;
+  border-radius: 5px; 
+  border: solid 1px #50a592;
   cursor: pointer;
-  color: blue;
+  background: #3e4b54;
+  color: #50a592;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+}
+
+a:hover {
+  background: #50a592;
+  color: #3e4b54;  
+}
+
+td.numval {
+  text-align: center;
+  white-space: nowrap;
+  width: 1%;
+}
+
+input {
+  background: #33414a;
+  color: #abbec6;
+  padding: 3px;
+  border: solid #abbec6 1px;
+  box-shadow: none;
+  border-radius: 3px;
+}
+
+table.toplevel {
+  border-style: solid;
+  border-width: 1px 1px 1px 1px;
+  border-color: #73828b;  
+  padding: 5px;
+  padding-top:15px;
+}
+
+tr.header {
+  margin-top: 10px;
+}
+
+td.controls {
+  padding: 0  px;
+  margin: 0px;
+  display: block;
+}
+
+.table-caption {
+  display: flex;
+  justify-content: space-around;
+}
+
+.table-caption-content {
+  background: #3e4b54;
+  font-size: 11pt;
+  margin-bottom: -10px; 
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #74858d;
 }
 
 input.cost {
@@ -11,4 +83,25 @@ input.cost {
 
 h3 {
   margin-top: 5px;
+}
+
+svg-icon.button {
+  display: inline-block;
+  border: solid 1px #50a592;
+  border-radius: 5px;
+  padding: 2px;
+  margin: 0px;
+  fill: #50a592;
+  width: 16px;
+  height: 16px;
+}
+
+svg-icon.button:hover {
+  fill: #3e4b54;
+  background: #50a592;
+}
+
+/*for highlight miscelanous rows*/
+.list:hover {
+  background: #2b363e;
 }

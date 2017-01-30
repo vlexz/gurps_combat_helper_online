@@ -1,0 +1,10 @@
+.cover
+.container()
+  .dialog
+    .title: h3 {{title}}
+    .body
+      ng-content
+    .footer 
+      .button-holder      
+        button((click)='_done()') Done
+    

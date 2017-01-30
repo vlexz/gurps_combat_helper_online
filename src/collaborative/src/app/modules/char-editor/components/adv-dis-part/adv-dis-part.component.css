@@ -1,4 +1,21 @@
+
+.container {
+  display: flex;
+  align-items: stretch;
+  width: 100%;  
+  padding-right: 10px;
+}
+
+.container:nth-child(1) {
+  margin-left: 10px;
+}
+
 app-trait-list {
-  display: inline-block;
-  margin-right: 50px;
+  display: block;  
+  flex: 1;  
+  margin-right: 10px;
+}
+
+.spacer {
+  width: 10px;
 }

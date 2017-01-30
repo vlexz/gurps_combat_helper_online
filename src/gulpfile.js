@@ -130,8 +130,12 @@ gulp.task('deploy:server', function() {
 });
 
 gulp.task('build:scala', function(cb){
-    let cmd = spawn('activator',['stage'], {
-        cwd: 'scala-backend'
+    let cmd = spawn('./stage',[], {
+        cwd: 'scala-backend',
+        env: {
+            JAVA_OPTS: '-Xss2M',
+            PATH: process.env.PATH
+        }        
     })
     cmd.stdout.on('data', data => process.stdout.write(data));
     cmd.stderr.on('data', data => process.stderr.write(data));
@@ -175,9 +179,29 @@ gulp.task('start:scala', function(cb) {
     cmd.on('close', cb)
 })
 
+gulp.task('start:pug' ,function(cb){    
+    let cmd = spawn('pug', ['watch', 'app', '--pretty', '--doctype', 'html'], {
+        cwd: 'collaborative/src/'
+    })
+    cmd.stdout.on('data', data => process.stdout.write(data));
+    cmd.stderr.on('data', data => process.stderr.write(data));
+    cmd.on('close', cb)
+});
+
+gulp.task('start:front', function(cb){
+    let cmd = spawn('ng', ['serve'], {
+        cwd: 'collaborative'
+    })
+    cmd.stdout.on('data', data => process.stdout.write(data));
+    cmd.stderr.on('data', data => process.stderr.write(data));
+    cmd.on('close', cb)
+})
+
+gulp.task('start:all', ['start:scala', 'start:pug','start:front'])
+
 gulp.task('start:dev', series(
-    'build:scala',
-    'start:scala'
+    'build:scala',    
+    'start:all'
 ))
 
 gulp.task('deploy:stage', series(

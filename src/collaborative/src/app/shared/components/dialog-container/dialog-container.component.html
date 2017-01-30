@@ -1,0 +1,17 @@
+
+<div class="cover"></div>
+<div class="container">
+  <div class="dialog">
+    <div class="title">
+      <h3>{{title}}</h3>
+    </div>
+    <div class="body">
+      <ng-content></ng-content>
+    </div>
+    <div class="footer"> 
+      <div class="button-holder">     
+        <button (click)="_done()">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
